@@ -1,0 +1,49 @@
+{% load i18n %}<div class="col-md-6 col-xl-4 col-xxl-3">
+    <article class="card template-card h-100">
+        <div class="card-body">
+            <div class="template-card-head">
+                <span class="template-card-icon {% if tmpl.is_builtin %}template-card-icon-builtin{% else %}template-card-icon-custom{% endif %}" aria-hidden="true"><i class="bi {% if tmpl.is_builtin %}bi-file-earmark-ruled{% else %}bi-file-earmark-plus{% endif %}"></i></span>
+                <div class="template-card-heading">
+                    <h3 class="template-card-title"><button type="button" class="template-card-open" data-modal-open="template_view" data-template="{{ tmpl.public_key }}">{{ tmpl.name }}</button></h3>
+                    <p class="template-card-meta"><span>{{ tmpl.get_doc_type_display }}</span> &middot; <span>{% blocktranslate trimmed count counter=tmpl.section_total %}{{ counter }} section{% plural %}{{ counter }} sections{% endblocktranslate %}</span>{% if tmpl.attribute_total %} &middot; <span>{% blocktranslate trimmed count counter=tmpl.attribute_total %}{{ counter }} attribute{% plural %}{{ counter }} attributes{% endblocktranslate %}</span>{% endif %}</p>
+                </div>
+                {% if tmpl.can_edit %}
+                <div class="template-actions">
+                    <button type="button" class="btn btn-sm btn-light border-0 menu-trigger" data-menu-open="templateMenu-{{ tmpl.public_key }}" data-menu-align="end" aria-label="{% blocktranslate trimmed with name=tmpl.name %}Actions for {{ name }}{% endblocktranslate %}"><i class="bi bi-three-dots-vertical"></i></button>
+                    <div class="menu" id="templateMenu-{{ tmpl.public_key }}" role="menu" popover="manual" aria-label="{% blocktranslate trimmed with name=tmpl.name %}Actions for {{ name }}{% endblocktranslate %}">
+                        <button type="button" class="menu-item" role="menuitem" tabindex="-1" data-modal-open="template_editor" data-template="{{ tmpl.public_key }}"><i class="bi bi-pencil menu-item-icon" aria-hidden="true"></i><span class="menu-item-text">{% translate "Edit" %}</span></button>
+                        <div class="menu-separator" role="separator"></div>
+                        {% if tmpl.can_delete %}
+                        <form method="post" action="{% url 'template_delete' tmpl.public_key %}" role="presentation" data-confirm="{% blocktranslate trimmed with name=tmpl.name %}Delete &quot;{{ name }}&quot;? This cannot be undone.{% endblocktranslate %}" data-confirm-title="{% translate 'Delete Template' %}" data-confirm-button="{% translate 'Delete' %}">
+                            {% csrf_token %}
+                            <button type="submit" class="menu-item menu-item-danger" role="menuitem" tabindex="-1"><i class="bi bi-trash menu-item-icon" aria-hidden="true"></i><span class="menu-item-text">{% translate "Delete" %}</span></button>
+                        </form>
+                        {% else %}
+                        <button type="button" class="menu-item" role="menuitem" tabindex="-1" aria-disabled="true"><i class="bi bi-trash menu-item-icon" aria-hidden="true"></i><span class="menu-item-text">{% translate "Delete" %}<span class="menu-item-hint">{% blocktranslate trimmed count counter=tmpl.usage_count %}Delete is unavailable: used by {{ counter }} project{% plural %}Delete is unavailable: used by {{ counter }} projects{% endblocktranslate %}</span></span></button>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            {% if tmpl.description %}<p class="template-card-desc" title="{{ tmpl.description }}">{{ tmpl.description }}</p>{% endif %}
+            {% if not tmpl.is_builtin %}
+            <p class="template-card-owner">
+                {% if tmpl.is_global %}<i class="bi bi-globe2" aria-hidden="true"></i> {% translate "Public" %}{% else %}<i class="bi bi-lock" aria-hidden="true"></i> {% translate "Private" %}{% endif %}
+                &middot; {% if not tmpl.created_by %}{% translate "Retired built-in template" %}{% elif tmpl.created_by_id == request.user.pk %}{% translate "Created by you" %}{% else %}{% blocktranslate trimmed with creator=tmpl.created_by %}Created by {{ creator }}{% endblocktranslate %}{% endif %}
+            </p>
+            {% endif %}
+        </div>
+        <div class="card-footer template-card-footer">
+            <span>{% blocktranslate trimmed count counter=tmpl.usage_count %}Used in {{ counter }} project{% plural %}Used in {{ counter }} projects{% endblocktranslate %}</span>
+            <div class="template-card-actions">
+                <button type="button" class="btn btn-sm btn-light" data-modal-open="template_view" data-template="{{ tmpl.public_key }}" title="{% translate 'View structure' %}">{% translate "View" %}</button>
+                {% if tmpl.can_duplicate %}
+                <form method="post" action="{% url 'template_duplicate' tmpl.public_key %}" data-confirm="{% blocktranslate trimmed with name=tmpl.name %}A private copy named &quot;{{ name }} (Copy)&quot; will be created.{% endblocktranslate %}" data-confirm-title="{% translate 'Duplicate Template' %}" data-confirm-button="{% translate 'Duplicate' %}" data-confirm-class="btn-primary">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-light">{% translate "Duplicate" %}</button>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+    </article>
+</div>

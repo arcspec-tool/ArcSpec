@@ -1,0 +1,3330 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-13 01:05+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: apps/accounts/adapters.py:22 apps/accounts/adapters.py:56
+#: apps/accounts/views.py:92
+msgid "Your account has been deactivated. Contact a system administrator."
+msgstr ""
+
+#: apps/accounts/adapters.py:34 apps/accounts/views.py:57
+msgid "Microsoft sign-in is turned off."
+msgstr ""
+
+#: apps/accounts/adapters.py:42
+msgid "Could not retrieve email from Microsoft account."
+msgstr ""
+
+#: apps/accounts/adapters.py:48
+msgid "Your account has not been invited. Contact a system administrator."
+msgstr ""
+
+#: apps/accounts/adapters.py:52
+msgid "A configuration error prevents login. Contact a system administrator."
+msgstr ""
+
+#: apps/accounts/adapters.py:81
+msgid "Microsoft sign-in was cancelled."
+msgstr ""
+
+#: apps/accounts/adapters.py:84
+msgid "Microsoft sign-in failed. Try again or contact a system administrator."
+msgstr ""
+
+#: apps/accounts/auth_methods.py:30 apps/administration/forms.py:90
+#: apps/administration/models.py:24
+msgid "At least one sign-in method must stay on."
+msgstr ""
+
+#: apps/accounts/auth_methods.py:32
+msgid ""
+"Microsoft sign-in cannot be turned on: it is not configured in this "
+"environment."
+msgstr ""
+
+#: apps/accounts/emails.py:23 apps/accounts/emails.py:60
+#: apps/accounts/templates/accounts/email/invitation.html:7
+#: apps/accounts/templates/accounts/email/password_link.html:7
+#: apps/notifications/templates/notifications/emails/notification.html:8
+#: apps/notifications/templates/notifications/emails/weekly_digest.html:7
+#, python-format
+msgid "Hi %(name)s,"
+msgstr ""
+
+#: apps/accounts/emails.py:25
+#: apps/accounts/templates/accounts/email/invitation.html:4
+#: apps/accounts/templates/accounts/email/invitation.html:8
+#, python-format
+msgid "%(inviter)s invited you to ArcSpec."
+msgstr ""
+
+#: apps/accounts/emails.py:31
+#, python-format
+msgid "Set your password with this link, valid for %(days)d day:"
+msgid_plural "Set your password with this link, valid for %(days)d days:"
+msgstr[0] ""
+msgstr[1] ""
+
+#: apps/accounts/emails.py:39
+#, python-format
+msgid "Your Microsoft account for %(email)s signs in at %(site_url)s"
+msgstr ""
+
+#: apps/accounts/emails.py:41
+#: apps/accounts/templates/accounts/email/invitation.html:21
+msgid "Ask your administrator how to sign in."
+msgstr ""
+
+#: apps/accounts/emails.py:44
+msgid "ArcSpec - Invitation"
+msgstr ""
+
+#: apps/accounts/emails.py:63
+#, python-format
+msgid ""
+"Set a new password for your ArcSpec account with this link, valid for "
+"%(days)d day:"
+msgid_plural ""
+"Set a new password for your ArcSpec account with this link, valid for "
+"%(days)d days:"
+msgstr[0] ""
+msgstr[1] ""
+
+#: apps/accounts/emails.py:69
+#: apps/accounts/templates/accounts/email/password_link.html:11
+msgid ""
+"If you did not ask for this, ignore this email. Your password stays as it is."
+msgstr ""
+
+#: apps/accounts/emails.py:74
+msgid "ArcSpec - Set your password"
+msgstr ""
+
+#: apps/accounts/models.py:26 apps/core/templatetags/core_tags.py:61
+#: apps/core/templatetags/core_tags.py:67 apps/projects/models.py:120
+msgid "Viewer"
+msgstr ""
+
+#: apps/accounts/models.py:27
+#: apps/administration/templates/administration/includes/_users.html:61
+#: apps/core/templatetags/core_tags.py:66 apps/doctemplates/models.py:92
+#: apps/projects/models.py:239
+msgid "User"
+msgstr ""
+
+#: apps/accounts/models.py:28 apps/core/templatetags/core_tags.py:65
+msgid "Administrator"
+msgstr ""
+
+#: apps/accounts/models.py:70
+msgid "A4"
+msgstr ""
+
+#: apps/accounts/models.py:70
+msgid "Letter"
+msgstr ""
+
+#: apps/accounts/models.py:70
+msgid "Legal"
+msgstr ""
+
+#: apps/accounts/models.py:71
+msgid "Portrait"
+msgstr ""
+
+#: apps/accounts/models.py:71
+msgid "Landscape"
+msgstr ""
+
+#: apps/accounts/templates/accounts/change_password.html:3
+#: apps/accounts/templates/accounts/change_password.html:6
+msgid "Change Password"
+msgstr ""
+
+#: apps/accounts/templates/accounts/change_password.html:7
+msgid "Change the password you sign in with"
+msgstr ""
+
+#: apps/accounts/templates/accounts/change_password.html:14
+#: apps/accounts/templates/accounts/login.html:34
+#: apps/accounts/templates/accounts/profile.html:41
+#: apps/accounts/templates/accounts/settings.html:157
+msgid "Password"
+msgstr ""
+
+#: apps/accounts/templates/accounts/change_password.html:24
+msgid "Current password"
+msgstr ""
+
+#: apps/accounts/templates/accounts/change_password.html:25
+#: apps/accounts/templates/accounts/set_password.html:13
+msgid "New password"
+msgstr ""
+
+#: apps/accounts/templates/accounts/change_password.html:26
+#: apps/accounts/templates/accounts/set_password.html:14
+msgid "Confirm new password"
+msgstr ""
+
+#: apps/accounts/templates/accounts/change_password.html:28
+#: apps/accounts/templates/accounts/modals/_edit_profile.html:45
+#: apps/administration/templates/administration/modals/_edit_role.html:11
+#: apps/administration/templates/administration/modals/_invite_user.html:27
+#: apps/administration/templates/administration/modals/_tag_preset.html:16
+#: apps/core/templates/modals/_confirm.html:7
+#: apps/core/templates/modals/_sign_out.html:7
+#: apps/doctemplates/templates/doctemplates/modals/_template_editor.html:73
+#: apps/projects/templates/projects/modals/_add_item.html:57
+#: apps/projects/templates/projects/modals/_add_link.html:18
+#: apps/projects/templates/projects/modals/_delete_item.html:7
+#: apps/projects/templates/projects/modals/_edit_item.html:66
+#: apps/projects/templates/projects/modals/_export.html:48
+#: apps/projects/templates/projects/modals/_manage_sections.html:55
+#: apps/projects/templates/projects/modals/_project_create.html:39
+#: apps/projects/templates/projects/modals/_project_delete.html:7
+#: apps/projects/templates/projects/modals/_project_edit.html:34
+#: apps/projects/templates/projects/modals/_save_view.html:10
+msgid "Cancel"
+msgstr ""
+
+#: apps/accounts/templates/accounts/change_password.html:29
+#: apps/accounts/templates/accounts/set_password.html:15
+msgid "Saving..."
+msgstr ""
+
+#: apps/accounts/templates/accounts/change_password.html:29
+#: apps/accounts/templates/accounts/profile.html:42
+#: apps/accounts/templates/accounts/settings.html:158
+msgid "Change password"
+msgstr ""
+
+#: apps/accounts/templates/accounts/change_password.html:34
+msgid "Back to settings"
+msgstr ""
+
+#: apps/accounts/templates/accounts/email/invitation.html:3
+msgid "Invitation to ArcSpec"
+msgstr ""
+
+#: apps/accounts/templates/accounts/email/invitation.html:5
+msgid "You are invited to ArcSpec"
+msgstr ""
+
+#: apps/accounts/templates/accounts/email/invitation.html:10
+#, python-format
+msgid ""
+"Set a password to activate your account. The link works once and expires in "
+"%(counter)s day."
+msgid_plural ""
+"Set a password to activate your account. The link works once and expires in "
+"%(counter)s days."
+msgstr[0] ""
+msgstr[1] ""
+
+#: apps/accounts/templates/accounts/email/invitation.html:11
+#: apps/accounts/templates/accounts/set_password.html:4
+msgid "Set your password"
+msgstr ""
+
+#: apps/accounts/templates/accounts/email/invitation.html:13
+#, python-format
+msgid ""
+"You can also sign in at <a href=\"%(site_url)s\" style=\"color:#284e8a;"
+"\">%(site_url)s</a> with your Microsoft account %(email)s."
+msgstr ""
+
+#: apps/accounts/templates/accounts/email/invitation.html:17
+#, python-format
+msgid "Sign in with your Microsoft account %(email)s."
+msgstr ""
+
+#: apps/accounts/templates/accounts/email/invitation.html:18
+#: apps/accounts/templates/accounts/login.html:4
+msgid "Sign in to ArcSpec"
+msgstr ""
+
+#: apps/accounts/templates/accounts/email/invitation.html:24
+#, python-format
+msgid ""
+"You received this email because %(inviter)s invited %(email)s to ArcSpec. If "
+"you did not expect it, you can ignore it."
+msgstr ""
+
+#: apps/accounts/templates/accounts/email/password_link.html:3
+msgid "Set Your Password"
+msgstr ""
+
+#: apps/accounts/templates/accounts/email/password_link.html:4
+#, python-format
+msgid ""
+"Set a new password for your ArcSpec account. The link expires in %(counter)s "
+"day."
+msgid_plural ""
+"Set a new password for your ArcSpec account. The link expires in %(counter)s "
+"days."
+msgstr[0] ""
+msgstr[1] ""
+
+#: apps/accounts/templates/accounts/email/password_link.html:5
+msgid "Set your ArcSpec password"
+msgstr ""
+
+#: apps/accounts/templates/accounts/email/password_link.html:8
+#, python-format
+msgid ""
+"Use the button below to set a new password for your ArcSpec account. The "
+"link works once and expires in %(counter)s day."
+msgid_plural ""
+"Use the button below to set a new password for your ArcSpec account. The "
+"link works once and expires in %(counter)s days."
+msgstr[0] ""
+msgstr[1] ""
+
+#: apps/accounts/templates/accounts/email/password_link.html:9
+msgid "Set new password"
+msgstr ""
+
+#: apps/accounts/templates/accounts/email/password_link.html:13
+#, python-format
+msgid ""
+"You received this email because a password link was requested for %(email)s."
+msgstr ""
+
+#: apps/accounts/templates/accounts/forgot_password.html:3
+msgid "Forgot Password"
+msgstr ""
+
+#: apps/accounts/templates/accounts/forgot_password.html:4
+msgid "Forgot password"
+msgstr ""
+
+#: apps/accounts/templates/accounts/forgot_password.html:5
+msgid ""
+"Enter your email address. If an account exists for it, you will receive a "
+"link to set a new password."
+msgstr ""
+
+#: apps/accounts/templates/accounts/forgot_password.html:10
+#: apps/accounts/templates/accounts/login.html:31
+#: apps/accounts/templates/accounts/settings.html:144
+#: apps/administration/forms.py:12
+msgid "Email"
+msgstr ""
+
+#: apps/accounts/templates/accounts/forgot_password.html:18
+msgid "Sending..."
+msgstr ""
+
+#: apps/accounts/templates/accounts/forgot_password.html:18
+msgid "Send link"
+msgstr ""
+
+#: apps/accounts/templates/accounts/forgot_sent.html:3
+msgid "Check Your Email"
+msgstr ""
+
+#: apps/accounts/templates/accounts/forgot_sent.html:5
+msgid "Check your email"
+msgstr ""
+
+#: apps/accounts/templates/accounts/forgot_sent.html:6
+#, python-format
+msgid ""
+"If an account exists for <strong>%(email)s</strong>, a link to set a new "
+"password has been sent to it. The link works once and expires in %(counter)s "
+"day."
+msgid_plural ""
+"If an account exists for <strong>%(email)s</strong>, a link to set a new "
+"password has been sent to it. The link works once and expires in %(counter)s "
+"days."
+msgstr[0] ""
+msgstr[1] ""
+
+#: apps/accounts/templates/accounts/forgot_sent.html:8
+#, python-format
+msgid ""
+"No email after a few minutes? Check your spam folder or <a "
+"href=\"%(forgot_url)s\">request another link</a>."
+msgstr ""
+
+#: apps/accounts/templates/accounts/includes/_login_footer.html:1
+msgid "Back to sign in"
+msgstr ""
+
+#: apps/accounts/templates/accounts/includes/_password_field.html:5
+msgid "Show password"
+msgstr ""
+
+#: apps/accounts/templates/accounts/login.html:3
+msgid "Sign In"
+msgstr ""
+
+#: apps/accounts/templates/accounts/login.html:7
+msgid "Redirecting to Microsoft..."
+msgstr ""
+
+#: apps/accounts/templates/accounts/login.html:14
+msgid "Sign in with Microsoft"
+msgstr ""
+
+#: apps/accounts/templates/accounts/login.html:21
+msgid "or"
+msgstr ""
+
+#: apps/accounts/templates/accounts/login.html:35
+msgid "Signing in..."
+msgstr ""
+
+#: apps/accounts/templates/accounts/login.html:35
+msgid "Sign in"
+msgstr ""
+
+#: apps/accounts/templates/accounts/login.html:36
+msgid "Forgot password?"
+msgstr ""
+
+#: apps/accounts/templates/accounts/login.html:41
+msgid "No sign-in method is enabled. Contact a system administrator."
+msgstr ""
+
+#: apps/accounts/templates/accounts/modals/_edit_profile.html:3
+msgid "Edit Profile"
+msgstr ""
+
+#: apps/accounts/templates/accounts/modals/_edit_profile.html:10
+#: apps/administration/forms.py:16 apps/administration/forms.py:18
+msgid "First name"
+msgstr ""
+
+#: apps/accounts/templates/accounts/modals/_edit_profile.html:15
+#: apps/administration/forms.py:21 apps/administration/forms.py:23
+msgid "Last name"
+msgstr ""
+
+#: apps/accounts/templates/accounts/modals/_edit_profile.html:20
+msgid "Your Microsoft account sets your first and last name at each sign-in."
+msgstr ""
+
+#: apps/accounts/templates/accounts/modals/_edit_profile.html:20
+msgid ""
+"Optional. If your Microsoft account provides your name, it replaces these at "
+"sign-in."
+msgstr ""
+
+#: apps/accounts/templates/accounts/modals/_edit_profile.html:20
+msgid "Use Display name to change how your name appears in ArcSpec."
+msgstr ""
+
+#: apps/accounts/templates/accounts/modals/_edit_profile.html:23
+msgid "Display name"
+msgstr ""
+
+#: apps/accounts/templates/accounts/modals/_edit_profile.html:25
+msgid "Shown across ArcSpec in place of your full name."
+msgstr ""
+
+#: apps/accounts/templates/accounts/modals/_edit_profile.html:29
+#: apps/accounts/templates/accounts/profile.html:27
+msgid "Department"
+msgstr ""
+
+#: apps/accounts/templates/accounts/modals/_edit_profile.html:34
+#: apps/accounts/templates/accounts/profile.html:31
+msgid "Location"
+msgstr ""
+
+#: apps/accounts/templates/accounts/modals/_edit_profile.html:39
+#: apps/accounts/templates/accounts/profile.html:35
+msgid "Phone"
+msgstr ""
+
+#: apps/accounts/templates/accounts/modals/_edit_profile.html:46
+#: apps/projects/templates/projects/modals/_edit_item.html:67
+#: apps/projects/templates/projects/modals/_manage_sections.html:57
+#: apps/projects/templates/projects/modals/_project_edit.html:35
+msgid "Save Changes"
+msgstr ""
+
+#: apps/accounts/templates/accounts/profile.html:3
+#: apps/core/templates/includes/_sidebar.html:21
+#: apps/core/templates/includes/_sidebar.html:22
+msgid "Profile"
+msgstr ""
+
+#: apps/accounts/templates/accounts/profile.html:7
+msgid "My Profile"
+msgstr ""
+
+#: apps/accounts/templates/accounts/profile.html:8
+msgid "Your account, your projects and your recent work"
+msgstr ""
+
+#: apps/accounts/templates/accounts/profile.html:19
+msgid "Edit profile"
+msgstr ""
+
+#: apps/accounts/templates/accounts/profile.html:23
+msgid "Full name"
+msgstr ""
+
+#: apps/accounts/templates/accounts/profile.html:24
+#: apps/accounts/templates/accounts/profile.html:28
+#: apps/accounts/templates/accounts/profile.html:32
+#: apps/accounts/templates/accounts/profile.html:36
+#: apps/accounts/templates/accounts/settings.html:158
+msgid "Not set"
+msgstr ""
+
+#: apps/accounts/templates/accounts/profile.html:39
+msgid "Sign-in"
+msgstr ""
+
+#: apps/accounts/templates/accounts/profile.html:41
+msgid "Microsoft account, password"
+msgstr ""
+
+#: apps/accounts/templates/accounts/profile.html:41
+#: apps/accounts/templates/accounts/settings.html:150
+msgid "Microsoft account"
+msgstr ""
+
+#: apps/accounts/templates/accounts/profile.html:41
+msgid "None"
+msgstr ""
+
+#: apps/accounts/templates/accounts/profile.html:46
+msgid "Member since"
+msgstr ""
+
+#: apps/accounts/templates/accounts/profile.html:59
+msgctxt "profile statistic"
+msgid "Project"
+msgid_plural "Projects"
+msgstr[0] ""
+msgstr[1] ""
+
+#: apps/accounts/templates/accounts/profile.html:70
+msgctxt "profile statistic"
+msgid "Item created"
+msgid_plural "Items created"
+msgstr[0] ""
+msgstr[1] ""
+
+#: apps/accounts/templates/accounts/profile.html:81
+msgctxt "profile statistic"
+msgid "Comment"
+msgid_plural "Comments"
+msgstr[0] ""
+msgstr[1] ""
+
+#: apps/accounts/templates/accounts/profile.html:91
+msgid "My projects"
+msgstr ""
+
+#: apps/accounts/templates/accounts/profile.html:99
+#: apps/projects/templates/projects/dashboard.html:85
+#: apps/projects/templates/projects/includes/_items_table.html:76
+#: apps/projects/templates/projects/includes/_tree_node.html:13
+#: apps/projects/templates/projects/list.html:60
+#, python-format
+msgid "%(counter)s item"
+msgid_plural "%(counter)s items"
+msgstr[0] ""
+msgstr[1] ""
+
+#: apps/accounts/templates/accounts/profile.html:99
+#, python-format
+msgid "updated <time datetime=\"%(iso)s\" title=\"%(full)s\">%(ago)s</time>"
+msgstr ""
+
+#: apps/accounts/templates/accounts/profile.html:106
+msgid "You are not a member of any project yet"
+msgstr ""
+
+#: apps/accounts/templates/accounts/profile.html:112
+#: apps/projects/templates/projects/dashboard.html:101
+msgid "View all projects"
+msgstr ""
+
+#: apps/accounts/templates/accounts/profile.html:119
+msgid "Recent activity"
+msgstr ""
+
+#: apps/accounts/templates/accounts/profile.html:127
+#: apps/projects/templates/projects/dashboard.html:116
+msgid "No activity yet"
+msgstr ""
+
+#: apps/accounts/templates/accounts/profile.html:133
+#: apps/projects/templates/projects/dashboard.html:122
+#: apps/projects/templates/projects/dashboard.html:149
+msgid "Load more"
+msgstr ""
+
+#: apps/accounts/templates/accounts/set_password.html:3
+msgid "Set Password"
+msgstr ""
+
+#: apps/accounts/templates/accounts/set_password.html:5
+#, python-format
+msgid "Choose a password for <strong>%(email)s</strong>."
+msgstr ""
+
+#: apps/accounts/templates/accounts/set_password.html:15
+msgid "Set password"
+msgstr ""
+
+#: apps/accounts/templates/accounts/set_password_invalid.html:3
+msgid "Link Not Valid"
+msgstr ""
+
+#: apps/accounts/templates/accounts/set_password_invalid.html:5
+msgid "This link is not valid"
+msgstr ""
+
+#: apps/accounts/templates/accounts/set_password_invalid.html:6
+msgid "The link has expired or has already been used."
+msgstr ""
+
+#: apps/accounts/templates/accounts/set_password_invalid.html:8
+msgid "Request a new link"
+msgstr ""
+
+#: apps/accounts/templates/accounts/settings.html:3
+#: apps/accounts/templates/accounts/settings.html:6
+#: apps/core/templates/includes/_sidebar.html:24
+#: apps/core/templates/includes/_sidebar.html:25
+msgid "Settings"
+msgstr ""
+
+#: apps/accounts/templates/accounts/settings.html:7
+msgid ""
+"Email notifications, export defaults and sign-in. Changes save as you make "
+"them."
+msgstr ""
+
+#: apps/accounts/templates/accounts/settings.html:14
+msgid "Email notifications"
+msgstr ""
+
+#: apps/accounts/templates/accounts/settings.html:15
+msgid ""
+"Which events also send you an email. Notifications always appear in ArcSpec."
+msgstr ""
+
+#: apps/accounts/templates/accounts/settings.html:23
+msgid "New items"
+msgstr ""
+
+#: apps/accounts/templates/accounts/settings.html:24
+msgid "When someone adds an item to one of your projects."
+msgstr ""
+
+#: apps/accounts/templates/accounts/settings.html:32
+msgid "Status changes"
+msgstr ""
+
+#: apps/accounts/templates/accounts/settings.html:33
+msgid "When an item's status changes in one of your projects."
+msgstr ""
+
+#: apps/accounts/templates/accounts/settings.html:41
+#: apps/accounts/templates/accounts/settings.html:115
+#: apps/projects/templates/projects/includes/_audit_trail.html:17
+#: apps/projects/templates/projects/includes/_detail_panel.html:107
+#: apps/projects/templates/projects/modals/_export.html:43
+msgid "Comments"
+msgstr ""
+
+#: apps/accounts/templates/accounts/settings.html:42
+msgid ""
+"When someone comments on an item you created or replies to your comment."
+msgstr ""
+
+#: apps/accounts/templates/accounts/settings.html:50
+#: apps/projects/templates/projects/list.html:79
+msgid "Members"
+msgstr ""
+
+#: apps/accounts/templates/accounts/settings.html:51
+msgid ""
+"When you are added to or removed from a project, your role changes, or "
+"someone joins your projects."
+msgstr ""
+
+#: apps/accounts/templates/accounts/settings.html:59
+msgid "Weekly digest"
+msgstr ""
+
+#: apps/accounts/templates/accounts/settings.html:60
+msgid "A weekly summary of activity across your projects."
+msgstr ""
+
+#: apps/accounts/templates/accounts/settings.html:72
+msgid "Export defaults"
+msgstr ""
+
+#: apps/accounts/templates/accounts/settings.html:73
+msgid "Preselected in the Export dialog; you can change them for each export."
+msgstr ""
+
+#: apps/accounts/templates/accounts/settings.html:81
+msgid "Paper size"
+msgstr ""
+
+#: apps/accounts/templates/accounts/settings.html:89
+#: apps/projects/templates/projects/modals/_export.html:28
+msgid "Orientation"
+msgstr ""
+
+#: apps/accounts/templates/accounts/settings.html:97
+msgid "Table of contents"
+msgstr ""
+
+#: apps/accounts/templates/accounts/settings.html:98
+msgid "A linked table of contents at the start."
+msgstr ""
+
+#: apps/accounts/templates/accounts/settings.html:106
+msgid "Item attributes"
+msgstr ""
+
+#: apps/accounts/templates/accounts/settings.html:107
+msgid "Each item's custom attributes."
+msgstr ""
+
+#: apps/accounts/templates/accounts/settings.html:116
+msgid "The discussion under each item."
+msgstr ""
+
+#: apps/accounts/templates/accounts/settings.html:124
+msgid "Traceability links"
+msgstr ""
+
+#: apps/accounts/templates/accounts/settings.html:125
+msgid "Links between items."
+msgstr ""
+
+#: apps/accounts/templates/accounts/settings.html:137
+msgid "Account and sign-in"
+msgstr ""
+
+#: apps/accounts/templates/accounts/settings.html:138
+msgid "Your name, department, location and phone are on your profile."
+msgstr ""
+
+#: apps/accounts/templates/accounts/settings.html:140
+msgid "Open profile"
+msgstr ""
+
+#: apps/accounts/templates/accounts/settings.html:146
+msgid ""
+"Used to sign in and to receive notifications. It is set when you are invited "
+"and cannot be changed here."
+msgstr ""
+
+#: apps/accounts/templates/accounts/settings.html:151
+msgid "Linked"
+msgstr ""
+
+#: apps/accounts/templates/accounts/settings.html:151
+msgid "Not linked"
+msgstr ""
+
+#: apps/accounts/templates/accounts/settings.html:152
+msgid "You sign in with the Microsoft account of this email address."
+msgstr ""
+
+#: apps/accounts/templates/accounts/settings.html:152
+msgid "Linked the first time you sign in with Microsoft."
+msgstr ""
+
+#: apps/accounts/templates/accounts/settings.html:158
+msgid "Set"
+msgstr ""
+
+#: apps/accounts/templates/accounts/settings.html:159
+msgid "Password sign-in is turned off for ArcSpec."
+msgstr ""
+
+#: apps/accounts/templates/accounts/settings.html:159
+msgid "Your current password is required to change it."
+msgstr ""
+
+#: apps/accounts/templates/accounts/settings.html:159
+msgid "Sign out, then use Forgot password on the sign-in page to set one."
+msgstr ""
+
+#: apps/accounts/templates/accounts/settings.html:167
+msgid "Could not save the change. Try again."
+msgstr ""
+
+#: apps/accounts/views.py:51
+msgid "Password sign-in is turned off."
+msgstr ""
+
+#: apps/accounts/views.py:82 apps/accounts/views.py:144
+msgid "Too many attempts. Try again in a few minutes."
+msgstr ""
+
+#: apps/accounts/views.py:88
+msgid "Incorrect email address or password."
+msgstr ""
+
+#: apps/accounts/views.py:154
+msgid "The email could not be sent. Try again later."
+msgstr ""
+
+#: apps/accounts/views.py:179
+msgid "Password set. You can sign in now."
+msgstr ""
+
+#: apps/accounts/views.py:196
+msgid ""
+"You have no password yet. Sign out, then use Forgot password on the sign-in "
+"page to set one."
+msgstr ""
+
+#: apps/accounts/views.py:206
+msgid "Password changed."
+msgstr ""
+
+#: apps/accounts/views.py:234
+msgid "Profile updated successfully."
+msgstr ""
+
+#: apps/accounts/views.py:240 apps/doctemplates/views.py:82
+#: apps/projects/views.py:296 apps/projects/views.py:314
+msgid "Please correct the errors below."
+msgstr ""
+
+#: apps/accounts/views.py:283
+msgid "Email notification settings saved."
+msgstr ""
+
+#: apps/accounts/views.py:284
+msgid "Export defaults saved."
+msgstr ""
+
+#: apps/administration/forms.py:29
+msgid "A user with this email already exists."
+msgstr ""
+
+#: apps/administration/forms.py:44
+msgid "Name"
+msgstr ""
+
+#: apps/administration/forms.py:44
+#: apps/projects/templates/projects/modals/_project_create.html:32
+#: apps/projects/templates/projects/modals/_project_edit.html:27
+msgid "Color"
+msgstr ""
+
+#: apps/administration/forms.py:46
+msgid "Tag name"
+msgstr ""
+
+#: apps/administration/forms.py:54
+msgid "5 MB"
+msgstr ""
+
+#: apps/administration/forms.py:54
+msgid "10 MB"
+msgstr ""
+
+#: apps/administration/forms.py:54
+msgid "25 MB"
+msgstr ""
+
+#: apps/administration/forms.py:54
+msgid "50 MB"
+msgstr ""
+
+#: apps/administration/forms.py:55
+msgid "Max attachment size"
+msgstr ""
+
+#: apps/administration/forms.py:62
+msgid "Organisation name"
+msgstr ""
+
+#: apps/administration/models.py:18 apps/administration/models.py:19
+#: apps/administration/templates/administration/panel.html:14
+msgid "System Settings"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_system.html:5
+msgid "General"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_system.html:6
+msgid "The organisation name printed in export footers, and the upload limit."
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_system.html:20
+#: apps/administration/templates/administration/includes/_system.html:67
+#: apps/administration/templates/administration/includes/_system.html:103
+#: apps/administration/templates/administration/modals/_edit_role.html:12
+#: apps/projects/templates/projects/modals/_save_view.html:11
+msgid "Save"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_system.html:28
+msgid "Project archiving"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_system.html:29
+msgid "Archive inactive projects and delete archived ones after a period."
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_system.html:37
+msgid "Auto-archive inactive projects"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_system.html:38
+msgid ""
+"Active projects with no change for the number of days below are archived."
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_system.html:43
+msgid "Days without a change"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_system.html:49
+msgid "Users can restore archived projects"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_system.html:50
+msgid "When off, only administrators can restore an archived project."
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_system.html:56
+msgid "Auto-delete archived projects"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_system.html:57
+msgid ""
+"Projects archived for longer than the number of days below are deleted "
+"permanently."
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_system.html:62
+msgid "Days after archiving"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_system.html:75
+msgid "Authentication"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_system.html:76
+msgid "At least one method stays on. Accounts are created by invitation only."
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_system.html:84
+msgid "Microsoft sign-in"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_system.html:87
+msgid ""
+"The \"Sign in with Microsoft\" button and the Microsoft callback accept sign-"
+"ins."
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_system.html:89
+msgid "Microsoft sign-in is not configured in this environment."
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_system.html:97
+msgid "Password sign-in"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_system.html:98
+msgid ""
+"An email and password form on the sign-in page, with password reset through "
+"an emailed link."
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_tags.html:2
+msgid "Tag presets are offered in every project."
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_tags.html:5
+msgid "Add Preset"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_tags.html:15
+#: apps/projects/templates/projects/includes/_bulk_toolbar.html:19
+#: apps/projects/templates/projects/includes/_toolbar.html:43
+msgid "Tag"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_tags.html:16
+#: apps/projects/templates/projects/includes/_detail_panel.html:138
+#: apps/projects/templates/projects/list.html:78
+msgid "Items"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_tags.html:17
+#: apps/administration/templates/administration/includes/_templates.html:13
+#: apps/administration/templates/administration/includes/_users.html:66
+#: apps/projects/templates/projects/includes/_items_table.html:15
+#: apps/projects/templates/projects/list.html:81
+msgid "Actions"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_tags.html:34
+#, python-format
+msgid "Delete the preset “%(name)s”?"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_tags.html:34
+#, python-format
+msgid "The tag is removed from %(counter)s item that uses it."
+msgid_plural "The tag is removed from %(counter)s items that use it."
+msgstr[0] ""
+msgstr[1] ""
+
+#: apps/administration/templates/administration/includes/_tags.html:34
+msgid "No item uses it."
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_tags.html:34
+msgid "Delete Tag Preset"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_tags.html:34
+#: apps/administration/templates/administration/includes/_tags.html:35
+#: apps/doctemplates/templates/doctemplates/includes/_template_card.html:17
+#: apps/doctemplates/templates/doctemplates/includes/_template_card.html:19
+#: apps/doctemplates/templates/doctemplates/includes/_template_card.html:22
+#: apps/projects/serializers.py:296
+#: apps/projects/templates/projects/includes/_bulk_toolbar.html:29
+#: apps/projects/templates/projects/includes/_project_actions.html:28
+#: apps/projects/templates/projects/modals/_delete_item.html:8
+msgid "Delete"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_tags.html:35
+#, python-format
+msgid "Delete %(name)s"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_tags.html:40
+msgid "No tag presets yet."
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_tags.html:45
+#, python-format
+msgid "%(counter)s tag preset"
+msgid_plural "%(counter)s tag presets"
+msgstr[0] ""
+msgstr[1] ""
+
+#: apps/administration/templates/administration/includes/_templates.html:7
+#: apps/projects/templates/projects/modals/_project_create.html:21
+msgid "Template"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_templates.html:8
+msgid "Type"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_templates.html:9
+#: apps/projects/templates/projects/modals/_manage_sections.html:9
+msgid "Sections"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_templates.html:10
+#: apps/administration/templates/administration/includes/_users.html:31
+#: apps/administration/templates/administration/includes/_users.html:63
+#: apps/core/templates/includes/_sidebar.html:13
+#: apps/core/templates/includes/_sidebar.html:14
+#: apps/projects/templates/projects/detail.html:9
+#: apps/projects/templates/projects/list.html:3
+#: apps/projects/templates/projects/list.html:7
+msgid "Projects"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_templates.html:11
+msgid "Created by"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_templates.html:12
+msgid "Visibility"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_templates.html:23
+msgid "System"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_templates.html:28
+#, python-format
+msgid ""
+"Make “%(name)s” private? Only its creator and administrators can see it. "
+"Projects already using it keep it."
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_templates.html:28
+msgid "Make Template Private"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_templates.html:28
+#: apps/administration/templates/administration/includes/_templates.html:29
+msgid "Make private"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_templates.html:29
+#, python-format
+msgid "Make %(name)s private"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_templates.html:32
+#, python-format
+msgid ""
+"Make “%(name)s” public? Every user can see it and create projects from it."
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_templates.html:32
+msgid "Make Template Public"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_templates.html:32
+#: apps/administration/templates/administration/includes/_templates.html:33
+msgid "Make public"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_templates.html:33
+#, python-format
+msgid "Make %(name)s public"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_templates.html:40
+msgid "No templates."
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_templates.html:45
+#, python-format
+msgid "%(counter)s template"
+msgid_plural "%(counter)s templates"
+msgstr[0] ""
+msgstr[1] ""
+
+#: apps/administration/templates/administration/includes/_users.html:7
+msgid "Total users"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_users.html:15
+msgid "Active users"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_users.html:23
+msgid "Administrators"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_users.html:42
+msgid "Search users"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_users.html:42
+msgid "Search users by name or email"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_users.html:44
+msgid "Filter by role"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_users.html:51
+#: apps/administration/templates/administration/modals/_invite_user.html:3
+msgid "Invite User"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_users.html:62
+msgid "Role"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_users.html:64
+msgid "Last sign-in"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_users.html:65
+#: apps/doctemplates/templates/doctemplates/modals/_template_editor.html:44
+#: apps/projects/export.py:354 apps/projects/export.py:522
+#: apps/projects/templates/projects/includes/_bulk_toolbar.html:7
+#: apps/projects/templates/projects/includes/_detail_panel.html:44
+#: apps/projects/templates/projects/includes/_items_table.html:10
+#: apps/projects/templates/projects/includes/_toolbar.html:25
+#: apps/projects/templates/projects/list.html:77
+#: apps/projects/templates/projects/modals/_add_item.html:20
+#: apps/projects/templates/projects/modals/_edit_item.html:20
+#: apps/projects/templates/projects/modals/_manage_sections.html:45
+#: apps/projects/templates/projects/modals/_project_edit.html:22
+msgid "Status"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_users.html:76
+msgid "you"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_users.html:83
+msgid "Never"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_users.html:88
+#: apps/administration/templates/administration/includes/_users.html:89
+#: apps/doctemplates/templates/doctemplates/includes/_template_card.html:12
+#: apps/doctemplates/templates/doctemplates/includes/_template_card.html:13
+#: apps/projects/templates/projects/includes/_project_actions.html:3
+#: apps/projects/templates/projects/includes/_project_actions.html:4
+#, python-format
+msgid "Actions for %(name)s"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_users.html:90
+#: apps/administration/templates/administration/modals/_edit_role.html:3
+msgid "Edit Role"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_users.html:92
+#, python-format
+msgid "Send the invitation email to %(email)s again?"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_users.html:92
+#: apps/administration/templates/administration/includes/_users.html:93
+msgid "Resend Invitation"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_users.html:92
+msgid "Send"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_users.html:98
+#, python-format
+msgid ""
+"Deactivate “%(name)s”? They can no longer sign in. Their projects and "
+"memberships are kept."
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_users.html:98
+msgid "Deactivate User"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_users.html:98
+#: apps/administration/templates/administration/includes/_users.html:99
+msgid "Deactivate"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_users.html:102
+#, python-format
+msgid "Reactivate “%(name)s”? They can sign in again."
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_users.html:102
+msgid "Reactivate User"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_users.html:102
+#: apps/administration/templates/administration/includes/_users.html:103
+msgid "Reactivate"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_users.html:112
+msgid "No users match."
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_users.html:112
+#: apps/doctemplates/templates/doctemplates/list.html:35
+#: apps/projects/templates/projects/list.html:121
+msgid "Clear filters"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_users.html:112
+msgid "No users yet."
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_users.html:117
+#, python-format
+msgid "%(counter)s user matching"
+msgid_plural "%(counter)s users matching"
+msgstr[0] ""
+msgstr[1] ""
+
+#: apps/administration/templates/administration/includes/_users.html:117
+#, python-format
+msgid "%(counter)s user"
+msgid_plural "%(counter)s users"
+msgstr[0] ""
+msgstr[1] ""
+
+#: apps/administration/templates/administration/modals/_edit_role.html:7
+#, python-format
+msgid ""
+"Change role for <strong id=\"editRoleUserName\">%(edited_user)s</strong>"
+msgstr ""
+
+#: apps/administration/templates/administration/modals/_invite_user.html:25
+msgid ""
+"The account is created with the User role and receives an email with a sign-"
+"in link. Change the role from the user list afterwards."
+msgstr ""
+
+#: apps/administration/templates/administration/modals/_invite_user.html:28
+#: apps/projects/templates/projects/modals/_collaborators.html:11
+msgid "Invite"
+msgstr ""
+
+#: apps/administration/templates/administration/modals/_tag_preset.html:3
+msgid "Add Tag Preset"
+msgstr ""
+
+#: apps/administration/templates/administration/modals/_tag_preset.html:17
+msgid "Create"
+msgstr ""
+
+#: apps/administration/templates/administration/panel.html:3
+#: apps/administration/templates/administration/panel.html:6
+#: apps/core/templates/includes/_sidebar.html:28
+#: apps/core/templates/includes/_sidebar.html:29
+msgid "Admin Panel"
+msgstr ""
+
+#: apps/administration/templates/administration/panel.html:7
+msgid "Users, templates, tag presets and system settings"
+msgstr ""
+
+#: apps/administration/templates/administration/panel.html:10
+msgid "Admin panel sections"
+msgstr ""
+
+#: apps/administration/templates/administration/panel.html:11
+msgid "Users"
+msgstr ""
+
+#: apps/administration/templates/administration/panel.html:12
+#: apps/core/templates/includes/_sidebar.html:16
+#: apps/core/templates/includes/_sidebar.html:17
+#: apps/doctemplates/templates/doctemplates/list.html:3
+#: apps/doctemplates/templates/doctemplates/list.html:7
+msgid "Templates"
+msgstr ""
+
+#: apps/administration/templates/administration/panel.html:13
+msgid "Tag Presets"
+msgstr ""
+
+#: apps/administration/views.py:94 apps/doctemplates/views.py:64
+#: apps/projects/views.py:254
+msgid "All"
+msgstr ""
+
+#: apps/administration/views.py:133
+#, python-format
+msgid ""
+"The invitation email to %(email)s could not be sent. Use \"Resend "
+"invitation\" later."
+msgstr ""
+
+#: apps/administration/views.py:135
+#, python-format
+msgid "Invitation sent to %(email)s."
+msgstr ""
+
+#: apps/administration/views.py:167
+#, python-format
+msgid ""
+"User \"%(user)s\" is deactivated. Reactivate the account before resending "
+"the invitation."
+msgstr ""
+
+#: apps/administration/views.py:169
+#, python-format
+msgid "User \"%(user)s\" already has a password. No invitation was sent."
+msgstr ""
+
+#: apps/administration/views.py:171
+#, python-format
+msgid "User \"%(user)s\" has already signed in. No invitation was sent."
+msgstr ""
+
+#: apps/administration/views.py:187
+#, python-format
+msgid "Role for \"%(user)s\" updated to %(role)s."
+msgstr ""
+
+#: apps/administration/views.py:199
+msgid "You cannot deactivate yourself."
+msgstr ""
+
+#: apps/administration/views.py:204
+#, python-format
+msgid "User \"%(user)s\" reactivated."
+msgstr ""
+
+#: apps/administration/views.py:206
+#, python-format
+msgid "User \"%(user)s\" deactivated."
+msgstr ""
+
+#: apps/administration/views.py:220
+#, python-format
+msgid "Tag preset \"%(name)s\" created."
+msgstr ""
+
+#: apps/administration/views.py:236
+#, python-format
+msgid "Tag preset \"%(name)s\" deleted."
+msgstr ""
+
+#: apps/administration/views.py:245
+msgid "Built-in templates are always visible and cannot be toggled."
+msgstr ""
+
+#: apps/administration/views.py:250
+#, python-format
+msgid "Template \"%(name)s\" is now visible to all users."
+msgstr ""
+
+#: apps/administration/views.py:252
+#, python-format
+msgid "Template \"%(name)s\" is now private."
+msgstr ""
+
+#: apps/administration/views.py:261
+msgid "Invalid form type."
+msgstr ""
+
+#: apps/administration/views.py:266
+msgid "System settings saved."
+msgstr ""
+
+#: apps/core/modals.py:105 apps/core/modals.py:107
+msgid "Confirm"
+msgstr ""
+
+#: apps/core/modals.py:106
+msgid "Are you sure?"
+msgstr ""
+
+#: apps/core/templates/403.html:3
+msgid "403 Forbidden"
+msgstr ""
+
+#: apps/core/templates/403.html:8
+msgid "You don't have permission to access this page."
+msgstr ""
+
+#: apps/core/templates/403.html:9 apps/core/templates/404.html:9
+#: apps/core/templates/500.html:9
+msgid "Go Home"
+msgstr ""
+
+#: apps/core/templates/404.html:3
+msgid "404 Not Found"
+msgstr ""
+
+#: apps/core/templates/404.html:8
+msgid "The page you're looking for doesn't exist."
+msgstr ""
+
+#: apps/core/templates/500.html:3
+msgid "500 Server Error"
+msgstr ""
+
+#: apps/core/templates/500.html:8
+msgid "Something went wrong. Please try again later."
+msgstr ""
+
+#: apps/core/templates/base.html:27
+msgid "Toggle sidebar"
+msgstr ""
+
+#: apps/core/templates/base.html:34
+msgid "Search projects, items... (Ctrl+K)"
+msgstr ""
+
+#: apps/core/templates/base.html:34
+msgid "Search projects and items"
+msgstr ""
+
+#: apps/core/templates/base.html:36
+msgid "Search results"
+msgstr ""
+
+#: apps/core/templates/base.html:43
+#: apps/projects/templates/projects/dashboard.html:130
+msgid "Notifications"
+msgstr ""
+
+#: apps/core/templates/base.html:51
+#: apps/core/templates/includes/_sidebar.html:48
+#: apps/core/templates/modals/_sign_out.html:4
+#: apps/core/templates/modals/_sign_out.html:10
+msgid "Sign Out"
+msgstr ""
+
+#: apps/core/templates/components/_modal_shell.html:6
+#: apps/doctemplates/templates/doctemplates/modals/_view_template.html:32
+#: apps/projects/templates/projects/includes/_audit_trail.html:9
+#: apps/projects/templates/projects/includes/_version_history.html:8
+msgid "Close"
+msgstr ""
+
+#: apps/core/templates/emails/_link_fallback.html:1
+msgid "If the button does not work, copy this link into your browser:"
+msgstr ""
+
+#: apps/core/templates/includes/_pagination.html:2
+msgid "Page navigation"
+msgstr ""
+
+#: apps/core/templates/includes/_pagination.html:5
+msgid "Previous page"
+msgstr ""
+
+#: apps/core/templates/includes/_pagination.html:13
+msgid "Next page"
+msgstr ""
+
+#: apps/core/templates/includes/_sidebar.html:9
+msgid "Main"
+msgstr ""
+
+#: apps/core/templates/includes/_sidebar.html:10
+#: apps/core/templates/includes/_sidebar.html:11
+#: apps/projects/templates/projects/dashboard.html:4
+#: apps/projects/templates/projects/dashboard.html:9
+msgid "Dashboard"
+msgstr ""
+
+#: apps/core/templates/includes/_sidebar.html:20
+msgid "Account"
+msgstr ""
+
+#: apps/core/templates/includes/_sidebar.html:34
+msgid "Collapse sidebar"
+msgstr ""
+
+#: apps/core/templates/includes/_sidebar.html:34
+msgid "Toggle sidebar collapse"
+msgstr ""
+
+#: apps/core/templates/modals/_sign_out.html:5
+msgid "Are you sure you want to sign out?"
+msgstr ""
+
+#: apps/core/templatetags/core_tags.py:40 apps/projects/models.py:28
+#: apps/projects/views.py:255
+msgid "Active"
+msgstr ""
+
+#: apps/core/templatetags/core_tags.py:41 apps/projects/models.py:30
+#: apps/projects/models.py:186 apps/projects/views.py:257
+msgid "Draft"
+msgstr ""
+
+#: apps/core/templatetags/core_tags.py:42 apps/projects/models.py:29
+#: apps/projects/models.py:187
+#: apps/projects/templates/projects/dashboard.html:54
+#: apps/projects/views.py:256
+msgid "In Review"
+msgstr ""
+
+#: apps/core/templatetags/core_tags.py:43 apps/notifications/models.py:30
+#: apps/projects/models.py:31 apps/projects/views.py:258
+msgid "Archived"
+msgstr ""
+
+#: apps/core/templatetags/core_tags.py:44 apps/projects/models.py:188
+msgid "Approved"
+msgstr ""
+
+#: apps/core/templatetags/core_tags.py:45 apps/projects/models.py:189
+msgid "Rejected"
+msgstr ""
+
+#: apps/core/templatetags/core_tags.py:46
+msgid "Inactive"
+msgstr ""
+
+#: apps/core/templatetags/core_tags.py:47
+msgid "Built-in"
+msgstr ""
+
+#: apps/core/templatetags/core_tags.py:48
+#: apps/doctemplates/templates/doctemplates/includes/_template_card.html:31
+msgid "Public"
+msgstr ""
+
+#: apps/core/templatetags/core_tags.py:49
+#: apps/doctemplates/templates/doctemplates/includes/_template_card.html:31
+msgid "Private"
+msgstr ""
+
+#: apps/core/templatetags/core_tags.py:53 apps/projects/models.py:193
+msgid "High"
+msgstr ""
+
+#: apps/core/templatetags/core_tags.py:54 apps/projects/models.py:194
+msgid "Medium"
+msgstr ""
+
+#: apps/core/templatetags/core_tags.py:55 apps/projects/models.py:195
+msgid "Low"
+msgstr ""
+
+#: apps/core/templatetags/core_tags.py:59 apps/projects/models.py:118
+msgid "Admin"
+msgstr ""
+
+#: apps/core/templatetags/core_tags.py:60 apps/projects/models.py:119
+msgid "Editor"
+msgstr ""
+
+#: apps/core/templatetags/core_tags.py:103
+#: apps/core/templatetags/core_tags.py:104
+msgid "min"
+msgstr ""
+
+#: apps/core/templatetags/core_tags.py:105
+#: apps/core/templatetags/core_tags.py:106
+msgid "h"
+msgstr ""
+
+#: apps/core/templatetags/core_tags.py:107
+#: apps/core/templatetags/core_tags.py:108
+msgid "d"
+msgstr ""
+
+#: apps/core/templatetags/core_tags.py:109
+#: apps/core/templatetags/core_tags.py:110
+msgid "w"
+msgstr ""
+
+#: apps/core/templatetags/core_tags.py:111
+#: apps/core/templatetags/core_tags.py:112
+msgid "mo"
+msgstr ""
+
+#: apps/core/templatetags/core_tags.py:113
+#: apps/core/templatetags/core_tags.py:114
+msgid "y"
+msgstr ""
+
+#: apps/core/templatetags/core_tags.py:136
+msgid "just now"
+msgstr ""
+
+#: apps/core/templatetags/core_tags.py:137
+#, python-format
+msgid "%(time)s ago"
+msgstr ""
+
+#: apps/doctemplates/forms.py:16
+msgid "e.g. Risk Analysis Template"
+msgstr ""
+
+#: apps/doctemplates/forms.py:21
+msgid "Describe what this template is for..."
+msgstr ""
+
+#: apps/doctemplates/forms.py:31
+#: apps/doctemplates/templates/doctemplates/modals/_template_editor.html:30
+msgid "Visible to all users"
+msgstr ""
+
+#: apps/doctemplates/forms.py:41
+#, python-format
+msgid "Attribute names must be unique: %(names)s."
+msgstr ""
+
+#: apps/doctemplates/forms.py:54
+#: apps/doctemplates/templates/doctemplates/modals/_editor_section.html:20
+#: apps/projects/templates/projects/modals/_structure_section.html:19
+msgid "Describe this section..."
+msgstr ""
+
+#: apps/doctemplates/modals.py:81
+msgid "Edit Template"
+msgstr ""
+
+#: apps/doctemplates/modals.py:87
+msgid "Create Template"
+msgstr ""
+
+#: apps/doctemplates/models.py:23
+msgid "Requirements"
+msgstr ""
+
+#: apps/doctemplates/models.py:24
+msgid "Architecture"
+msgstr ""
+
+#: apps/doctemplates/models.py:25
+msgid "Test Cases"
+msgstr ""
+
+#: apps/doctemplates/models.py:26
+msgid "Risk Analysis"
+msgstr ""
+
+#: apps/doctemplates/models.py:27
+msgid "Custom"
+msgstr ""
+
+#: apps/doctemplates/models.py:88 apps/projects/export.py:353
+#: apps/projects/export.py:522 apps/projects/models.py:235
+#: apps/projects/templates/projects/includes/_detail_panel.html:37
+#: apps/projects/templates/projects/includes/_items_table.html:9
+#: apps/projects/templates/projects/modals/_add_item.html:15
+#: apps/projects/templates/projects/modals/_edit_item.html:15
+msgid "Text"
+msgstr ""
+
+#: apps/doctemplates/models.py:89 apps/projects/models.py:236
+msgid "Number"
+msgstr ""
+
+#: apps/doctemplates/models.py:90 apps/projects/models.py:237
+msgid "Date"
+msgstr ""
+
+#: apps/doctemplates/models.py:91 apps/projects/models.py:238
+msgid "Boolean"
+msgstr ""
+
+#: apps/doctemplates/models.py:93 apps/projects/models.py:240
+msgid "Dropdown"
+msgstr ""
+
+#: apps/doctemplates/models.py:94 apps/projects/models.py:241
+msgid "Multi-select"
+msgstr ""
+
+#: apps/doctemplates/templates/doctemplates/includes/_template_card.html:8
+#: apps/doctemplates/templates/doctemplates/modals/_view_template.html:11
+#, python-format
+msgid "%(counter)s section"
+msgid_plural "%(counter)s sections"
+msgstr[0] ""
+msgstr[1] ""
+
+#: apps/doctemplates/templates/doctemplates/includes/_template_card.html:8
+#, python-format
+msgid "%(counter)s attribute"
+msgid_plural "%(counter)s attributes"
+msgstr[0] ""
+msgstr[1] ""
+
+#: apps/doctemplates/templates/doctemplates/includes/_template_card.html:14
+#: apps/projects/templates/projects/includes/_project_actions.html:6
+msgid "Edit"
+msgstr ""
+
+#: apps/doctemplates/templates/doctemplates/includes/_template_card.html:17
+#, python-format
+msgid "Delete &quot;%(name)s&quot;? This cannot be undone."
+msgstr ""
+
+#: apps/doctemplates/templates/doctemplates/includes/_template_card.html:17
+msgid "Delete Template"
+msgstr ""
+
+#: apps/doctemplates/templates/doctemplates/includes/_template_card.html:22
+#, python-format
+msgid "Delete is unavailable: used by %(counter)s project"
+msgid_plural "Delete is unavailable: used by %(counter)s projects"
+msgstr[0] ""
+msgstr[1] ""
+
+#: apps/doctemplates/templates/doctemplates/includes/_template_card.html:32
+msgid "Retired built-in template"
+msgstr ""
+
+#: apps/doctemplates/templates/doctemplates/includes/_template_card.html:32
+msgid "Created by you"
+msgstr ""
+
+#: apps/doctemplates/templates/doctemplates/includes/_template_card.html:32
+#, python-format
+msgid "Created by %(creator)s"
+msgstr ""
+
+#: apps/doctemplates/templates/doctemplates/includes/_template_card.html:37
+#, python-format
+msgid "Used in %(counter)s project"
+msgid_plural "Used in %(counter)s projects"
+msgstr[0] ""
+msgstr[1] ""
+
+#: apps/doctemplates/templates/doctemplates/includes/_template_card.html:39
+msgid "View structure"
+msgstr ""
+
+#: apps/doctemplates/templates/doctemplates/includes/_template_card.html:39
+#: apps/projects/templates/projects/list.html:36
+msgid "View"
+msgstr ""
+
+#: apps/doctemplates/templates/doctemplates/includes/_template_card.html:41
+#: apps/doctemplates/templates/doctemplates/modals/_view_template.html:26
+#, python-format
+msgid "A private copy named &quot;%(name)s (Copy)&quot; will be created."
+msgstr ""
+
+#: apps/doctemplates/templates/doctemplates/includes/_template_card.html:41
+#: apps/doctemplates/templates/doctemplates/modals/_view_template.html:26
+msgid "Duplicate Template"
+msgstr ""
+
+#: apps/doctemplates/templates/doctemplates/includes/_template_card.html:41
+#: apps/doctemplates/templates/doctemplates/includes/_template_card.html:43
+#: apps/doctemplates/templates/doctemplates/modals/_view_template.html:26
+#: apps/projects/templates/projects/includes/_context_menu.html:4
+#: apps/projects/templates/projects/includes/_project_actions.html:9
+#: apps/projects/templates/projects/includes/_project_actions.html:10
+msgid "Duplicate"
+msgstr ""
+
+#: apps/doctemplates/templates/doctemplates/list.html:8
+msgid "Create and manage project templates"
+msgstr ""
+
+#: apps/doctemplates/templates/doctemplates/list.html:12
+#: apps/doctemplates/templates/doctemplates/list.html:74
+msgid "New Template"
+msgstr ""
+
+#: apps/doctemplates/templates/doctemplates/list.html:20
+msgid "Search templates"
+msgstr ""
+
+#: apps/doctemplates/templates/doctemplates/list.html:23
+msgid "Filter by document type"
+msgstr ""
+
+#: apps/doctemplates/templates/doctemplates/list.html:34
+#, python-format
+msgid "No templates match “%(search_query)s”"
+msgstr ""
+
+#: apps/doctemplates/templates/doctemplates/list.html:34
+msgid "No templates match this type"
+msgstr ""
+
+#: apps/doctemplates/templates/doctemplates/list.html:44
+msgid "Built-in templates"
+msgstr ""
+
+#: apps/doctemplates/templates/doctemplates/list.html:51
+msgid "No built-in templates available."
+msgstr ""
+
+#: apps/doctemplates/templates/doctemplates/list.html:61
+msgid "Custom templates"
+msgstr ""
+
+#: apps/doctemplates/templates/doctemplates/list.html:72
+msgid "No custom templates yet"
+msgstr ""
+
+#: apps/doctemplates/templates/doctemplates/modals/_editor_attribute.html:3
+#: apps/projects/templates/projects/modals/_structure_attribute.html:3
+msgid "Attribute name"
+msgstr ""
+
+#: apps/doctemplates/templates/doctemplates/modals/_editor_attribute.html:7
+#: apps/projects/templates/projects/includes/_detail_panel.html:31
+#: apps/projects/templates/projects/modals/_collaborators.html:26
+#: apps/projects/templates/projects/modals/_structure_attribute.html:7
+msgid "Remove"
+msgstr ""
+
+#: apps/doctemplates/templates/doctemplates/modals/_editor_attribute.html:10
+#: apps/projects/templates/projects/modals/_structure_attribute.html:10
+msgid "Option1, Option2, Option3"
+msgstr ""
+
+#: apps/doctemplates/templates/doctemplates/modals/_editor_section.html:6
+#: apps/projects/templates/projects/modals/_structure_section.html:5
+msgid "Section name"
+msgstr ""
+
+#: apps/doctemplates/templates/doctemplates/modals/_editor_section.html:8
+#: apps/projects/templates/projects/modals/_structure_section.html:7
+msgid "Move up"
+msgstr ""
+
+#: apps/doctemplates/templates/doctemplates/modals/_editor_section.html:9
+#: apps/projects/templates/projects/modals/_structure_section.html:8
+msgid "Move down"
+msgstr ""
+
+#: apps/doctemplates/templates/doctemplates/modals/_editor_section.html:11
+#: apps/projects/templates/projects/modals/_structure_section.html:10
+msgid "Outdent section"
+msgstr ""
+
+#: apps/doctemplates/templates/doctemplates/modals/_editor_section.html:12
+#: apps/projects/templates/projects/modals/_structure_section.html:11
+msgid "Indent section"
+msgstr ""
+
+#: apps/doctemplates/templates/doctemplates/modals/_editor_section.html:14
+#: apps/projects/templates/projects/modals/_structure_section.html:13
+msgid "Toggle description"
+msgstr ""
+
+#: apps/doctemplates/templates/doctemplates/modals/_editor_section.html:15
+#: apps/projects/templates/projects/modals/_structure_section.html:14
+msgid "Add sub-section"
+msgstr ""
+
+#: apps/doctemplates/templates/doctemplates/modals/_editor_section.html:16
+#: apps/projects/templates/projects/modals/_structure_section.html:15
+msgid "Remove section"
+msgstr ""
+
+#: apps/doctemplates/templates/doctemplates/modals/_template_editor.html:13
+msgid "Template Name"
+msgstr ""
+
+#: apps/doctemplates/templates/doctemplates/modals/_template_editor.html:18
+#: apps/projects/templates/projects/includes/_detail_panel.html:142
+#: apps/projects/templates/projects/modals/_project_create.html:16
+#: apps/projects/templates/projects/modals/_project_edit.html:16
+msgid "Description"
+msgstr ""
+
+#: apps/doctemplates/templates/doctemplates/modals/_template_editor.html:23
+msgid "Document Type"
+msgstr ""
+
+#: apps/doctemplates/templates/doctemplates/modals/_template_editor.html:32
+msgid "When off, only you and system admins can see this template."
+msgstr ""
+
+#: apps/doctemplates/templates/doctemplates/modals/_template_editor.html:35
+#: apps/projects/templates/projects/modals/_export.html:39
+#: apps/projects/templates/projects/modals/_item_attribute_fields.html:1
+msgid "Custom Attributes"
+msgstr ""
+
+#: apps/doctemplates/templates/doctemplates/modals/_template_editor.html:36
+msgid "Define column attributes for items in this template."
+msgstr ""
+
+#: apps/doctemplates/templates/doctemplates/modals/_template_editor.html:39
+#: apps/projects/export.py:354 apps/projects/export.py:522
+#: apps/projects/templates/projects/includes/_bulk_toolbar.html:13
+#: apps/projects/templates/projects/includes/_detail_panel.html:48
+#: apps/projects/templates/projects/includes/_items_table.html:11
+#: apps/projects/templates/projects/includes/_toolbar.html:34
+#: apps/projects/templates/projects/modals/_add_item.html:26
+#: apps/projects/templates/projects/modals/_edit_item.html:26
+#: apps/projects/templates/projects/modals/_manage_sections.html:40
+msgid "Priority"
+msgstr ""
+
+#: apps/doctemplates/templates/doctemplates/modals/_template_editor.html:40
+#: apps/doctemplates/templates/doctemplates/modals/_template_editor.html:45
+#: apps/projects/templates/projects/modals/_manage_sections.html:41
+#: apps/projects/templates/projects/modals/_manage_sections.html:46
+msgid "Dropdown (built-in)"
+msgstr ""
+
+#: apps/doctemplates/templates/doctemplates/modals/_template_editor.html:52
+#: apps/projects/templates/projects/modals/_manage_sections.html:35
+msgid "Add Attribute"
+msgstr ""
+
+#: apps/doctemplates/templates/doctemplates/modals/_template_editor.html:59
+msgid "Section Structure"
+msgstr ""
+
+#: apps/doctemplates/templates/doctemplates/modals/_template_editor.html:60
+#: apps/projects/templates/projects/modals/_manage_sections.html:22
+msgid ""
+"Drag sections to reorder or nest. Use arrows to move, indent, or outdent."
+msgstr ""
+
+#: apps/doctemplates/templates/doctemplates/modals/_template_editor.html:63
+#: apps/projects/templates/projects/modals/_manage_sections.html:24
+msgid "Add Section"
+msgstr ""
+
+#: apps/doctemplates/templates/doctemplates/modals/_template_editor.html:75
+msgid "Save Template"
+msgstr ""
+
+#: apps/doctemplates/templates/doctemplates/modals/_view_template.html:4
+msgid "Template Structure"
+msgstr ""
+
+#: apps/doctemplates/templates/doctemplates/modals/_view_template.html:13
+msgid "Item Attributes:"
+msgstr ""
+
+#: apps/doctemplates/templates/doctemplates/modals/_view_template.html:29
+msgid "Duplicate as Custom"
+msgstr ""
+
+#: apps/doctemplates/views.py:98
+#, python-format
+msgid "Template \"%(name)s\" created."
+msgstr ""
+
+#: apps/doctemplates/views.py:118
+#, python-format
+msgid "Template \"%(name)s\" updated."
+msgstr ""
+
+#: apps/doctemplates/views.py:219
+#, python-format
+msgid "Cannot delete \"%(name)s\": it is used by %(count)d project."
+msgid_plural "Cannot delete \"%(name)s\": it is used by %(count)d projects."
+msgstr[0] ""
+msgstr[1] ""
+
+#: apps/doctemplates/views.py:227
+#, python-format
+msgid "Template \"%(name)s\" deleted."
+msgstr ""
+
+#: apps/doctemplates/views.py:238 apps/projects/views.py:353
+#, python-format
+msgid "%(name)s (Copy)"
+msgstr ""
+
+#: apps/doctemplates/views.py:270
+#, python-format
+msgid "Template duplicated as \"%(name)s\"."
+msgstr ""
+
+#: apps/notifications/jobs.py:41
+#, python-format
+msgid "ArcSpec - %(type)s"
+msgstr ""
+
+#: apps/notifications/jobs.py:49
+#, python-format
+msgid "View in ArcSpec: %(url)s"
+msgstr ""
+
+#: apps/notifications/jobs.py:102
+#, python-format
+msgid "Weekly Digest for %(name)s"
+msgstr ""
+
+#: apps/notifications/jobs.py:105
+#, python-format
+msgid "%(project)s: %(count)d changes, %(url)s"
+msgid_plural "%(project)s: %(count)d changes, %(url)s"
+msgstr[0] ""
+msgstr[1] ""
+
+#: apps/notifications/jobs.py:109
+#, python-format
+msgid "Open dashboard: %(url)s"
+msgstr ""
+
+#: apps/notifications/jobs.py:114
+msgid "ArcSpec - Weekly Digest"
+msgstr ""
+
+#: apps/notifications/models.py:10
+#: apps/projects/templates/projects/includes/_audit_trail.html:14
+#: apps/projects/templates/projects/includes/_detail_panel.html:60
+msgid "Created"
+msgstr ""
+
+#: apps/notifications/models.py:11
+#: apps/projects/templates/projects/includes/_detail_panel.html:64
+#: apps/projects/templates/projects/includes/_items_table.html:14
+#: apps/projects/templates/projects/list.html:64
+#: apps/projects/templates/projects/list.html:80
+msgid "Updated"
+msgstr ""
+
+#: apps/notifications/models.py:12
+#: apps/projects/templates/projects/includes/_audit_trail.html:15
+msgid "Edited"
+msgstr ""
+
+#: apps/notifications/models.py:13
+msgid "Deleted"
+msgstr ""
+
+#: apps/notifications/models.py:14 apps/notifications/models.py:85
+msgid "Status Changed"
+msgstr ""
+
+#: apps/notifications/models.py:15
+msgid "Priority Changed"
+msgstr ""
+
+#: apps/notifications/models.py:16
+msgid "Commented"
+msgstr ""
+
+#: apps/notifications/models.py:17
+msgid "Exported"
+msgstr ""
+
+#: apps/notifications/models.py:18 apps/notifications/models.py:83
+msgid "Collaborator Added"
+msgstr ""
+
+#: apps/notifications/models.py:19
+msgid "Collaborator Removed"
+msgstr ""
+
+#: apps/notifications/models.py:20
+msgid "Collaborator Role Changed"
+msgstr ""
+
+#: apps/notifications/models.py:21
+msgid "Tag Added"
+msgstr ""
+
+#: apps/notifications/models.py:22
+msgid "Tag Removed"
+msgstr ""
+
+#: apps/notifications/models.py:23
+msgid "Attachment Added"
+msgstr ""
+
+#: apps/notifications/models.py:24
+msgid "Attachment Removed"
+msgstr ""
+
+#: apps/notifications/models.py:25
+msgid "Link Added"
+msgstr ""
+
+#: apps/notifications/models.py:26
+msgid "Link Removed"
+msgstr ""
+
+#: apps/notifications/models.py:27
+msgid "Version Restored"
+msgstr ""
+
+#: apps/notifications/models.py:28
+msgid "Bulk Updated"
+msgstr ""
+
+#: apps/notifications/models.py:29
+msgid "Duplicated"
+msgstr ""
+
+#: apps/notifications/models.py:31
+msgid "Restored"
+msgstr ""
+
+#: apps/notifications/models.py:81
+msgid "Item Created"
+msgstr ""
+
+#: apps/notifications/models.py:82
+msgid "Comment"
+msgstr ""
+
+#: apps/notifications/models.py:84
+msgid "Review Requested"
+msgstr ""
+
+#: apps/notifications/models.py:86
+msgid "Mention"
+msgstr ""
+
+#: apps/notifications/templates/notifications/emails/notification.html:10
+msgid "View in ArcSpec"
+msgstr ""
+
+#: apps/notifications/templates/notifications/emails/notification.html:12
+msgid "You received this email because of your notification settings."
+msgstr ""
+
+#: apps/notifications/templates/notifications/emails/notification.html:12
+#: apps/notifications/templates/notifications/emails/weekly_digest.html:31
+msgid "Manage notification settings"
+msgstr ""
+
+#: apps/notifications/templates/notifications/emails/weekly_digest.html:3
+msgid "Weekly Digest"
+msgstr ""
+
+#: apps/notifications/templates/notifications/emails/weekly_digest.html:4
+#, python-format
+msgid "Activity in your projects from %(start)s to %(end)s."
+msgstr ""
+
+#: apps/notifications/templates/notifications/emails/weekly_digest.html:5
+msgid "Your weekly digest"
+msgstr ""
+
+#: apps/notifications/templates/notifications/emails/weekly_digest.html:8
+#, python-format
+msgid "Here is the activity in your projects from %(start)s to %(end)s."
+msgstr ""
+
+#: apps/notifications/templates/notifications/emails/weekly_digest.html:14
+#, python-format
+msgid "%(counter)s change"
+msgid_plural "%(counter)s changes"
+msgstr[0] ""
+msgstr[1] ""
+
+#: apps/notifications/templates/notifications/emails/weekly_digest.html:23
+#, python-format
+msgid "and %(counter)s more"
+msgid_plural "and %(counter)s more"
+msgstr[0] ""
+msgstr[1] ""
+
+#: apps/notifications/templates/notifications/emails/weekly_digest.html:29
+msgid "Open dashboard"
+msgstr ""
+
+#: apps/notifications/templates/notifications/emails/weekly_digest.html:31
+msgid ""
+"You received this email because the weekly digest is on in your notification "
+"settings."
+msgstr ""
+
+#: apps/notifications/views.py:31
+msgid "Not found"
+msgstr ""
+
+#: apps/projects/api.py:297
+msgid "Assignee user not found or inactive."
+msgstr ""
+
+#: apps/projects/api.py:306
+msgid "Assignee must be a project member."
+msgstr ""
+
+#: apps/projects/api.py:319
+#, python-format
+msgid "Invalid status. Must be one of: %(choices)s"
+msgstr ""
+
+#: apps/projects/api.py:326
+#, python-format
+msgid "Invalid priority. Must be one of: %(choices)s"
+msgstr ""
+
+#: apps/projects/api.py:356 apps/projects/views.py:706
+msgid "One or more sections do not belong to this project."
+msgstr ""
+
+#: apps/projects/api.py:393
+msgid "Tag not found."
+msgstr ""
+
+#: apps/projects/api.py:420
+#, python-format
+msgid "Deleted %(count)d items"
+msgid_plural "Deleted %(count)d items"
+msgstr[0] ""
+msgstr[1] ""
+
+#: apps/projects/api.py:436
+msgid "No image file provided."
+msgstr ""
+
+#: apps/projects/api.py:442 apps/projects/serializers.py:20
+#, python-format
+msgid "Image type \"%(ext)s\" is not allowed. Use PNG, JPG, GIF, or WebP."
+msgstr ""
+
+#: apps/projects/api.py:447 apps/projects/serializers.py:23
+msgid "Image size exceeds 5 MB limit."
+msgstr ""
+
+#: apps/projects/api.py:572
+#, python-format
+msgid "Tag %(tag)s is not available for this project."
+msgstr ""
+
+#: apps/projects/api.py:625
+msgid "No file was uploaded."
+msgstr ""
+
+#: apps/projects/api.py:631
+#, python-format
+msgid "File type \"%(ext)s\" is not allowed."
+msgstr ""
+
+#: apps/projects/api.py:639
+#, python-format
+msgid "File size exceeds the %(size)s MB limit."
+msgstr ""
+
+#: apps/projects/api.py:775
+msgid "preferences must be a JSON object."
+msgstr ""
+
+#: apps/projects/api.py:804
+msgid "Invalid role."
+msgstr ""
+
+#: apps/projects/api.py:810
+msgid "User not found or inactive."
+msgstr ""
+
+#: apps/projects/api.py:816
+msgid "User is already a collaborator."
+msgstr ""
+
+#: apps/projects/api.py:846
+msgid "Cannot demote the last project admin."
+msgstr ""
+
+#: apps/projects/api.py:860
+msgid "Cannot remove the last project admin."
+msgstr ""
+
+#: apps/projects/api.py:888
+msgid "This version has no snapshot data to restore."
+msgstr ""
+
+#: apps/projects/api.py:904
+#, python-format
+msgid "Restored version %(version)s"
+msgstr ""
+
+#: apps/projects/api.py:908
+#, python-format
+msgid "Restored to version %(version)s"
+msgstr ""
+
+#: apps/projects/api.py:1078 apps/projects/api.py:1125
+msgid "Name is required."
+msgstr ""
+
+#: apps/projects/api.py:1082 apps/projects/api.py:1134
+#, python-format
+msgid "Invalid field type: %(type)s"
+msgstr ""
+
+#: apps/projects/api.py:1085 apps/projects/api.py:1127
+#, python-format
+msgid "Attribute \"%(name)s\" already exists."
+msgstr ""
+
+#: apps/projects/api.py:1119
+msgid "Cannot modify built-in attributes."
+msgstr ""
+
+#: apps/projects/api.py:1159
+msgid "Cannot delete built-in attributes."
+msgstr ""
+
+#: apps/projects/export.py:180
+#, python-format
+msgid "Page %(page)s of %(pages)s"
+msgstr ""
+
+#: apps/projects/export.py:203
+#, python-format
+msgid "Author: %(names)s"
+msgid_plural "Authors: %(names)s"
+msgstr[0] ""
+msgstr[1] ""
+
+#: apps/projects/export.py:323 apps/projects/export.py:466
+#, python-format
+msgid "Version %(number)s"
+msgstr ""
+
+#: apps/projects/export.py:333 apps/projects/export.py:482
+#: apps/projects/templates/projects/modals/_export.html:36
+msgid "Table of Contents"
+msgstr ""
+
+#: apps/projects/export.py:349 apps/projects/export.py:519
+msgid "No items in this section."
+msgstr ""
+
+#: apps/projects/export.py:353 apps/projects/export.py:522
+#: apps/projects/templates/projects/includes/_items_table.html:8
+msgid "ID"
+msgstr ""
+
+#: apps/projects/export.py:357 apps/projects/export.py:525
+#: apps/projects/templates/projects/includes/_detail_panel.html:52
+#: apps/projects/templates/projects/includes/_items_table.html:13
+#: apps/projects/templates/projects/modals/_add_item.html:32
+#: apps/projects/templates/projects/modals/_edit_item.html:32
+#: apps/projects/templates/projects/modals/_export.html:38
+msgid "Assignee"
+msgstr ""
+
+#: apps/projects/export.py:1158
+msgid "[Table of contents will appear here]"
+msgstr ""
+
+#: apps/projects/forms.py:26
+msgid "e.g. Payment Gateway SRS"
+msgstr ""
+
+#: apps/projects/forms.py:31
+msgid "Brief description of the project..."
+msgstr ""
+
+#: apps/projects/forms.py:76 apps/projects/views.py:625
+msgid "Title is required."
+msgstr ""
+
+#: apps/projects/forms.py:84 apps/projects/views.py:638
+msgid "A section cannot be its own parent."
+msgstr ""
+
+#: apps/projects/forms.py:87 apps/projects/views.py:643
+msgid "Parent section does not belong to this project."
+msgstr ""
+
+#: apps/projects/models.py:260
+#: apps/projects/templates/projects/modals/_item_attribute_fields.html:9
+msgid "Yes"
+msgstr ""
+
+#: apps/projects/models.py:260
+msgid "No"
+msgstr ""
+
+#: apps/projects/models.py:354
+#, python-format
+msgid "%(size)s B"
+msgstr ""
+
+#: apps/projects/models.py:356
+#, python-format
+msgid "%(size)s KB"
+msgstr ""
+
+#: apps/projects/models.py:357
+#, python-format
+msgid "%(size)s MB"
+msgstr ""
+
+#: apps/projects/models.py:377
+msgid "Traces to"
+msgstr ""
+
+#: apps/projects/models.py:378
+msgid "Derived from"
+msgstr ""
+
+#: apps/projects/models.py:379
+msgid "Verified by"
+msgstr ""
+
+#: apps/projects/models.py:380
+msgid "Conflicts with"
+msgstr ""
+
+#: apps/projects/models.py:381
+msgid "Related to"
+msgstr ""
+
+#: apps/projects/permissions.py:78
+msgid "This project is archived. Restore it to make changes."
+msgstr ""
+
+#: apps/projects/serializers.py:137
+msgid "Source item must belong to the current project."
+msgstr ""
+
+#: apps/projects/serializers.py:145
+msgid "You do not have access to the target item's project."
+msgstr ""
+
+#: apps/projects/serializers.py:258
+msgid "Send insert_before or insert_after, not both."
+msgstr ""
+
+#: apps/projects/serializers.py:262
+msgid "The item is not in the chosen section."
+msgstr ""
+
+#: apps/projects/serializers.py:276
+msgid "Section does not belong to this project."
+msgstr ""
+
+#: apps/projects/serializers.py:293
+#: apps/projects/templates/projects/includes/_context_menu.html:6
+msgid "Set Status"
+msgstr ""
+
+#: apps/projects/serializers.py:294
+#: apps/projects/templates/projects/includes/_context_menu.html:12
+msgid "Set Priority"
+msgstr ""
+
+#: apps/projects/serializers.py:295
+msgid "Add Tag"
+msgstr ""
+
+#: apps/projects/serializers.py:311
+#, python-format
+msgid "Invalid status \"%(value)s\". Must be one of: %(choices)s"
+msgstr ""
+
+#: apps/projects/serializers.py:317
+#, python-format
+msgid "Invalid priority \"%(value)s\". Must be one of: %(choices)s"
+msgstr ""
+
+#: apps/projects/serializers.py:321
+msgid "Give the id of the tag to add."
+msgstr ""
+
+#: apps/projects/signals.py:146
+#, python-format
+msgid "Created item %(item)s"
+msgstr ""
+
+#: apps/projects/signals.py:151
+#, python-format
+msgid "New item %(item)s created in %(project)s"
+msgstr ""
+
+#: apps/projects/signals.py:168
+#, python-format
+msgid "%(item)s status changed to %(status)s in %(project)s"
+msgstr ""
+
+#: apps/projects/signals.py:176
+#, python-format
+msgid "Item %(item)s status changed to %(status)s"
+msgstr ""
+
+#: apps/projects/signals.py:217
+#, python-format
+msgid "Deleted item %(item)s"
+msgstr ""
+
+#: apps/projects/signals.py:302
+#, python-format
+msgid "You were added to %(project)s as %(role)s"
+msgstr ""
+
+#: apps/projects/signals.py:312
+#, python-format
+msgid "%(user)s was added to %(project)s as %(role)s"
+msgstr ""
+
+#: apps/projects/signals.py:340
+#, python-format
+msgid "Your role in %(project)s was changed to %(role)s"
+msgstr ""
+
+#: apps/projects/signals.py:367
+#, python-format
+msgid "You were removed from %(project)s"
+msgstr ""
+
+#: apps/projects/signals.py:399
+#, python-format
+msgid "New comment on %(item)s in %(project)s"
+msgstr ""
+
+#: apps/projects/templates/projects/dashboard.html:10
+#, python-format
+msgid "Welcome back, %(name)s"
+msgstr ""
+
+#: apps/projects/templates/projects/dashboard.html:14
+#: apps/projects/templates/projects/dashboard.html:94
+#: apps/projects/templates/projects/list.html:12
+#: apps/projects/templates/projects/list.html:130
+msgid "New Project"
+msgstr ""
+
+#: apps/projects/templates/projects/dashboard.html:28
+msgid "Active Projects"
+msgstr ""
+
+#: apps/projects/templates/projects/dashboard.html:41
+msgid "Approved Items"
+msgstr ""
+
+#: apps/projects/templates/projects/dashboard.html:67
+#: apps/projects/templates/projects/modals/_collaborators.html:3
+msgid "Collaborators"
+msgstr ""
+
+#: apps/projects/templates/projects/dashboard.html:77
+msgid "Recent Projects"
+msgstr ""
+
+#: apps/projects/templates/projects/dashboard.html:85
+msgid "updated"
+msgstr ""
+
+#: apps/projects/templates/projects/dashboard.html:92
+#: apps/projects/templates/projects/list.html:128
+msgid "No projects yet"
+msgstr ""
+
+#: apps/projects/templates/projects/dashboard.html:108
+msgid "Recent Activity"
+msgstr ""
+
+#: apps/projects/templates/projects/dashboard.html:131
+msgid "Unread notifications"
+msgstr ""
+
+#: apps/projects/templates/projects/dashboard.html:134
+msgid "Mark all read"
+msgstr ""
+
+#: apps/projects/templates/projects/dashboard.html:143
+msgid "You're all caught up"
+msgstr ""
+
+#: apps/projects/templates/projects/dashboard.html:158
+msgid "Could not mark the notification as read."
+msgstr ""
+
+#: apps/projects/templates/projects/dashboard.html:158
+msgid "Could not mark the notifications as read."
+msgstr ""
+
+#: apps/projects/templates/projects/dashboard.html:158
+msgid "No more notifications"
+msgstr ""
+
+#: apps/projects/templates/projects/detail.html:8
+msgid "Breadcrumb"
+msgstr ""
+
+#: apps/projects/templates/projects/detail.html:23
+msgid "Share / manage collaborators"
+msgstr ""
+
+#: apps/projects/templates/projects/detail.html:24
+msgid "Share"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_audit_trail.html:2
+#: apps/projects/templates/projects/includes/_audit_trail.html:6
+#: apps/projects/templates/projects/includes/_toolbar.html:103
+msgid "Audit Log"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_audit_trail.html:13
+msgid "All actions"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_audit_trail.html:16
+msgid "Status changed"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_audit_trail.html:18
+msgid "Collaboration"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_audit_trail.html:21
+msgid "All users"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_bulk_toolbar.html:3
+msgid "Select All"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_bulk_toolbar.html:4
+msgid "0 selected"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_bulk_toolbar.html:8
+msgid "Set status of the selected items"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_bulk_toolbar.html:14
+msgid "Set priority of the selected items"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_bulk_toolbar.html:20
+msgid "Add a tag to the selected items"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_bulk_toolbar.html:24
+#: apps/projects/templates/projects/includes/_tag_menu_items.html:4
+msgid "No tags available"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_context_menu.html:2
+#: apps/projects/templates/projects/includes/_detail_panel.html:17
+msgid "Item actions"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_context_menu.html:3
+#: apps/projects/templates/projects/modals/_edit_item.html:3
+msgid "Edit Item"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_context_menu.html:7
+msgid "Set status"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_context_menu.html:13
+msgid "Set priority"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_context_menu.html:18
+msgid "Set Tags"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_context_menu.html:19
+msgid "Set tags"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_context_menu.html:23
+msgid "Insert Above"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_context_menu.html:24
+msgid "Insert Below"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_context_menu.html:25
+msgid "Move Up"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_context_menu.html:26
+msgid "Move Down"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_context_menu.html:28
+msgid "Copy ID"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_context_menu.html:29
+msgid "Copy Link"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_context_menu.html:31
+#: apps/projects/templates/projects/modals/_delete_item.html:4
+msgid "Delete Item"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_dashboard_notifications.html:5
+msgid "Unread:"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_dashboard_notifications.html:9
+msgid "Mark as read"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_detail_panel.html:4
+#: apps/projects/templates/projects/includes/_toolbar.html:92
+msgid "Details"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_detail_panel.html:5
+msgid "Close details"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_detail_panel.html:16
+msgid "Edit item"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_detail_panel.html:25
+msgid "Item image"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_detail_panel.html:25
+msgid "Click to open full size"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_detail_panel.html:30
+msgid "Change image"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_detail_panel.html:30
+msgid "Change"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_detail_panel.html:31
+msgid "Remove image"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_detail_panel.html:42
+#: apps/projects/templates/projects/modals/_manage_sections.html:14
+msgid "Attributes"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_detail_panel.html:56
+#: apps/projects/templates/projects/modals/_add_item.html:7
+#: apps/projects/templates/projects/modals/_edit_item.html:7
+msgid "Section"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_detail_panel.html:72
+#: apps/projects/templates/projects/includes/_detail_panel.html:75
+#: apps/projects/templates/projects/includes/_items_table.html:12
+msgid "Tags"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_detail_panel.html:74
+msgid "Edit tags"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_detail_panel.html:85
+msgid "Attachments"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_detail_panel.html:88
+msgid "Upload file"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_detail_panel.html:97
+msgid "Links"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_detail_panel.html:99
+msgid "Add link"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_detail_panel.html:114
+msgid "Add a comment... (Shift+Enter for new line)"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_detail_panel.html:122
+msgid "History"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_detail_panel.html:134
+msgid "Section Number"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_detail_panel.html:146
+msgid "Add item to this section"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_detail_panel.html:153
+msgid "Select an item or a section to see its details here."
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_items_table.html:7
+msgid "Order"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_items_table.html:32
+#, python-format
+msgid "%(counter)s attachment"
+msgid_plural "%(counter)s attachments"
+msgstr[0] ""
+msgstr[1] ""
+
+#: apps/projects/templates/projects/includes/_items_table.html:32
+#, python-format
+msgid "%(counter)s comment"
+msgid_plural "%(counter)s comments"
+msgstr[0] ""
+msgstr[1] ""
+
+#: apps/projects/templates/projects/includes/_items_table.html:45
+#, python-format
+msgid "Actions for %(item_id)s"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_items_table.html:55
+msgid "No items match"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_items_table.html:56
+msgid "No item matches the search and filters."
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_items_table.html:57
+msgid "Clear search and filters"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_project_actions.html:9
+#, python-format
+msgid ""
+"Create “%(name)s (Copy)” as a draft with the same sections and attributes? "
+"Items are not copied."
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_project_actions.html:9
+msgid "Duplicate Project"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_project_actions.html:17
+#, python-format
+msgid "Restore “%(name)s” as an active project?"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_project_actions.html:17
+msgid "Restore Project"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_project_actions.html:17
+#: apps/projects/templates/projects/includes/_project_actions.html:18
+#: apps/projects/templates/projects/includes/_project_actions.html:21
+msgid "Restore"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_project_actions.html:21
+msgid "Only an administrator can restore this project"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_project_actions.html:24
+#, python-format
+msgid "Archive “%(name)s”? It moves to Archived and can be restored later."
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_project_actions.html:24
+msgid "Archive Project"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_project_actions.html:24
+#: apps/projects/templates/projects/includes/_project_actions.html:25
+msgid "Archive"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_project_summary.html:4
+msgid "Project Summary"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_project_summary.html:5
+msgid "Close summary"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_project_summary.html:13
+msgid "Items by Status"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_project_summary.html:20
+msgid "Items by Priority"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_project_summary.html:30
+msgid "Items by Section"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_project_summary.html:36
+msgid "Recent Changes"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_toolbar.html:4
+msgid "Document sections"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_toolbar.html:8
+msgid "Add new item"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_toolbar.html:9
+#: apps/projects/templates/projects/modals/_add_item.html:3
+#: apps/projects/templates/projects/modals/_add_item.html:58
+msgid "Add Item"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_toolbar.html:11
+msgid "Select multiple items (Ctrl+Shift+A)"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_toolbar.html:11
+msgid "Select multiple items"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_toolbar.html:18
+msgid "Search items (/)"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_toolbar.html:18
+msgid "Search items"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_toolbar.html:21
+msgid "Filter"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_toolbar.html:23
+msgid "Filter items"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_toolbar.html:27
+msgid "All statuses"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_toolbar.html:36
+msgid "All priorities"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_toolbar.html:45
+msgid "All tags"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_toolbar.html:52
+msgid "Apply"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_toolbar.html:53
+msgid "Clear"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_toolbar.html:56
+msgid "Save as View"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_toolbar.html:58
+msgid "Saved Views"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_toolbar.html:58
+#: apps/projects/templates/projects/includes/_toolbar.html:61
+#: apps/projects/templates/projects/includes/_toolbar.html:62
+msgid "Saved views"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_toolbar.html:67
+msgid "No saved views"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_toolbar.html:72
+#: apps/projects/templates/projects/includes/_toolbar.html:73
+msgid "Delete a view"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_toolbar.html:82
+msgid "Show or hide columns"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_toolbar.html:83
+#: apps/projects/templates/projects/includes/_toolbar.html:85
+#: apps/projects/templates/projects/includes/_toolbar.html:86
+msgid "Columns"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_toolbar.html:88
+msgid "Project summary"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_toolbar.html:95
+#: apps/projects/templates/projects/includes/_toolbar.html:98
+msgid "More options"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_toolbar.html:99
+msgid "Export to PDF"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_toolbar.html:100
+msgid "Export to DOCX"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_toolbar.html:102
+#: apps/projects/templates/projects/includes/_version_history.html:2
+#: apps/projects/templates/projects/includes/_version_history.html:6
+msgid "Version History"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_tree_nav.html:3
+msgid "Document Sections"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_tree_nav.html:6
+msgid "Manage Sections"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_tree_nav.html:10
+msgid "Collapse panel"
+msgstr ""
+
+#: apps/projects/templates/projects/includes/_tree_node.html:13
+#, python-format
+msgid "%(counter)s item in this section and its subsections"
+msgid_plural "%(counter)s items in this section and its subsections"
+msgstr[0] ""
+msgstr[1] ""
+
+#: apps/projects/templates/projects/list.html:8
+msgid "Manage your specification and documentation projects"
+msgstr ""
+
+#: apps/projects/templates/projects/list.html:20
+msgid "Search projects"
+msgstr ""
+
+#: apps/projects/templates/projects/list.html:24
+msgid "Filter by status"
+msgstr ""
+
+#: apps/projects/templates/projects/list.html:30
+msgid "Sort projects"
+msgstr ""
+
+#: apps/projects/templates/projects/list.html:31
+msgid "Last updated"
+msgstr ""
+
+#: apps/projects/templates/projects/list.html:32
+msgid "Name A-Z"
+msgstr ""
+
+#: apps/projects/templates/projects/list.html:33
+msgid "Name Z-A"
+msgstr ""
+
+#: apps/projects/templates/projects/list.html:34
+msgid "Date created"
+msgstr ""
+
+#: apps/projects/templates/projects/list.html:37
+msgid "Grid view"
+msgstr ""
+
+#: apps/projects/templates/projects/list.html:38
+msgid "Table view"
+msgstr ""
+
+#: apps/projects/templates/projects/list.html:60
+#, python-format
+msgid "%(counter)s member"
+msgid_plural "%(counter)s members"
+msgstr[0] ""
+msgstr[1] ""
+
+#: apps/projects/templates/projects/list.html:76
+msgid "Project"
+msgstr ""
+
+#: apps/projects/templates/projects/list.html:111
+#, python-format
+msgid "Showing %(start)s-%(end)s of %(total)s"
+msgstr ""
+
+#: apps/projects/templates/projects/list.html:120
+#, python-format
+msgid "No projects match “%(search_query)s” in this status"
+msgstr ""
+
+#: apps/projects/templates/projects/list.html:120
+#, python-format
+msgid "No projects match “%(search_query)s”"
+msgstr ""
+
+#: apps/projects/templates/projects/list.html:120
+msgid "No projects match this status"
+msgstr ""
+
+#: apps/projects/templates/projects/modals/_add_item.html:16
+#: apps/projects/templates/projects/modals/_edit_item.html:16
+msgid "Enter item text..."
+msgstr ""
+
+#: apps/projects/templates/projects/modals/_add_item.html:35
+#: apps/projects/templates/projects/modals/_edit_item.html:35
+msgid "Unassigned"
+msgstr ""
+
+#: apps/projects/templates/projects/modals/_add_item.html:45
+#: apps/projects/templates/projects/modals/_edit_item.html:54
+msgid "Image"
+msgstr ""
+
+#: apps/projects/templates/projects/modals/_add_item.html:45
+msgid "(optional: chart, diagram, graph)"
+msgstr ""
+
+#: apps/projects/templates/projects/modals/_add_item.html:51
+#: apps/projects/templates/projects/modals/_edit_item.html:60
+msgid "Caption (optional)"
+msgstr ""
+
+#: apps/projects/templates/projects/modals/_add_item.html:54
+#: apps/projects/templates/projects/modals/_edit_item.html:63
+msgid "Max 5 MB. PNG, JPG, GIF, WebP."
+msgstr ""
+
+#: apps/projects/templates/projects/modals/_add_link.html:3
+msgid "Add Traceability Link"
+msgstr ""
+
+#: apps/projects/templates/projects/modals/_add_link.html:6
+msgid "Link Type"
+msgstr ""
+
+#: apps/projects/templates/projects/modals/_add_link.html:12
+msgid "Target Item"
+msgstr ""
+
+#: apps/projects/templates/projects/modals/_add_link.html:13
+msgid "Search by item ID or text..."
+msgstr ""
+
+#: apps/projects/templates/projects/modals/_add_link.html:19
+msgid "Add Link"
+msgstr ""
+
+#: apps/projects/templates/projects/modals/_collaborators.html:7
+msgid "Email address"
+msgstr ""
+
+#: apps/projects/templates/projects/modals/_delete_item.html:5
+#, python-format
+msgid ""
+"Are you sure you want to delete <strong id=\"deleteItemId\">%(item_id)s</"
+"strong>? This action cannot be undone."
+msgstr ""
+
+#: apps/projects/templates/projects/modals/_edit_item.html:50
+msgid "Remove current image"
+msgstr ""
+
+#: apps/projects/templates/projects/modals/_edit_item.html:54
+msgid "(optional)"
+msgstr ""
+
+#: apps/projects/templates/projects/modals/_export.html:3
+msgid "Export Project"
+msgstr ""
+
+#: apps/projects/templates/projects/modals/_export.html:8
+msgid "Format"
+msgstr ""
+
+#: apps/projects/templates/projects/modals/_export.html:22
+msgid "Paper Size"
+msgstr ""
+
+#: apps/projects/templates/projects/modals/_export.html:35
+msgid "Include"
+msgstr ""
+
+#: apps/projects/templates/projects/modals/_export.html:37
+msgid "Authors"
+msgstr ""
+
+#: apps/projects/templates/projects/modals/_export.html:44
+msgid "Traceability Links"
+msgstr ""
+
+#: apps/projects/templates/projects/modals/_export.html:49
+msgid "Export"
+msgstr ""
+
+#: apps/projects/templates/projects/modals/_item_attribute_fields.html:10
+#: apps/projects/templates/projects/modals/_item_attribute_fields.html:12
+msgid "-- Select --"
+msgstr ""
+
+#: apps/projects/templates/projects/modals/_manage_sections.html:3
+msgid "Project Structure"
+msgstr ""
+
+#: apps/projects/templates/projects/modals/_manage_sections.html:33
+msgid "Define custom attributes for items in this project."
+msgstr ""
+
+#: apps/projects/templates/projects/modals/_project_create.html:4
+msgid "Create New Project"
+msgstr ""
+
+#: apps/projects/templates/projects/modals/_project_create.html:11
+#: apps/projects/templates/projects/modals/_project_edit.html:11
+msgid "Project Name"
+msgstr ""
+
+#: apps/projects/templates/projects/modals/_project_create.html:27
+msgid "Initial Status"
+msgstr ""
+
+#: apps/projects/templates/projects/modals/_project_create.html:40
+msgid "Create Project"
+msgstr ""
+
+#: apps/projects/templates/projects/modals/_project_delete.html:4
+#: apps/projects/templates/projects/modals/_project_delete.html:10
+msgid "Delete Project"
+msgstr ""
+
+#: apps/projects/templates/projects/modals/_project_delete.html:5
+#, python-format
+msgid ""
+"Are you sure you want to delete <strong id=\"deleteProjectName\">%(name)s</"
+"strong>? This action cannot be undone and all items, comments, and history "
+"will be permanently removed."
+msgstr ""
+
+#: apps/projects/templates/projects/modals/_project_edit.html:4
+msgid "Edit Project"
+msgstr ""
+
+#: apps/projects/templates/projects/modals/_save_view.html:3
+msgid "Save View"
+msgstr ""
+
+#: apps/projects/templates/projects/modals/_save_view.html:6
+msgid "View Name"
+msgstr ""
+
+#: apps/projects/templates/projects/modals/_save_view.html:7
+msgid "e.g. High Priority Draft Items"
+msgstr ""
+
+#: apps/projects/views.py:292
+#, python-format
+msgid "Project \"%(name)s\" created."
+msgstr ""
+
+#: apps/projects/views.py:310
+#, python-format
+msgid "Project \"%(name)s\" updated."
+msgstr ""
+
+#: apps/projects/views.py:324
+#, python-format
+msgid "Project \"%(name)s\" archived."
+msgstr ""
+
+#: apps/projects/views.py:336
+#, python-format
+msgid "Project \"%(name)s\" restored."
+msgstr ""
+
+#: apps/projects/views.py:345
+#, python-format
+msgid "Project \"%(name)s\" deleted."
+msgstr ""
+
+#: apps/projects/views.py:390
+#, python-format
+msgid "Project duplicated as \"%(name)s\"."
+msgstr ""
+
+#: apps/projects/views.py:648
+msgid "This move would create a circular hierarchy."
+msgstr ""
+
+#: apps/projects/views.py:683
+msgid "Cannot delete section that contains items. Move or delete items first."
+msgstr ""
+
+#: apps/projects/views.py:719
+msgid "This reorder would create a circular hierarchy."
+msgstr ""

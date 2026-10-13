@@ -1,0 +1,77 @@
+{% extends "components/_modal_shell.html" %}
+{% load i18n %}
+{% block header_class %} border-bottom{% endblock %}
+{% block modal_title %}{{ editor_title }}{% endblock %}
+{% block after_header %}<form id="templateEditorForm" method="post" action="{{ form_action }}" data-modal-form style="display:flex;flex-direction:column;overflow:hidden;max-height:inherit">
+                {% csrf_token %}{% endblock %}
+{% block body_class %} p-0{% endblock %}
+{% block modal_body %}
+                    {% if template_form.non_field_errors %}<div class="alert alert-danger m-3 mb-0">{{ template_form.non_field_errors }}</div>{% endif %}
+                    <div class="row g-0">
+                        <div class="col-md-4 border-end p-4">
+                            <div class="mb-3">
+                                <label for="id_name" class="form-label fw-medium">{% translate "Template Name" %}</label>
+                                {{ template_form.name }}
+                                {% for error in template_form.name.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
+                            </div>
+                            <div class="mb-3">
+                                <label for="id_description" class="form-label fw-medium">{% translate "Description" %}</label>
+                                {{ template_form.description }}
+                                {% for error in template_form.description.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
+                            </div>
+                            <div class="mb-3">
+                                <label for="id_doc_type" class="form-label fw-medium">{% translate "Document Type" %}</label>
+                                {{ template_form.doc_type }}
+                                {% for error in template_form.doc_type.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
+                            </div>
+                            <div class="mb-3">
+                                <div class="form-check">
+                                    {{ template_form.is_global }}
+                                    <label class="form-check-label small" for="id_is_global">{% translate "Visible to all users" %}</label>
+                                </div>
+                                <p class="text-muted small mb-0">{% translate "When off, only you and system admins can see this template." %}</p>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-medium">{% translate "Custom Attributes" %}</label>
+                                <p class="text-muted small mb-2">{% translate "Define column attributes for items in this template." %}</p>
+                                <div id="customAttributes">
+                                    <div class="attribute-row attribute-row-builtin d-flex align-items-center gap-2 mb-2">
+                                        <span class="form-control form-control-sm bg-light border">{% translate "Priority" %}</span>
+                                        <span class="text-muted small">{% translate "Dropdown (built-in)" %}</span>
+                                        <i class="bi bi-lock text-muted ms-auto"></i>
+                                    </div>
+                                    <div class="attribute-row attribute-row-builtin d-flex align-items-center gap-2 mb-2">
+                                        <span class="form-control form-control-sm bg-light border">{% translate "Status" %}</span>
+                                        <span class="text-muted small">{% translate "Dropdown (built-in)" %}</span>
+                                        <i class="bi bi-lock text-muted ms-auto"></i>
+                                    </div>
+                                    {% for attribute in attributes %}{% include "doctemplates/modals/_editor_attribute.html" %}{% endfor %}
+                                </div>
+                                <template id="attributeRowTemplate">{% include "doctemplates/modals/_editor_attribute.html" with attribute=blank_attribute %}</template>
+                                <button type="button" class="btn btn-sm btn-outline-primary mt-1" id="addAttributeBtn">
+                                    <i class="bi bi-plus me-1"></i>{% translate "Add Attribute" %}
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-md-8 p-4">
+                            <div class="d-flex align-items-center justify-content-between mb-3">
+                                <div>
+                                    <h6 class="fw-semibold mb-0">{% translate "Section Structure" %}</h6>
+                                    <p class="text-muted small mb-0">{% translate "Drag sections to reorder or nest. Use arrows to move, indent, or outdent." %}</p>
+                                </div>
+                                <button type="button" class="btn btn-sm btn-outline-primary" id="addSectionBtn">
+                                    <i class="bi bi-plus me-1"></i>{% translate "Add Section" %}
+                                </button>
+                            </div>
+                            {{ section_formset.management_form }}
+                            <div id="sectionTree" class="section-tree">{% for section in sections %}{% include "doctemplates/modals/_editor_section.html" %}{% endfor %}</div>
+                            <template id="sectionItemTemplate">{% include "doctemplates/modals/_editor_section.html" with section=blank_section %}</template>
+                        </div>
+                    </div>
+{% endblock %}
+{% block footer_class %} border-top{% endblock %}
+{% block modal_footer %}<button type="button" class="btn btn-sm btn-light" data-bs-dismiss="modal">{% translate "Cancel" %}</button>
+                    <button type="submit" class="btn btn-sm btn-primary" id="saveTemplateBtn">
+                        <i class="bi bi-check-lg me-1"></i> {% translate "Save Template" %}
+                    </button>{% endblock %}
+{% block after_footer %}</form>{% endblock %}

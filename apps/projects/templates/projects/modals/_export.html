@@ -1,0 +1,49 @@
+{% extends "components/_modal_shell.html" %}
+{% load i18n %}
+{% block modal_title %}<i class="bi bi-download me-2"></i>{% translate "Export Project" %}{% endblock %}
+{% block modal_body %}
+                <form id="exportForm" method="post" action="{{ form_action }}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label fw-medium">{% translate "Format" %}</label>
+                        <div class="d-flex gap-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="format" id="formatPdf" value="pdf"{% if export_format == 'pdf' %} checked{% endif %}>
+                                <label class="form-check-label" for="formatPdf">PDF</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="format" id="formatDocx" value="docx"{% if export_format == 'docx' %} checked{% endif %}>
+                                <label class="form-check-label" for="formatDocx">DOCX</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row g-3 mb-3">
+                        <div class="col-6">
+                            <label for="exportPaperSize" class="form-label">{% translate "Paper Size" %}</label>
+                            <select class="form-select form-select-sm" name="paper_size" id="exportPaperSize">
+                                {% for value, label in defaults.PAPER_SIZE_CHOICES %}<option value="{{ value }}"{% if defaults.export_paper_size == value %} selected{% endif %}>{{ label }}</option>{% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-6">
+                            <label for="exportOrientation" class="form-label">{% translate "Orientation" %}</label>
+                            <select class="form-select form-select-sm" name="orientation" id="exportOrientation">
+                                {% for value, label in defaults.ORIENTATION_CHOICES %}<option value="{{ value }}"{% if defaults.export_orientation == value %} selected{% endif %}>{{ label }}</option>{% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-medium">{% translate "Include" %}</label>
+                        <div class="form-check"><input class="form-check-input" type="checkbox" name="include_toc" id="exportToc"{% if defaults.export_include_toc %} checked{% endif %}><label class="form-check-label" for="exportToc">{% translate "Table of Contents" %}</label></div>
+                        <div class="form-check"><input class="form-check-input" type="checkbox" name="include_authors" id="exportAuthors" checked><label class="form-check-label" for="exportAuthors">{% translate "Authors" %}</label></div>
+                        <div class="form-check"><input class="form-check-input" type="checkbox" name="include_assignee" id="exportAssignee"><label class="form-check-label" for="exportAssignee">{% translate "Assignee" %}</label></div>
+                        <div class="form-check"><input class="form-check-input" type="checkbox" name="include_attributes" id="exportAttrs"{% if defaults.export_include_attributes %} checked{% endif %}><label class="form-check-label" for="exportAttrs">{% translate "Custom Attributes" %}</label></div>
+                        <div id="exportAttrsList" class="ms-4 mt-1"{% if not attributes %} style="display:none"{% endif %}>
+                            {% for attribute in attributes %}<div class="form-check"><input class="form-check-input" type="checkbox" name="export_attr_ids" value="{{ attribute.pk }}" id="exportAttr_{{ attribute.pk }}" checked><label class="form-check-label small" for="exportAttr_{{ attribute.pk }}">{{ attribute.name }}</label></div>{% endfor %}
+                        </div>
+                        <div class="form-check"><input class="form-check-input" type="checkbox" name="include_comments" id="exportComments"{% if defaults.export_include_comments %} checked{% endif %}><label class="form-check-label" for="exportComments">{% translate "Comments" %}</label></div>
+                        <div class="form-check"><input class="form-check-input" type="checkbox" name="include_links" id="exportLinks"{% if defaults.export_include_links %} checked{% endif %}><label class="form-check-label" for="exportLinks">{% translate "Traceability Links" %}</label></div>
+                    </div>
+                </form>
+{% endblock %}
+{% block modal_footer %}<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% translate "Cancel" %}</button>
+                <button type="submit" form="exportForm" class="btn btn-primary" id="exportSubmit">{% translate "Export" %}</button>{% endblock %}

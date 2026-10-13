@@ -1,0 +1,11 @@
+{% load core_tags %}{% for activity in activities %}
+<a href="{{ activity.project.get_absolute_url }}" class="dash-row dash-activity">
+    <span class="activity-dot bg-{% if activity.action == 'created' %}primary{% elif activity.action == 'updated' %}warning{% elif activity.action == 'deleted' %}danger{% elif activity.action == 'status_changed' or activity.action == 'approved' %}success{% elif activity.action == 'commented' %}info{% elif activity.action == 'collaborator_added' or activity.action == 'collaborator_removed' %}secondary{% else %}primary{% endif %}" aria-hidden="true">
+        <i class="bi {% if activity.action == 'created' %}bi-plus-circle{% elif activity.action == 'updated' %}bi-pencil{% elif activity.action == 'deleted' %}bi-trash{% elif activity.action == 'status_changed' %}bi-check-circle{% elif activity.action == 'commented' %}bi-chat-dots{% elif activity.action == 'collaborator_added' %}bi-person-plus{% elif activity.action == 'collaborator_removed' %}bi-person-dash{% elif activity.action == 'exported' %}bi-download{% else %}bi-circle{% endif %}"></i>
+    </span>
+    <span class="dash-row-body">
+        <span class="dash-row-title">{% if hide_actor %}{{ activity.get_action_display|lower|capfirst }}{% else %}<span class="dash-actor">{{ activity.user }}</span> {{ activity.get_action_display|lower }}{% endif %} {{ activity.target_type|lower }} <span class="dash-target">{{ activity.target_id }}</span></span>
+        <span class="dash-row-meta">{% if activity.target_type|lower != "project" %}{{ activity.project.name }} &middot; {% endif %}<time datetime="{{ activity.created_at|date:'c' }}" title="{{ activity.created_at|date:'j M Y, H:i' }}">{{ activity.created_at|time_ago }}</time></span>
+    </span>
+</a>
+{% endfor %}

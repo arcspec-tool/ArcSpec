@@ -1,0 +1,3 @@
+<div class="d-flex gap-2 flex-wrap color-picker" id="{{ picker_id }}">
+    {% for color in colors %}<label class="color-swatch-label"><input type="radio" name="color" value="{{ color }}"{% if color == selected_color %} checked{% endif %} class="d-none"><span class="color-swatch{% if color == selected_color %} color-swatch-selected{% endif %}" style="background: {{ color }};"></span></label>{% endfor %}
+</div>

@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% load static core_tags i18n %}
+
+{% block body_class %}page-project{% endblock %}
+{% block title %}{{ project.name }} - ArcSpec{% endblock %}
+
+{% block topbar_context %}
+<nav class="topbar-context" aria-label="{% translate 'Breadcrumb' %}">
+    <a href="{% url 'project_list' %}" class="topbar-context-parent">{% translate "Projects" %}</a>
+    <i class="bi bi-chevron-right topbar-context-sep" aria-hidden="true"></i>
+    <span class="topbar-context-icon" style="background: {{ project.color }}" aria-hidden="true"><i class="bi bi-file-earmark-text"></i></span>
+    <h1 class="topbar-context-title" title="{{ project.name }}">{{ project.name }}</h1>
+    {% status_badge project.status %}
+</nav>
+{% endblock %}
+
+{% block topbar_extra %}
+<div class="project-members d-flex align-items-center gap-1 me-2">
+    {% for m in memberships %}
+    <span class="avatar-sm" title="{{ m.user }}" style="background:{{ m.user.avatar_color }}">{{ m.user|initials }}</span>
+    {% endfor %}
+</div>
+<button class="btn btn-sm btn-outline-secondary" title="{% translate 'Share / manage collaborators' %}" data-modal-open="collaborators" data-project="{{ project.slug }}">
+    <i class="bi bi-people"></i><span class="btn-label ms-1">{% translate "Share" %}</span>
+</button>
+{% endblock %}
+
+{% block content %}
+{% include "projects/includes/_toolbar.html" %}
+{% include "projects/includes/_bulk_toolbar.html" %}
+
+<div class="project-workspace">
+
+    {% include "projects/includes/_tree_nav.html" %}
+
+    <div class="resize-handle resize-handle-tree" id="resizeTree"></div>
+
+    {% include "projects/includes/_items_table.html" %}
+
+    <div class="resize-handle resize-handle-details" id="resizeDetails"></div>
+
+    {% include "projects/includes/_detail_panel.html" %}
+
+    {% include "projects/includes/_project_summary.html" %}
+
+</div>
+<div class="panel-backdrop" id="panelBackdrop"></div>
+
+{% include "projects/includes/_context_menu.html" %}
+
+{% include "projects/includes/_audit_trail.html" %}
+{% include "projects/includes/_version_history.html" %}
+{% endblock %}
+
+{% block extra_js %}
+<div id="projectData" class="d-none"
+     data-slug="{{ project.slug }}"
+     data-id="{{ project.pk }}"
+     data-role="{{ user_role }}"
+     data-editor="{{ is_editor|yesno:'true,false' }}"
+     data-admin="{{ is_admin|yesno:'true,false' }}"
+     data-archived="{{ is_archived|yesno:'true,false' }}"
+     data-user-id="{{ request.user.pk }}"></div>
+{{ section_data|json_script:"section-data" }}
+{{ template_attributes|json_script:"template-attributes" }}
+<script nonce="{{ request.csp_nonce }}">var SECTION_DATA = JSON.parse(document.getElementById('section-data').textContent);
+var TEMPLATE_ATTRIBUTES = JSON.parse(document.getElementById('template-attributes').textContent);</script>
+<script src="https://cdn.jsdelivr.net/npm/tinymce@7.9.3/tinymce.min.js" integrity="sha384-Ovv1ZPEkpW4ElBKDKaEIPkNfTTadFpifFwNJOBnuStg0PQ0RBln5Lsf9AI8BsCmx" crossorigin="anonymous"></script>
+<script src="{% static 'js/project.js' %}"></script>
+<script src="{% static 'js/advanced.js' %}"></script>
+<script src="{% static 'js/collaboration.js' %}"></script>
+{% endblock %}

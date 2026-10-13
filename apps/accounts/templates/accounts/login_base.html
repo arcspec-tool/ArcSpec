@@ -1,0 +1,32 @@
+{% extends "base_bare.html" %}
+{% load static %}
+{% block content %}
+<main class="login-wrapper">
+    <img class="login-logo" src="{% static 'img/logo-login.png' %}" alt="ArcSpec" width="200" height="47">
+    <div class="card login-card">
+        <div class="card-body">
+            <div class="login-header">
+                {% block status_icon %}{% endblock %}
+                <h1 class="login-title">{% block heading %}{% endblock %}</h1>
+                {% block subtitle %}{% endblock %}
+            </div>
+
+            {% for message in messages %}
+            {% if message.level_tag == 'error' %}
+            <div class="alert alert-danger login-alert" role="alert"><i class="bi bi-exclamation-circle" aria-hidden="true"></i><span>{{ message }}</span></div>
+            {% elif message.level_tag == 'success' %}
+            <div class="alert alert-success login-alert" role="status"><i class="bi bi-check-circle" aria-hidden="true"></i><span>{{ message }}</span></div>
+            {% else %}
+            <div class="alert alert-info login-alert" role="status"><i class="bi bi-info-circle" aria-hidden="true"></i><span>{{ message }}</span></div>
+            {% endif %}
+            {% endfor %}
+
+            {% block card %}{% endblock %}
+            {% block footer %}{% endblock %}
+        </div>
+    </div>
+</main>
+{% endblock %}
+{% block extra_js %}
+<script src="{% static 'js/auth.js' %}"></script>
+{% endblock %}

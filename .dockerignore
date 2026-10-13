@@ -1,0 +1,13 @@
+.env
+__pycache__
+*.pyc
+.git
+.gitignore
+media/
+staticfiles/
+docker-compose.dev.yml
+docs/
+venv/
+*.egg-info
+.coverage
+htmlcov/

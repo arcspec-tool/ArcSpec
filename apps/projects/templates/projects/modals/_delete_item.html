@@ -1,0 +1,8 @@
+{% extends "components/_modal_shell.html" %}
+{% load i18n %}
+{% block header_class %} border-0 pb-0{% endblock %}
+{% block modal_title %}<i class="bi bi-exclamation-triangle text-danger me-2"></i>{% translate "Delete Item" %}{% endblock %}
+{% block modal_body %}<p class="mb-0">{% blocktranslate trimmed with item_id=item.item_id %}Are you sure you want to delete <strong id="deleteItemId">{{ item_id }}</strong>? This action cannot be undone.{% endblocktranslate %}</p>{% endblock %}
+{% block footer_class %} border-0 pt-0{% endblock %}
+{% block modal_footer %}<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% translate "Cancel" %}</button>
+                <button type="button" class="btn btn-danger" id="deleteItemConfirm" data-item-key="{{ item.public_key }}">{% translate "Delete" %}</button>{% endblock %}

@@ -1,0 +1,33 @@
+{% load i18n %}{% if is_editor %}
+<div class="menu" id="itemMenu" role="menu" popover="manual" aria-label="{% translate 'Item actions' %}" data-menu-target="tr.item-row[data-key]">
+    <button type="button" class="menu-item" role="menuitem" tabindex="-1" data-action="edit"><i class="bi bi-pencil menu-item-icon" aria-hidden="true"></i><span class="menu-item-text">{% translate "Edit Item" %}</span></button>
+    <button type="button" class="menu-item" role="menuitem" tabindex="-1" data-action="duplicate"><i class="bi bi-files menu-item-icon" aria-hidden="true"></i><span class="menu-item-text">{% translate "Duplicate" %}</span></button>
+    <div class="menu-separator" role="separator"></div>
+    <button type="button" class="menu-item menu-item-parent" role="menuitem" tabindex="-1" aria-haspopup="menu" aria-expanded="false" aria-controls="itemMenuStatus"><i class="bi bi-circle menu-item-icon" aria-hidden="true"></i><span class="menu-item-text">{% translate "Set Status" %}</span><i class="bi bi-chevron-right menu-item-caret" aria-hidden="true"></i></button>
+    <div class="menu menu-sub" id="itemMenuStatus" role="menu" popover="manual" aria-label="{% translate 'Set status' %}">
+        {% for value, label in status_choices %}
+        <button type="button" class="menu-item" role="menuitemradio" aria-checked="false" tabindex="-1" data-action="set-status" data-value="{{ value }}"><span class="menu-item-icon menu-dot-{{ value }}" aria-hidden="true"><span class="menu-dot"></span></span><span class="menu-item-text">{{ label }}</span><i class="bi bi-check-lg menu-item-check" aria-hidden="true"></i></button>
+        {% endfor %}
+    </div>
+    <button type="button" class="menu-item menu-item-parent" role="menuitem" tabindex="-1" aria-haspopup="menu" aria-expanded="false" aria-controls="itemMenuPriority"><i class="bi bi-flag menu-item-icon" aria-hidden="true"></i><span class="menu-item-text">{% translate "Set Priority" %}</span><i class="bi bi-chevron-right menu-item-caret" aria-hidden="true"></i></button>
+    <div class="menu menu-sub" id="itemMenuPriority" role="menu" popover="manual" aria-label="{% translate 'Set priority' %}">
+        {% for value, label in priority_choices %}
+        <button type="button" class="menu-item" role="menuitemradio" aria-checked="false" tabindex="-1" data-action="set-priority" data-value="{{ value }}"><i class="bi bi-flag-fill menu-item-icon menu-flag-{{ value }}" aria-hidden="true"></i><span class="menu-item-text">{{ label }}</span><i class="bi bi-check-lg menu-item-check" aria-hidden="true"></i></button>
+        {% endfor %}
+    </div>
+    <button type="button" class="menu-item menu-item-parent" role="menuitem" tabindex="-1" aria-haspopup="menu" aria-expanded="false" aria-controls="itemMenuTags"><i class="bi bi-tags menu-item-icon" aria-hidden="true"></i><span class="menu-item-text">{% translate "Set Tags" %}</span><i class="bi bi-chevron-right menu-item-caret" aria-hidden="true"></i></button>
+    <div class="menu menu-sub" id="itemMenuTags" role="menu" popover="manual" aria-label="{% translate 'Set tags' %}" data-tag-menu>
+        {% include "projects/includes/_tag_menu_items.html" %}
+    </div>
+    <div class="menu-separator" role="separator"></div>
+    <button type="button" class="menu-item" role="menuitem" tabindex="-1" data-action="insert-above"><i class="bi bi-arrow-up menu-item-icon" aria-hidden="true"></i><span class="menu-item-text">{% translate "Insert Above" %}</span></button>
+    <button type="button" class="menu-item" role="menuitem" tabindex="-1" data-action="insert-below"><i class="bi bi-arrow-down menu-item-icon" aria-hidden="true"></i><span class="menu-item-text">{% translate "Insert Below" %}</span></button>
+    <button type="button" class="menu-item" role="menuitem" tabindex="-1" data-action="move-up"><i class="bi bi-chevron-up menu-item-icon" aria-hidden="true"></i><span class="menu-item-text">{% translate "Move Up" %}</span></button>
+    <button type="button" class="menu-item" role="menuitem" tabindex="-1" data-action="move-down"><i class="bi bi-chevron-down menu-item-icon" aria-hidden="true"></i><span class="menu-item-text">{% translate "Move Down" %}</span></button>
+    <div class="menu-separator" role="separator"></div>
+    <button type="button" class="menu-item" role="menuitem" tabindex="-1" data-action="copy-id"><i class="bi bi-clipboard menu-item-icon" aria-hidden="true"></i><span class="menu-item-text">{% translate "Copy ID" %}</span></button>
+    <button type="button" class="menu-item" role="menuitem" tabindex="-1" data-action="copy-link"><i class="bi bi-link-45deg menu-item-icon" aria-hidden="true"></i><span class="menu-item-text">{% translate "Copy Link" %}</span></button>
+    <div class="menu-separator" role="separator"></div>
+    <button type="button" class="menu-item menu-item-danger" role="menuitem" tabindex="-1" data-action="delete"><i class="bi bi-trash menu-item-icon" aria-hidden="true"></i><span class="menu-item-text">{% translate "Delete Item" %}</span></button>
+</div>
+{% endif %}

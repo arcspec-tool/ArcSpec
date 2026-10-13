@@ -1,0 +1,31 @@
+{% extends "emails/base.html" %}
+{% load email_tags i18n %}
+{% block title %}{% translate "Weekly Digest" %} - ArcSpec{% endblock %}
+{% block preheader %}{% blocktranslate trimmed with start=period_start|date:"j F" end=period_end|date:"j F Y" %}Activity in your projects from {{ start }} to {{ end }}.{% endblocktranslate %}{% endblock %}
+{% block heading %}{% translate "Your weekly digest" %}{% endblock %}
+{% block content %}
+<p style="margin:0 0 16px 0;">{% blocktranslate trimmed with name=user.first_name|default:user.email %}Hi {{ name }},{% endblocktranslate %}</p>
+<p style="margin:0 0 24px 0;">{% blocktranslate trimmed with start=period_start|date:"j F" end=period_end|date:"j F Y" %}Here is the activity in your projects from {{ start }} to {{ end }}.{% endblocktranslate %}</p>
+{% for project_name, logs in project_activity.items %}
+{% site_url logs.0.project.get_absolute_url as project_url %}
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 16px 0;border-top:1px solid #e2e8f0;">
+  <tr>
+    <td style="padding:16px 0 6px 0;font-size:15px;line-height:22px;font-weight:600;"><a href="{{ project_url }}" style="color:#0f172a;text-decoration:none;">{{ project_name }}</a></td>
+    <td align="right" style="padding:16px 0 6px 12px;font-size:13px;line-height:22px;color:#64748b;white-space:nowrap;">{% blocktranslate trimmed count counter=logs|length %}{{ counter }} change{% plural %}{{ counter }} changes{% endblocktranslate %}</td>
+  </tr>
+  {% for log in logs|slice:":5" %}
+  <tr>
+    <td colspan="2" style="padding:3px 0;font-size:14px;line-height:20px;color:#334155;">{{ log.get_action_display }} <span style="color:#64748b;">&middot; {{ log.target_type }} {{ log.target_id }}</span></td>
+  </tr>
+  {% endfor %}
+  {% if logs|length > 5 %}
+  <tr>
+    <td colspan="2" style="padding:3px 0;font-size:14px;line-height:20px;"><a href="{{ project_url }}" style="color:#284e8a;">{% blocktranslate trimmed count counter=logs|length|add:"-5" %}and {{ counter }} more{% plural %}and {{ counter }} more{% endblocktranslate %}</a></td>
+  </tr>
+  {% endif %}
+</table>
+{% endfor %}
+{% url 'dashboard:dashboard' as dashboard_path %}{% site_url dashboard_path as dashboard_url %}
+{% include "emails/_button.html" with url=dashboard_url label=_("Open dashboard") %}
+{% endblock %}
+{% block footer_note %}{% translate "You received this email because the weekly digest is on in your notification settings." %} {% url 'settings' as settings_path %}<a href="{% site_url settings_path %}#notifications" style="color:#64748b;text-decoration:underline;">{% translate "Manage notification settings" %}</a>{% endblock %}

@@ -1,0 +1,157 @@
+{% load core_tags i18n %}
+<div class="project-panel project-panel-details collapsed" id="panelDetails">
+    <div class="project-panel-header">
+        <span class="fw-semibold small">{% translate "Details" %}</span>
+        <button type="button" class="btn btn-sm btn-link text-muted p-0" title="{% translate 'Close details' %}" aria-label="{% translate 'Close details' %}" data-collapse="details">
+            <i class="bi bi-x-lg"></i>
+        </button>
+    </div>
+    <div class="project-panel-body">
+
+        <div class="details-content d-none" id="detailsContent">
+            <div class="details-header">
+                <span class="item-id-badge" id="detailItemId"></span>
+                {% if is_editor %}
+                <div class="d-flex align-items-center gap-1 ms-auto">
+                <button class="btn btn-sm btn-light border-0" id="detailEditBtn" title="{% translate 'Edit item' %}"><i class="bi bi-pencil"></i></button>
+                <button type="button" class="btn btn-sm btn-light border-0 menu-trigger" id="detailMenuBtn" data-menu-open="itemMenu" data-menu-align="end" title="{% translate 'Item actions' %}" aria-label="{% translate 'Item actions' %}"><i class="bi bi-three-dots"></i></button>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="details-body">
+                <div class="details-field d-none" id="detailImageSection">
+                    <div class="text-center">
+                        <img id="detailImage" class="img-fluid rounded border" style="max-height: 400px; cursor: pointer;" alt="{% translate 'Item image' %}" title="{% translate 'Click to open full size' %}">
+                        <p class="text-muted small mt-1 mb-0" id="detailImageCaption"></p>
+                    </div>
+                    {% if is_editor %}
+                    <div class="text-center mt-1">
+                        <button class="btn btn-sm btn-outline-secondary" id="changeImageBtn" title="{% translate 'Change image' %}"><i class="bi bi-arrow-repeat me-1"></i>{% translate "Change" %}</button>
+                        <button class="btn btn-sm btn-outline-danger" id="removeImageBtn" title="{% translate 'Remove image' %}"><i class="bi bi-trash me-1"></i>{% translate "Remove" %}</button>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="details-field">
+                    <label class="details-label">{% translate "Text" %}</label>
+                    <div class="details-value" id="detailText"></div>
+                </div>
+
+                <div class="details-section">
+                    <div class="details-section-title">{% translate "Attributes" %}</div>
+                    <div class="details-attr-row">
+                        <span class="details-attr-label">{% translate "Status" %}</span>
+                        <span id="detailStatus"></span>
+                    </div>
+                    <div class="details-attr-row">
+                        <span class="details-attr-label">{% translate "Priority" %}</span>
+                        <span id="detailPriority"></span>
+                    </div>
+                    <div class="details-attr-row">
+                        <span class="details-attr-label">{% translate "Assignee" %}</span>
+                        <span id="detailAssignee"></span>
+                    </div>
+                    <div class="details-attr-row">
+                        <span class="details-attr-label">{% translate "Section" %}</span>
+                        <span id="detailSection" class="small"></span>
+                    </div>
+                    <div class="details-attr-row">
+                        <span class="details-attr-label">{% translate "Created" %}</span>
+                        <span id="detailCreated" class="small text-muted"></span>
+                    </div>
+                    <div class="details-attr-row">
+                        <span class="details-attr-label">{% translate "Updated" %}</span>
+                        <span id="detailUpdated" class="small text-muted"></span>
+                    </div>
+                    <div id="detailCustomAttributes"></div>
+                </div>
+
+                <div class="details-section">
+                    <div class="details-section-title">
+                        {% translate "Tags" %}
+                        {% if is_editor %}
+                        <button type="button" class="btn btn-sm btn-link p-0 ms-auto menu-trigger" title="{% translate 'Edit tags' %}" aria-label="{% translate 'Edit tags' %}" id="editTagsBtn" data-menu-open="detailTagsMenu" data-menu-align="end"><i class="bi bi-pencil"></i></button>
+                        <div class="menu" id="detailTagsMenu" role="menu" popover="manual" aria-label="{% translate 'Tags' %}" data-tag-menu>
+                            {% include "projects/includes/_tag_menu_items.html" %}
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div id="detailsTagsList"></div>
+                </div>
+
+                <div class="details-section">
+                    <div class="details-section-title">
+                        {% translate "Attachments" %}
+                        <span class="badge bg-secondary bg-opacity-10 text-secondary ms-1" id="attachmentsCount">0</span>
+                        {% if is_editor %}
+                        <button class="btn btn-sm btn-link p-0 ms-auto" id="attachUploadBtn" title="{% translate 'Upload file' %}"><i class="bi bi-paperclip"></i></button>
+                        <input type="file" id="attachFileInput" class="d-none">
+                        {% endif %}
+                    </div>
+                    <div id="detailsAttachmentsList"></div>
+                </div>
+
+                <div class="details-section">
+                    <div class="details-section-title">
+                        {% translate "Links" %}
+                        {% if is_editor %}
+                        <button class="btn btn-sm btn-link p-0 ms-auto" id="addLinkBtn" title="{% translate 'Add link' %}" data-modal-open="add_link" data-project="{{ project.slug }}"><i class="bi bi-plus-lg"></i></button>
+                        {% endif %}
+                    </div>
+                    <div id="detailsLinksList"></div>
+                </div>
+
+                <div class="details-section">
+                    <div class="details-section-title">
+                        {% translate "Comments" %}
+                        <span class="badge bg-secondary bg-opacity-10 text-secondary ms-1" id="commentsCount">0</span>
+                    </div>
+                    <div id="commentsList"></div>
+                    {% if not is_archived %}
+                    <div class="details-comment-input mt-2">
+                        <div class="input-group input-group-sm">
+                            <textarea class="form-control" rows="2" placeholder="{% translate 'Add a comment... (Shift+Enter for new line)' %}" id="commentInput"></textarea>
+                            <button class="btn btn-outline-primary" id="postCommentBtn"><i class="bi bi-send"></i></button>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="details-section">
+                    <div class="details-section-title">{% translate "History" %}</div>
+                    <div id="detailHistory"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="details-content d-none" id="sectionDetailsContent">
+            <div class="details-header">
+                <span class="fw-semibold" id="sectionDetailTitle"></span>
+            </div>
+            <div class="details-body">
+                <div class="details-field">
+                    <label class="details-label">{% translate "Section Number" %}</label>
+                    <div class="details-value" id="sectionDetailNumber"></div>
+                </div>
+                <div class="details-field">
+                    <label class="details-label">{% translate "Items" %}</label>
+                    <div class="details-value" id="sectionDetailCount"></div>
+                </div>
+                <div class="details-field">
+                    <label class="details-label">{% translate "Description" %}</label>
+                    <div class="details-value text-muted" id="sectionDetailDescription"></div>
+                </div>
+                {% if is_editor %}
+                <button type="button" class="btn btn-sm btn-outline-primary" id="sectionAddItemBtn" data-modal-open="add_item" data-project="{{ project.slug }}" data-section=""><i class="bi bi-plus-lg me-1"></i>{% translate "Add item to this section" %}</button>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="details-empty" id="detailsEmpty">
+            <i class="bi bi-layout-sidebar-reverse details-empty-icon" aria-hidden="true"></i>
+            <p class="details-empty-text">{% translate "Select an item or a section to see its details here." %}</p>
+        </div>
+
+    </div>
+</div>

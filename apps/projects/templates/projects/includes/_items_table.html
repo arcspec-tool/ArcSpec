@@ -1,0 +1,78 @@
+{% load core_tags i18n %}
+<div class="project-panel project-panel-table" id="panelTable">
+    <div class="project-table-wrapper">
+        <table class="project-table" id="itemsTable"{% if is_editor %} data-menu-context="itemMenu" data-menu-context-target="tr.item-row[data-key]"{% endif %}>
+            <thead>
+                <tr>
+                    <th class="col-grip"><span class="visually-hidden">{% translate "Order" %}</span></th>
+                    <th class="col-id">{% translate "ID" %}</th>
+                    <th class="col-text">{% translate "Text" %}</th>
+                    <th class="col-status">{% translate "Status" %}</th>
+                    <th class="col-priority">{% translate "Priority" %}</th>
+                    <th class="col-tags">{% translate "Tags" %}</th>
+                    <th class="col-assignee">{% translate "Assignee" %}</th>
+                    <th class="col-updated">{% translate "Updated" %}</th>
+                    {% if is_editor %}<th class="col-actions"><span class="visually-hidden">{% translate "Actions" %}</span></th>{% endif %}
+                </tr>
+            </thead>
+            <tbody id="itemsBody">
+                {% for section in sections %}
+                {% with section_items=items_by_section|get_item:section.pk %}
+                <tr class="item-row {% if section.parent_id %}subsection-header-row{% else %}section-header-row{% endif %}" data-section="{{ section.pk }}" data-number="{{ section.number }}" data-id="SEC-{{ section.number }}">
+                    <td class="col-grip"></td>
+                    <td class="col-id"><span class="{% if section.parent_id %}subsection-id{% else %}section-id{% endif %}">{{ section.number }}</span></td>
+                    <td class="col-text" colspan="{% if is_editor %}7{% else %}6{% endif %}"><strong>{{ section.title }}</strong></td>
+                </tr>
+                {% if section_items %}
+                {% for item in section_items %}
+                <tr class="item-row" data-section="{{ section.pk }}" data-section-key="{{ section.public_key }}" data-id="{{ item.pk }}" data-key="{{ item.public_key }}" data-item-id="{{ item.item_id }}" data-status="{{ item.status }}" data-priority="{{ item.priority }}"{% if is_editor %} draggable="true"{% endif %}>
+                    <td class="col-grip"><span class="drag-handle"><i class="bi bi-grip-vertical"></i></span></td>
+                    <td class="col-id"><span class="item-id">{{ item.item_id }}</span></td>
+                    <td class="col-text cell-editable" data-field="text">{% if item.image %}<div class="mb-1"><img src="{% url 'item_image' project.slug item.public_key %}" class="img-fluid rounded border" style="max-height: 120px;" alt="{{ item.image_caption }}">{% if item.image_caption %}<div class="text-muted small">{{ item.image_caption }}</div>{% endif %}</div>{% endif %}{{ item.text|sanitize_rich_text }}</td>
+                    <td class="col-status">{% status_badge item.status %}{% if item.attachment_count or item.comment_count %}<br><span class="item-indicators">{% if item.attachment_count %}<i class="bi bi-paperclip text-muted" title="{% blocktranslate trimmed count counter=item.attachment_count %}{{ counter }} attachment{% plural %}{{ counter }} attachments{% endblocktranslate %}"></i>{% endif %}{% if item.comment_count %}<i class="bi bi-chat-left-text text-muted" title="{% blocktranslate trimmed count counter=item.comment_count %}{{ counter }} comment{% plural %}{{ counter }} comments{% endblocktranslate %}"></i>{% endif %}</span>{% endif %}</td>
+                    <td class="col-priority cell-editable" data-field="priority">{% priority_badge item.priority %}</td>
+                    <td class="col-tags">
+                        {% for it in item.item_tags.all %}
+                        <span class="badge" data-tag-id="{{ it.tag_id }}" style="background-color: {{ it.tag.color }}20; color: {{ it.tag.color }};">{{ it.tag.name }}</span>
+                        {% endfor %}
+                    </td>
+                    <td class="col-assignee">
+                        {% if item.assignee %}
+                        <span class="avatar-xs" title="{{ item.assignee }}" style="background:{{ item.assignee.avatar_color }}">{{ item.assignee|initials }}</span>
+                        {% endif %}
+                    </td>
+                    <td class="col-updated"><span class="small text-muted" title="{{ item.updated_at|date:'j M Y, H:i' }}">{{ item.updated_at|time_ago }}</span></td>
+                    {% if is_editor %}<td class="col-actions"><button type="button" class="btn btn-sm btn-light border-0 menu-trigger row-actions-btn" data-menu-open="itemMenu" data-menu-align="end" aria-label="{% blocktranslate trimmed with item_id=item.item_id %}Actions for {{ item_id }}{% endblocktranslate %}"><i class="bi bi-three-dots-vertical"></i></button></td>{% endif %}
+                </tr>
+                {% endfor %}
+                {% endif %}
+                {% endwith %}
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="table-empty" id="itemsEmpty" hidden>
+            <i class="bi bi-search" aria-hidden="true"></i>
+            <p class="table-empty-title">{% translate "No items match" %}</p>
+            <p class="table-empty-text">{% translate "No item matches the search and filters." %}</p>
+            <button type="button" class="btn btn-sm btn-outline-secondary" id="clearAllFiltersBtn">{% translate "Clear search and filters" %}</button>
+        </div>
+    </div>
+
+    <div class="project-table-footer" id="tableFooter">
+        <div class="status-overview">
+            {% if total_items > 0 %}
+            <div class="status-progress" id="statusProgress">
+                {% for st in status_summary %}
+                <div class="status-progress-segment status-fill-{{ st.value }}" style="width:{% widthratio st.count total_items 100 %}%" title="{{ st.count }} {{ st.label }}"></div>
+                {% endfor %}
+            </div>
+            <div class="status-summary" id="statusSummary">
+                {% for st in status_summary %}
+                <span class="status-summary-item"><span class="status-dot status-fill-{{ st.value }}"></span>{{ st.count }} {{ st.label }}</span>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+        <span class="text-muted small" id="itemCount" data-total="{{ total_items }}">{% blocktranslate trimmed count counter=total_items %}{{ counter }} item{% plural %}{{ counter }} items{% endblocktranslate %}</span>
+    </div>
+</div>

@@ -1,0 +1,14 @@
+{% load i18n %}<div class="audit-trail-backdrop" id="versionBackdrop"></div>
+<div class="audit-trail-panel" id="versionPanel" role="dialog" aria-label="{% translate 'Version History' %}" aria-modal="true">
+    <div class="audit-trail-header">
+        <div class="d-flex align-items-center gap-2">
+            <i class="bi bi-clock-history"></i>
+            <span class="fw-semibold">{% translate "Version History" %}</span>
+        </div>
+        <button class="btn btn-sm btn-link text-muted p-0" id="closeVersionBtn" title="{% translate 'Close' %}"><i class="bi bi-x-lg"></i></button>
+    </div>
+    <div class="audit-trail-body" style="padding: .75rem;">
+        <div id="versionHistoryList">
+        </div>
+    </div>
+</div>

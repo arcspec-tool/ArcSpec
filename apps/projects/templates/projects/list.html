@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% load core_tags i18n %}
+{% block title %}{% translate "Projects" %} - ArcSpec{% endblock %}
+{% block content %}
+<div class="page-header d-flex align-items-center justify-content-between">
+    <div>
+        <h1 class="page-title">{% translate "Projects" %}</h1>
+        <p class="page-subtitle">{% translate "Manage your specification and documentation projects" %}</p>
+    </div>
+    {% if not request.user.is_viewer %}
+    <button type="button" class="btn btn-primary btn-sm" data-modal-open="project_create">
+        <i class="bi bi-plus-lg me-1"></i> {% translate "New Project" %}
+    </button>
+    {% endif %}
+</div>
+
+<div class="page-toolbar">
+    <form method="get" class="toolbar-search" role="search" id="projectSearchForm">
+        <i class="bi bi-search" aria-hidden="true"></i>
+        <input type="search" class="form-control form-control-sm" name="q" value="{{ search_query }}" placeholder="{% translate 'Search projects' %}" aria-label="{% translate 'Search projects' %}" id="localProjectSearch">
+        {% if active_status != 'all' %}<input type="hidden" name="status" value="{{ active_status }}">{% endif %}
+        <input type="hidden" name="sort" value="{{ active_sort }}">
+    </form>
+    <nav class="segmented" aria-label="{% translate 'Filter by status' %}">
+        {% for value, label, count in status_filters %}
+        <a href="{% if value == 'all' %}{% querystring status=None page=None %}{% else %}{% querystring status=value page=None %}{% endif %}" class="segmented-link{% if active_status == value %} active{% endif %}"{% if active_status == value %} aria-current="page"{% endif %}>{{ label }} <span class="segmented-count">{{ count }}</span></a>
+        {% endfor %}
+    </nav>
+    <div class="toolbar-end">
+        <select class="form-select form-select-sm filter-sort" id="projectSort" aria-label="{% translate 'Sort projects' %}">
+            <option value="updated" {% if active_sort == 'updated' %}selected{% endif %}>{% translate "Last updated" %}</option>
+            <option value="name-asc" {% if active_sort == 'name-asc' %}selected{% endif %}>{% translate "Name A-Z" %}</option>
+            <option value="name-desc" {% if active_sort == 'name-desc' %}selected{% endif %}>{% translate "Name Z-A" %}</option>
+            <option value="created" {% if active_sort == 'created' %}selected{% endif %}>{% translate "Date created" %}</option>
+        </select>
+        <div class="btn-group btn-group-sm view-toggle" role="group" aria-label="{% translate 'View' %}">
+            <a href="{% querystring view='grid' %}" class="btn btn-outline-secondary{% if view_mode == 'grid' %} active{% endif %}" title="{% translate 'Grid view' %}" aria-label="{% translate 'Grid view' %}"{% if view_mode == 'grid' %} aria-current="true"{% endif %}><i class="bi bi-grid-3x2-gap"></i></a>
+            <a href="{% querystring view='table' %}" class="btn btn-outline-secondary{% if view_mode == 'table' %} active{% endif %}" title="{% translate 'Table view' %}" aria-label="{% translate 'Table view' %}"{% if view_mode == 'table' %} aria-current="true"{% endif %}><i class="bi bi-list-ul"></i></a>
+        </div>
+    </div>
+</div>
+
+{% if projects %}
+
+{% if view_mode == 'grid' %}
+<div id="projectsGrid" class="row g-3">
+    {% for project in projects %}
+    <div class="col-sm-6 col-xl-4 col-xxl-3" data-status="{{ project.status }}">
+        <article class="card project-card h-100{% if project.status == 'archived' %} project-card-archived{% endif %}">
+            <div class="card-body">
+                <div class="project-card-head">
+                    <span class="project-card-icon" style="background: {{ project.color }}" aria-hidden="true"><i class="bi bi-file-earmark-text"></i></span>
+                    <div class="project-card-heading">
+                        <h2 class="project-card-title"><a href="{{ project.get_absolute_url }}" class="stretched-link" title="{{ project.name }}">{{ project.name }}</a></h2>
+                        <p class="project-card-meta" title="{{ project.template.name }}">{{ project.template.name }}</p>
+                    </div>
+                    {% include "projects/includes/_project_actions.html" %}
+                </div>
+                {% if project.description %}<p class="project-card-desc">{{ project.description }}</p>{% endif %}
+                <p class="project-card-counts">{% blocktranslate trimmed count counter=project.items_total %}{{ counter }} item{% plural %}{{ counter }} items{% endblocktranslate %} &middot; {% blocktranslate trimmed count counter=project.members_total %}{{ counter }} member{% plural %}{{ counter }} members{% endblocktranslate %}</p>
+            </div>
+            <div class="card-footer project-card-footer">
+                {% status_badge project.status %}
+                <span>{% translate "Updated" %} <time datetime="{{ project.updated_at|date:'c' }}" title="{{ project.updated_at|date:'j M Y, H:i' }}">{{ project.updated_at|time_ago }}</time></span>
+            </div>
+        </article>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div id="projectsList" class="card data-table-card">
+    <div class="table-responsive">
+        <table class="table data-table align-middle mb-0">
+            <thead>
+                <tr>
+                    <th scope="col">{% translate "Project" %}</th>
+                    <th scope="col">{% translate "Status" %}</th>
+                    <th scope="col" class="text-end">{% translate "Items" %}</th>
+                    <th scope="col" class="text-end">{% translate "Members" %}</th>
+                    <th scope="col">{% translate "Updated" %}</th>
+                    <th scope="col" class="data-table-actions"><span class="visually-hidden">{% translate "Actions" %}</span></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for project in projects %}
+                <tr data-status="{{ project.status }}" data-href="{{ project.get_absolute_url }}"{% if project.status == 'archived' %} class="projects-row-archived"{% endif %}>
+                    <td>
+                        <div class="projects-table-project">
+                            <span class="project-card-icon-sm" style="background: {{ project.color }}" aria-hidden="true"><i class="bi bi-file-earmark-text"></i></span>
+                            <div class="projects-table-heading">
+                                <a href="{{ project.get_absolute_url }}" class="projects-table-name">{{ project.name }}</a>
+                                <div class="projects-table-template">{{ project.template.name }}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>{% status_badge project.status %}</td>
+                    <td class="text-end">{{ project.items_total }}</td>
+                    <td class="text-end">{{ project.members_total }}</td>
+                    <td class="text-nowrap"><time datetime="{{ project.updated_at|date:'c' }}" title="{{ project.updated_at|date:'j M Y, H:i' }}">{{ project.updated_at|time_ago }}</time></td>
+                    <td class="text-end">{% include "projects/includes/_project_actions.html" %}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}
+
+{% if page_obj.has_other_pages %}
+<div class="projects-pagination">
+    <small class="text-muted">{% blocktranslate trimmed with start=page_obj.start_index end=page_obj.end_index total=page_obj.paginator.count %}Showing {{ start }}-{{ end }} of {{ total }}{% endblocktranslate %}</small>
+    {% include "includes/_pagination.html" %}
+</div>
+{% endif %}
+
+{% elif filters_active %}
+<div class="card dash-panel">
+    <div class="dash-empty">
+        <i class="bi bi-search" aria-hidden="true"></i>
+        <p class="mb-3">{% if search_query %}{% if active_status != 'all' %}{% blocktranslate trimmed %}No projects match “{{ search_query }}” in this status{% endblocktranslate %}{% else %}{% blocktranslate trimmed %}No projects match “{{ search_query }}”{% endblocktranslate %}{% endif %}{% else %}{% translate "No projects match this status" %}{% endif %}</p>
+        <a href="{% querystring q=None status=None page=None %}" class="btn btn-sm btn-light">{% translate "Clear filters" %}</a>
+    </div>
+</div>
+{% else %}
+<div class="card dash-panel">
+    <div class="dash-empty">
+        <i class="bi bi-folder2-open" aria-hidden="true"></i>
+        <p class="mb-3">{% translate "No projects yet" %}</p>
+        {% if not request.user.is_viewer %}
+        <button type="button" class="btn btn-primary btn-sm" data-modal-open="project_create"><i class="bi bi-plus-lg me-1"></i> {% translate "New Project" %}</button>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+{% load static %}
+<script src="{% static 'js/projects.js' %}"></script>
+{% endblock %}

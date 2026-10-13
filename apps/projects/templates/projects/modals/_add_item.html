@@ -1,0 +1,58 @@
+{% extends "components/_modal_shell.html" %}
+{% load core_tags i18n %}
+{% block modal_title %}<i class="bi bi-plus-circle me-2"></i>{% translate "Add Item" %}{% endblock %}
+{% block modal_body %}
+                <form id="addItemForm" data-project="{{ project.slug }}">
+                    <div class="mb-3">
+                        <label for="addItemSection" class="form-label">{% translate "Section" %}</label>
+                        <select class="form-select" id="addItemSection" required>
+                            {% for section in sections %}
+                            <option value="{{ section.pk }}"{% if section.pk == selected_section %} selected{% endif %}>{{ section.number }} {{ section.title }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="addItemText" class="form-label">{% translate "Text" %}</label>
+                        <textarea class="form-control" id="addItemText" rows="6" required placeholder="{% translate 'Enter item text...' %}"></textarea>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label for="addItemStatus" class="form-label">{% translate "Status" %}</label>
+                            <select class="form-select" id="addItemStatus">
+                                {% for value, label in status_choices %}<option value="{{ value }}">{{ label }}</option>{% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="addItemPriority" class="form-label">{% translate "Priority" %}</label>
+                            <select class="form-select" id="addItemPriority">
+                                {% for value, label in priority_choices %}<option value="{{ value }}"{% if value == 'medium' %} selected{% endif %}>{{ label }}</option>{% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="addItemAssignee" class="form-label">{% translate "Assignee" %}</label>
+                            <div class="searchable-select" data-target="addItemAssignee">
+                                <select class="form-select" id="addItemAssignee">
+                                    <option value="">{% translate "Unassigned" %}</option>
+                                    {% for m in memberships %}
+                                    <option value="{{ m.user.pk }}" data-color="{{ m.user.avatar_color }}" data-initials="{{ m.user|initials }}">{{ m.user }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="addItemCustomAttributes">{% include "projects/modals/_item_attribute_fields.html" with prefix="addItemCustomAttributes" %}</div>
+                    <hr class="my-3">
+                    <label class="form-label">{% translate "Image" %} <span class="text-muted small">{% translate "(optional: chart, diagram, graph)" %}</span></label>
+                    <div class="row g-3 mb-1">
+                        <div class="col-7">
+                            <input type="file" class="form-control" id="addItemImage" accept="image/png,image/jpeg,image/gif,image/webp">
+                        </div>
+                        <div class="col-5">
+                            <input type="text" class="form-control" id="addItemImageCaption" maxlength="255" placeholder="{% translate 'Caption (optional)' %}">
+                        </div>
+                    </div>
+                    <div class="form-text">{% translate "Max 5 MB. PNG, JPG, GIF, WebP." %}</div>
+                </form>
+{% endblock %}
+{% block modal_footer %}<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% translate "Cancel" %}</button>
+                <button type="button" class="btn btn-primary" id="addItemSubmit">{% translate "Add Item" %}</button>{% endblock %}

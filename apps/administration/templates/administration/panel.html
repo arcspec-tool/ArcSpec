@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load static i18n %}
+{% block title %}{% translate "Admin Panel" %} - ArcSpec{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">{% translate "Admin Panel" %}</h1>
+    <p class="page-subtitle">{% translate "Users, templates, tag presets and system settings" %}</p>
+</div>
+
+<nav class="admin-tabs" aria-label="{% translate 'Admin panel sections' %}">
+    <a class="admin-tab{% if active_tab == 'users' %} active{% endif %}" href="?tab=users"{% if active_tab == 'users' %} aria-current="page"{% endif %}><i class="bi bi-people" aria-hidden="true"></i>{% translate "Users" %}<span class="admin-tab-count">{{ tab_counts.users }}</span></a>
+    <a class="admin-tab{% if active_tab == 'templates' %} active{% endif %}" href="?tab=templates"{% if active_tab == 'templates' %} aria-current="page"{% endif %}><i class="bi bi-file-earmark-ruled" aria-hidden="true"></i>{% translate "Templates" %}<span class="admin-tab-count">{{ tab_counts.templates }}</span></a>
+    <a class="admin-tab{% if active_tab == 'tags' %} active{% endif %}" href="?tab=tags"{% if active_tab == 'tags' %} aria-current="page"{% endif %}><i class="bi bi-tags" aria-hidden="true"></i>{% translate "Tag Presets" %}<span class="admin-tab-count">{{ tab_counts.tags }}</span></a>
+    <a class="admin-tab{% if active_tab == 'system' %} active{% endif %}" href="?tab=system"{% if active_tab == 'system' %} aria-current="page"{% endif %}><i class="bi bi-sliders" aria-hidden="true"></i>{% translate "System Settings" %}</a>
+</nav>
+
+{% if active_tab == 'users' %}
+{% include "administration/includes/_users.html" %}
+{% elif active_tab == 'templates' %}
+{% include "administration/includes/_templates.html" %}
+{% elif active_tab == 'tags' %}
+{% include "administration/includes/_tags.html" %}
+{% else %}
+{% include "administration/includes/_system.html" %}
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/admin.js' %}"></script>
+{% endblock %}

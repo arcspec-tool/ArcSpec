@@ -1,0 +1,20 @@
+{% load i18n %}<div class="project-panel project-panel-tree" id="panelTree">
+    <div class="project-panel-header">
+        <span class="fw-semibold small">{% translate "Document Sections" %}</span>
+        <div class="d-flex align-items-center gap-1">
+            {% if is_editor %}
+            <button class="btn btn-sm btn-link text-muted p-0" title="{% translate 'Manage Sections' %}" data-modal-open="manage_sections" data-project="{{ project.slug }}">
+                <i class="bi bi-gear"></i>
+            </button>
+            {% endif %}
+            <button class="btn btn-sm btn-link text-muted p-0" title="{% translate 'Collapse panel' %}" data-collapse="tree">
+                <i class="bi bi-chevron-left"></i>
+            </button>
+        </div>
+    </div>
+    <div class="project-panel-body">
+        <div class="tree-nav" id="treeNav">
+            {% include "projects/includes/_tree_node.html" with sections=root_sections is_root=True %}
+        </div>
+    </div>
+</div>

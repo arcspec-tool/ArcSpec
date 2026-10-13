@@ -1,0 +1,12 @@
+{% load core_tags i18n %}{% for notification in notifications %}
+<div class="dash-row dash-notification{% if not notification.is_read %} is-unread{% endif %}" data-notification-id="{{ notification.public_key }}">
+    <span class="dash-notification-icon" aria-hidden="true"><i class="bi {% if notification.type == 'item_created' %}bi-plus-circle{% elif notification.type == 'comment' %}bi-chat-dots{% elif notification.type == 'collaborator_added' %}bi-person-plus{% elif notification.type == 'review_requested' %}bi-exclamation-circle{% elif notification.type == 'status_changed' %}bi-check-circle{% elif notification.type == 'mention' %}bi-at{% else %}bi-bell{% endif %}"></i></span>
+    <a href="{{ notification.link|default:'/dashboard/' }}" class="dash-row-body notification-link">
+        <span class="dash-row-title" title="{{ notification.message }}">{% if not notification.is_read %}<span class="visually-hidden">{% translate "Unread:" %} </span>{% endif %}{{ notification.message }}</span>
+        <span class="dash-row-meta"><time datetime="{{ notification.created_at|date:'c' }}" title="{{ notification.created_at|date:'j M Y, H:i' }}">{{ notification.created_at|time_ago }}</time></span>
+    </a>
+    {% if not notification.is_read %}
+    <button type="button" class="btn btn-sm btn-light border-0 notification-dismiss" title="{% translate 'Mark as read' %}" aria-label="{% translate 'Mark as read' %}" data-notification-id="{{ notification.public_key }}"><i class="bi bi-check2"></i></button>
+    {% endif %}
+</div>
+{% endfor %}

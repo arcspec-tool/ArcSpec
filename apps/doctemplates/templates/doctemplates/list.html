@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% translate "Templates" %} - ArcSpec{% endblock %}
+{% block content %}
+<div class="page-header d-flex align-items-center justify-content-between">
+    <div>
+        <h1 class="page-title">{% translate "Templates" %}</h1>
+        <p class="page-subtitle">{% translate "Create and manage project templates" %}</p>
+    </div>
+    {% if not request.user.is_viewer %}
+    <button type="button" class="btn btn-primary btn-sm" data-modal-open="template_editor">
+        <i class="bi bi-plus-lg me-1"></i> {% translate "New Template" %}
+    </button>
+    {% endif %}
+</div>
+
+<div class="page-toolbar">
+    <form method="get" action="{% url 'template_list' %}" class="toolbar-search" role="search">
+        <i class="bi bi-search" aria-hidden="true"></i>
+        <input type="search" class="form-control form-control-sm" name="q" value="{{ search_query }}" placeholder="{% translate 'Search templates' %}" aria-label="{% translate 'Search templates' %}" id="localTemplateSearch">
+        {% if selected_type %}<input type="hidden" name="type" value="{{ selected_type }}">{% endif %}
+    </form>
+    <nav class="segmented" aria-label="{% translate 'Filter by document type' %}">
+        {% for value, label, count in type_filters %}
+        <a href="{% if value %}{% querystring type=value %}{% else %}{% querystring type=None %}{% endif %}" class="segmented-link{% if selected_type == value %} active{% endif %}"{% if selected_type == value %} aria-current="page"{% endif %}>{{ label }} <span class="segmented-count">{{ count }}</span></a>
+        {% endfor %}
+    </nav>
+</div>
+
+{% if filters_active and not builtin_templates and not custom_templates %}
+<div class="card dash-panel">
+    <div class="dash-empty">
+        <i class="bi bi-search" aria-hidden="true"></i>
+        <p class="mb-3">{% if search_query %}{% blocktranslate trimmed %}No templates match “{{ search_query }}”{% endblocktranslate %}{% else %}{% translate "No templates match this type" %}{% endif %}</p>
+        <a href="{% url 'template_list' %}" class="btn btn-sm btn-light">{% translate "Clear filters" %}</a>
+    </div>
+</div>
+{% else %}
+
+{% if builtin_templates or not filters_active %}
+<section class="template-group" aria-labelledby="builtinHeading">
+    <h2 class="template-group-heading" id="builtinHeading">
+        <button type="button" class="template-group-toggle" aria-expanded="true" aria-controls="builtinSection" data-toggle-target="builtinSection">
+            <i class="bi bi-chevron-down" aria-hidden="true"></i> {% translate "Built-in templates" %} <span class="segmented-count">{{ builtin_templates|length }}</span>
+        </button>
+    </h2>
+    <div class="row g-3" id="builtinSection">
+        {% for tmpl in builtin_templates %}
+        {% include "doctemplates/includes/_template_card.html" %}
+        {% empty %}
+        <div class="col-12"><p class="text-muted small mb-0">{% translate "No built-in templates available." %}</p></div>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+{% if custom_templates or not filters_active %}
+<section class="template-group" aria-labelledby="customHeading">
+    <h2 class="template-group-heading" id="customHeading">
+        <button type="button" class="template-group-toggle" aria-expanded="true" aria-controls="customSection" data-toggle-target="customSection">
+            <i class="bi bi-chevron-down" aria-hidden="true"></i> {% translate "Custom templates" %} <span class="segmented-count">{{ custom_templates|length }}</span>
+        </button>
+    </h2>
+    <div class="row g-3" id="customSection">
+        {% for tmpl in custom_templates %}
+        {% include "doctemplates/includes/_template_card.html" %}
+        {% empty %}
+        <div class="col-12">
+            <div class="card dash-panel">
+                <div class="dash-empty">
+                    <i class="bi bi-file-earmark-plus" aria-hidden="true"></i>
+                    <p class="mb-3">{% translate "No custom templates yet" %}</p>
+                    {% if not request.user.is_viewer %}
+                    <button type="button" class="btn btn-primary btn-sm" data-modal-open="template_editor"><i class="bi bi-plus-lg me-1"></i> {% translate "New Template" %}</button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+{% load static %}
+<script src="{% static 'js/templates.js' %}"></script>
+<script nonce="{{ request.csp_nonce }}">
+(function() {
+    'use strict';
+    var filtered = {{ filters_active|yesno:"true,false" }};
+
+    function setExpanded(toggle, target, expanded) {
+        toggle.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+        target.classList.toggle('d-none', !expanded);
+    }
+
+    document.querySelectorAll('.template-group-toggle').forEach(function(toggle) {
+        var targetId = toggle.getAttribute('data-toggle-target');
+        var target = document.getElementById(targetId);
+        if (!target) return;
+        var key = 'tmpl_' + targetId + '_collapsed';
+        var stored = null;
+        try { stored = localStorage.getItem(key); } catch (e) {}
+        if (!filtered && stored === '1') setExpanded(toggle, target, false);
+        toggle.addEventListener('click', function() {
+            var expand = toggle.getAttribute('aria-expanded') !== 'true';
+            setExpanded(toggle, target, expand);
+            try { localStorage.setItem(key, expand ? '0' : '1'); } catch (e) {}
+        });
+    });
+
+    var search = document.getElementById('localTemplateSearch');
+    if (search) {
+        search.addEventListener('search', function() {
+            if (search.value === '' && search.defaultValue !== '') search.form.requestSubmit();
+        });
+        search.form.addEventListener('submit', function() {
+            if (search.value.trim() === '') search.disabled = true;
+        });
+    }
+})();
+</script>
+{% endblock %}

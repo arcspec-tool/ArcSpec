@@ -1,0 +1,34 @@
+{% extends "components/_modal_shell.html" %}
+{% load core_tags i18n %}
+{% block modal_title %}<i class="bi bi-people me-2"></i>{% translate "Collaborators" %}{% endblock %}
+{% block modal_body %}
+                {% if is_admin %}
+                <div class="d-flex gap-2 mb-3">
+                    <input type="email" class="form-control form-control-sm" id="inviteEmail" placeholder="{% translate 'Email address' %}">
+                    <select class="form-select form-select-sm" id="inviteRole" style="width: 120px;">
+                        {% for value, label in role_choices %}<option value="{{ value }}"{% if value == 'viewer' %} selected{% endif %}>{{ label }}</option>{% endfor %}
+                    </select>
+                    <button class="btn btn-sm btn-primary" id="inviteBtn" style="white-space: nowrap;">{% translate "Invite" %}</button>
+                </div>
+                {% endif %}
+                <div id="collaboratorsList">
+                    {% for m in memberships %}
+                    <div class="collab-item d-flex align-items-center gap-2 py-2 border-bottom" data-membership-key="{{ m.public_key }}">
+                        <span class="avatar-sm" style="background:{{ m.user.avatar_color }}">{{ m.user|initials }}</span>
+                        <div class="flex-fill">
+                            <div class="small fw-semibold">{{ m.user }}</div>
+                            <div class="small text-muted">{{ m.user.email }}</div>
+                        </div>
+                        {% if is_admin %}
+                        <select class="form-select form-select-sm collab-role-select" data-id="{{ m.public_key }}" data-current-role="{{ m.role }}" style="width:100px;">
+                            {% for value, label in role_choices %}<option value="{{ value }}"{% if value == m.role %} selected{% endif %}>{{ label }}</option>{% endfor %}
+                        </select>
+                        <button class="btn btn-sm btn-outline-danger collab-remove-btn" data-id="{{ m.public_key }}" title="{% translate 'Remove' %}"><i class="bi bi-x-lg"></i></button>
+                        {% else %}
+                        <span class="badge bg-{% if m.role == 'admin' %}primary{% elif m.role == 'editor' %}info{% else %}secondary{% endif %}">{{ m.get_role_display }}</span>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+{% endblock %}
+{% block footer_wrapper %}{% endblock %}

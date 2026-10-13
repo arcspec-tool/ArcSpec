@@ -1,0 +1,17 @@
+{% load i18n %}{% if page_obj.has_other_pages %}
+<nav aria-label="{% translate 'Page navigation' %}">
+    <ul class="pagination pagination-sm justify-content-center">
+        {% if page_obj.has_previous %}
+        <li class="page-item"><a class="page-link" href="{% querystring page=page_obj.previous_page_number %}" aria-label="{% translate 'Previous page' %}">&laquo;</a></li>
+        {% endif %}
+        {% for num in page_obj.paginator.page_range %}
+        <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+            <a class="page-link" href="{% querystring page=num %}"{% if page_obj.number == num %} aria-current="page"{% endif %}>{{ num }}</a>
+        </li>
+        {% endfor %}
+        {% if page_obj.has_next %}
+        <li class="page-item"><a class="page-link" href="{% querystring page=page_obj.next_page_number %}" aria-label="{% translate 'Next page' %}">&raquo;</a></li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}

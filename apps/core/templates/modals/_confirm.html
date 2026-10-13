@@ -1,0 +1,8 @@
+{% extends "components/_modal_shell.html" %}
+{% load i18n %}
+{% block header_class %} border-0 pb-0{% endblock %}
+{% block modal_title %}{% if variant == 'warning' %}<i class="bi bi-exclamation-triangle text-warning me-2"></i>{% elif variant == 'primary' %}<i class="bi bi-question-circle text-primary me-2"></i>{% else %}<i class="bi bi-exclamation-triangle text-danger me-2"></i>{% endif %}<span id="confirmModalTitle">{{ title }}</span>{% endblock %}
+{% block modal_body %}<p class="mb-0" id="confirmModalBody">{{ message }}</p>{% endblock %}
+{% block footer_class %} border-0 pt-0{% endblock %}
+{% block modal_footer %}<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% translate "Cancel" %}</button>
+                <button type="button" class="btn btn-{{ variant }}" id="confirmModalConfirm" data-modal-confirm>{{ confirm_label }}</button>{% endblock %}

@@ -1,0 +1,42 @@
+{% load i18n %}<div class="project-summary-overlay d-none" id="projectSummary">
+    <div class="project-summary-inner">
+        <div class="d-flex align-items-center justify-content-between mb-3">
+            <h2 class="summary-heading"><i class="bi bi-bar-chart-line me-2" aria-hidden="true"></i>{% translate "Project Summary" %}</h2>
+            <button type="button" class="btn btn-sm btn-light border-0" id="closeSummaryBtn" title="{% translate 'Close summary' %}" aria-label="{% translate 'Close summary' %}"><i class="bi bi-x-lg"></i></button>
+        </div>
+
+        <div class="summary-stats-grid mb-3" id="summaryQuickStats"></div>
+
+        <div class="row g-3 mb-3">
+            <div class="col-md-6">
+                <div class="summary-card">
+                    <div class="summary-card-title">{% translate "Items by Status" %}</div>
+                    <div class="summary-stack" id="summaryStatusChart"></div>
+                    <div class="summary-breakdown" id="summaryStatusLegend"></div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="summary-card">
+                    <div class="summary-card-title">{% translate "Items by Priority" %}</div>
+                    <div class="summary-stack" id="summaryPriorityChart"></div>
+                    <div class="summary-breakdown" id="summaryPriorityLegend"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-3">
+            <div class="col-md-7">
+                <div class="summary-card">
+                    <div class="summary-card-title">{% translate "Items by Section" %}</div>
+                    <div id="summarySectionList" class="summary-section-list"></div>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <div class="summary-card">
+                    <div class="summary-card-title">{% translate "Recent Changes" %}</div>
+                    <div id="summaryRecentChanges" class="summary-recent-list"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

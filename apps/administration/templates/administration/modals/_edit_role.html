@@ -1,0 +1,13 @@
+{% extends "components/_modal_shell.html" %}
+{% load i18n %}
+{% block modal_title %}<i class="bi bi-pencil me-2"></i>{% translate "Edit Role" %}{% endblock %}
+{% block after_header %}<form method="post" id="editRoleForm" action="{{ form_action }}" data-modal-form>
+                {% csrf_token %}{% endblock %}
+{% block modal_body %}
+                    <p class="text-muted mb-3">{% blocktranslate trimmed %}Change role for <strong id="editRoleUserName">{{ edited_user }}</strong>{% endblocktranslate %}</p>
+                    {{ form.system_role }}
+                    {% for error in form.system_role.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
+{% endblock %}
+{% block modal_footer %}<button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{% translate "Cancel" %}</button>
+                    <button type="submit" class="btn btn-primary">{% translate "Save" %}</button>{% endblock %}
+{% block after_footer %}</form>{% endblock %}

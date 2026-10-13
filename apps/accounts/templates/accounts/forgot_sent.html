@@ -1,0 +1,10 @@
+{% extends "accounts/login_base.html" %}
+{% load i18n %}
+{% block title %}{% translate "Check Your Email" %} - ArcSpec{% endblock %}
+{% block status_icon %}<div class="login-status-icon" aria-hidden="true"><i class="bi bi-envelope"></i></div>{% endblock %}
+{% block heading %}{% translate "Check your email" %}{% endblock %}
+{% block subtitle %}<p class="login-subtitle">{% blocktranslate trimmed count counter=link_days %}If an account exists for <strong>{{ email }}</strong>, a link to set a new password has been sent to it. The link works once and expires in {{ counter }} day.{% plural %}If an account exists for <strong>{{ email }}</strong>, a link to set a new password has been sent to it. The link works once and expires in {{ counter }} days.{% endblocktranslate %}</p>{% endblock %}
+{% block card %}
+<p class="login-text mb-0">{% url 'forgot_password' as forgot_url %}{% blocktranslate trimmed %}No email after a few minutes? Check your spam folder or <a href="{{ forgot_url }}">request another link</a>.{% endblocktranslate %}</p>
+{% endblock %}
+{% block footer %}{% include "accounts/includes/_login_footer.html" %}{% endblock %}

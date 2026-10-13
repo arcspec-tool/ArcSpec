@@ -1,0 +1,9 @@
+{% spaceless %}
+{% if size == 'xs' %}
+<div class="avatar avatar-xs" style="background: {{ color }}; width: 24px; height: 24px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: .6rem; font-weight: 600; color: #fff;">{{ initials_text }}</div>
+{% elif size == 'lg' %}
+<div class="avatar avatar-lg" style="background: {{ color }}; width: 48px; height: 48px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 1rem; font-weight: 600; color: #fff;">{{ initials_text }}</div>
+{% else %}
+<div class="avatar avatar-sm" style="background: {{ color }}; width: 32px; height: 32px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: .75rem; font-weight: 600; color: #fff;">{{ initials_text }}</div>
+{% endif %}
+{% endspaceless %}

@@ -1,0 +1,50 @@
+{% load email_tags %}<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<meta name="supported-color-schemes" content="light">
+<title>{% block title %}ArcSpec{% endblock %}</title>
+<style>
+@media only screen and (max-width: 600px) {
+  .email-outer { padding: 24px 12px !important; }
+  .email-card { padding: 28px 20px !important; }
+}
+</style>
+</head>
+<body style="margin:0;padding:0;background-color:#f1f5f9;">
+<div style="display:none;max-height:0;max-width:0;overflow:hidden;opacity:0;mso-hide:all;font-size:1px;line-height:1px;color:#f1f5f9;">{% block preheader %}{% endblock %}</div>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#f1f5f9;">
+  <tr>
+    <td align="center" class="email-outer" style="padding:40px 16px;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:560px;">
+        <tr>
+          <td style="padding:0 4px 24px 4px;">
+            <a href="{% site_url %}" style="text-decoration:none;"><img src="{% inline_png 'img/email-logo.png' %}" width="132" height="31" alt="ArcSpec" style="display:block;width:132px;height:31px;border:0;outline:none;text-decoration:none;"></a>
+          </td>
+        </tr>
+        <tr>
+          <td class="email-card" style="background-color:#ffffff;border:1px solid #e2e8f0;border-radius:8px;padding:36px 40px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:15px;line-height:24px;color:#334155;">
+            {% block eyebrow %}{% endblock %}
+            <h1 style="margin:0 0 20px 0;font-size:20px;line-height:28px;font-weight:600;color:#0f172a;">{% block heading %}{% endblock %}</h1>
+            {% block content %}{% endblock %}
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:24px 4px 0 4px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:12px;line-height:18px;color:#64748b;">
+            <p style="margin:0 0 16px 0;">{% block footer_note %}{% endblock %}</p>
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+                <td style="padding:0 8px 0 0;vertical-align:middle;"><img src="{% inline_png 'img/email-icon.png' %}" width="20" height="20" alt="" style="display:block;width:20px;height:20px;border:0;"></td>
+                <td style="vertical-align:middle;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:12px;line-height:18px;color:#64748b;">ArcSpec &middot; <a href="{% site_url %}" style="color:#64748b;text-decoration:underline;">{% site_host %}</a></td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+</body>
+</html>

@@ -1,0 +1,47 @@
+{% extends "components/_modal_shell.html" %}
+{% load i18n %}
+{% block modal_title %}<i class="bi bi-pencil me-2"></i>{% translate "Edit Profile" %}{% endblock %}
+{% block after_header %}<form method="post" action="{{ form_action }}" data-modal-form>
+                {% csrf_token %}{% endblock %}
+{% block modal_body %}
+                    {% if form.non_field_errors %}<div class="alert alert-danger">{{ form.non_field_errors }}</div>{% endif %}
+                    <div class="row g-3">
+                        <div class="col-sm-6">
+                            <label for="id_first_name" class="form-label">{% translate "First name" %}{% if not form.microsoft_linked %} <span class="text-danger">*</span>{% endif %}</label>
+                            <input type="text" name="first_name" value="{{ form.first_name.value|default_if_none:'' }}" class="form-control{% if form.first_name.errors %} is-invalid{% endif %}" id="id_first_name" autocomplete="given-name"{% if form.names_managed %} disabled{% elif not form.microsoft_linked %} required{% endif %}{% if form.microsoft_linked %} aria-describedby="namesManagedHelp"{% endif %}>
+                            {% if form.first_name.errors %}<div class="invalid-feedback">{{ form.first_name.errors.0 }}</div>{% endif %}
+                        </div>
+                        <div class="col-sm-6">
+                            <label for="id_last_name" class="form-label">{% translate "Last name" %}{% if not form.microsoft_linked %} <span class="text-danger">*</span>{% endif %}</label>
+                            <input type="text" name="last_name" value="{{ form.last_name.value|default_if_none:'' }}" class="form-control{% if form.last_name.errors %} is-invalid{% endif %}" id="id_last_name" autocomplete="family-name"{% if form.names_managed %} disabled{% elif not form.microsoft_linked %} required{% endif %}{% if form.microsoft_linked %} aria-describedby="namesManagedHelp"{% endif %}>
+                            {% if form.last_name.errors %}<div class="invalid-feedback">{{ form.last_name.errors.0 }}</div>{% endif %}
+                        </div>
+                        {% if form.microsoft_linked %}
+                        <div class="col-12"><p class="form-text my-0" id="namesManagedHelp"><i class="bi bi-info-circle me-1"></i>{% if form.names_managed %}{% translate "Your Microsoft account sets your first and last name at each sign-in." %}{% else %}{% translate "Optional. If your Microsoft account provides your name, it replaces these at sign-in." %}{% endif %} {% translate "Use Display name to change how your name appears in ArcSpec." %}</p></div>
+                        {% endif %}
+                        <div class="col-12">
+                            <label for="id_display_name" class="form-label">{% translate "Display name" %}</label>
+                            <input type="text" name="display_name" value="{{ form.display_name.value|default_if_none:'' }}" class="form-control{% if form.display_name.errors %} is-invalid{% endif %}" id="id_display_name" autocomplete="nickname" aria-describedby="displayNameHelp">
+                            <div class="form-text" id="displayNameHelp">{% translate "Shown across ArcSpec in place of your full name." %}</div>
+                            {% if form.display_name.errors %}<div class="invalid-feedback">{{ form.display_name.errors.0 }}</div>{% endif %}
+                        </div>
+                        <div class="col-sm-6">
+                            <label for="id_department" class="form-label">{% translate "Department" %}</label>
+                            <input type="text" name="department" value="{{ form.department.value|default_if_none:'' }}" class="form-control{% if form.department.errors %} is-invalid{% endif %}" id="id_department" autocomplete="organization-title">
+                            {% if form.department.errors %}<div class="invalid-feedback">{{ form.department.errors.0 }}</div>{% endif %}
+                        </div>
+                        <div class="col-sm-6">
+                            <label for="id_location" class="form-label">{% translate "Location" %}</label>
+                            <input type="text" name="location" value="{{ form.location.value|default_if_none:'' }}" class="form-control{% if form.location.errors %} is-invalid{% endif %}" id="id_location" autocomplete="address-level2">
+                            {% if form.location.errors %}<div class="invalid-feedback">{{ form.location.errors.0 }}</div>{% endif %}
+                        </div>
+                        <div class="col-sm-6">
+                            <label for="id_phone" class="form-label">{% translate "Phone" %}</label>
+                            <input type="tel" name="phone" value="{{ form.phone.value|default_if_none:'' }}" class="form-control{% if form.phone.errors %} is-invalid{% endif %}" id="id_phone" autocomplete="tel">
+                            {% if form.phone.errors %}<div class="invalid-feedback">{{ form.phone.errors.0 }}</div>{% endif %}
+                        </div>
+                    </div>
+{% endblock %}
+{% block modal_footer %}<button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">{% translate "Cancel" %}</button>
+                    <button type="submit" class="btn btn-primary btn-sm"><i class="bi bi-check-lg me-1"></i>{% translate "Save Changes" %}</button>{% endblock %}
+{% block after_footer %}</form>{% endblock %}

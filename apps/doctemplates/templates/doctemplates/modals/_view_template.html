@@ -1,0 +1,32 @@
+{% extends "components/_modal_shell.html" %}
+{% load i18n %}
+{% block header_class %} border-bottom{% endblock %}
+{% block modal_title %}{% translate "Template Structure" %}{% endblock %}
+{% block body_class %} p-4{% endblock %}
+{% block modal_body %}
+                <div class="mb-3">
+                    <h6 class="fw-semibold">{{ template.name }}</h6>
+                    <span class="badge bg-secondary">{{ template.get_doc_type_display }}</span>
+                    {% if template.description %}<p class="text-muted small mt-2">{{ template.description }}</p>{% endif %}
+                    <div class="text-muted small">{% blocktranslate trimmed count counter=template.section_count %}{{ counter }} section{% plural %}{{ counter }} sections{% endblocktranslate %}</div>
+                    {% if attributes %}
+                    <div class="mt-2"><span class="small fw-medium">{% translate "Item Attributes:" %}</span>
+                        {% for attribute in attributes %}<span class="badge {% if attribute.is_builtin %}bg-primary bg-opacity-10 text-primary{% else %}bg-warning bg-opacity-10 text-warning{% endif %} me-1">{% if attribute.is_builtin %}<i class="bi bi-lock me-1"></i>{% endif %}{{ attribute.name }}<span class="ms-1 opacity-75">{{ attribute.field_type }}</span></span>{% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+                <hr>
+                {% if sections %}
+                <ul class="view-section-tree">
+                    {% for section in sections %}{% include "doctemplates/modals/_view_section.html" %}{% endfor %}
+                </ul>
+                {% endif %}
+{% endblock %}
+{% block footer_class %} border-top{% endblock %}
+{% block modal_footer %}{% if can_duplicate %}<form method="post" id="viewTemplateDuplicateForm" action="{% url 'template_duplicate' template.public_key %}" class="d-inline" data-confirm="{% blocktranslate trimmed with name=template.name %}A private copy named &quot;{{ name }} (Copy)&quot; will be created.{% endblocktranslate %}" data-confirm-title="{% translate 'Duplicate Template' %}" data-confirm-button="{% translate 'Duplicate' %}" data-confirm-class="btn-primary">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-outline-primary" id="viewTemplateDuplicateBtn">
+                        <i class="bi bi-files me-1"></i>{% translate "Duplicate as Custom" %}
+                    </button>
+                </form>{% endif %}
+                <button type="button" class="btn btn-sm btn-light" data-bs-dismiss="modal">{% translate "Close" %}</button>{% endblock %}

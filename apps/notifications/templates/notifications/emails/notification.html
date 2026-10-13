@@ -1,0 +1,12 @@
+{% extends "emails/base.html" %}
+{% load email_tags i18n %}
+{% block title %}{{ notification.get_type_display }} - ArcSpec{% endblock %}
+{% block preheader %}{{ notification.message }}{% endblock %}
+{% block eyebrow %}{% if notification.project %}<p style="margin:0 0 6px 0;font-size:13px;line-height:20px;font-weight:600;color:#64748b;">{{ notification.project.name }}</p>{% endif %}{% endblock %}
+{% block heading %}{{ notification.get_type_display }}{% endblock %}
+{% block content %}
+<p style="margin:0 0 16px 0;">{% blocktranslate trimmed with name=user.first_name|default:user.email %}Hi {{ name }},{% endblocktranslate %}</p>
+<p style="margin:0 0 16px 0;">{{ notification.message }}</p>
+{% if notification.link %}{% site_url notification.link as link_url %}{% include "emails/_button.html" with url=link_url label=_("View in ArcSpec") %}{% endif %}
+{% endblock %}
+{% block footer_note %}{% translate "You received this email because of your notification settings." %} {% url 'settings' as settings_path %}<a href="{% site_url settings_path %}#notifications" style="color:#64748b;text-decoration:underline;">{% translate "Manage notification settings" %}</a>{% endblock %}

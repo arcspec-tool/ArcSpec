@@ -1,0 +1,32 @@
+{% load i18n %}{% if project.can_manage or project.can_duplicate %}
+<div class="project-actions">
+    <button type="button" class="btn btn-sm btn-light border-0 menu-trigger" data-menu-open="projectMenu-{{ project.slug }}" data-menu-align="end" aria-label="{% blocktranslate trimmed with name=project.name %}Actions for {{ name }}{% endblocktranslate %}"><i class="bi bi-three-dots-vertical"></i></button>
+    <div class="menu" id="projectMenu-{{ project.slug }}" role="menu" popover="manual" aria-label="{% blocktranslate trimmed with name=project.name %}Actions for {{ name }}{% endblocktranslate %}">
+        {% if project.can_manage and project.status != 'archived' %}
+        <button type="button" class="menu-item" role="menuitem" tabindex="-1" data-modal-open="project_edit" data-project="{{ project.slug }}"><i class="bi bi-pencil menu-item-icon" aria-hidden="true"></i><span class="menu-item-text">{% translate "Edit" %}</span></button>
+        {% endif %}
+        {% if project.can_duplicate %}
+        <form method="post" action="{% url 'project_duplicate' slug=project.slug %}" role="presentation" data-confirm="{% blocktranslate trimmed with name=project.name %}Create “{{ name }} (Copy)” as a draft with the same sections and attributes? Items are not copied.{% endblocktranslate %}" data-confirm-title="{% translate 'Duplicate Project' %}" data-confirm-button="{% translate 'Duplicate' %}" data-confirm-class="btn-primary">
+            {% csrf_token %}<button type="submit" class="menu-item" role="menuitem" tabindex="-1"><i class="bi bi-files menu-item-icon" aria-hidden="true"></i><span class="menu-item-text">{% translate "Duplicate" %}</span></button>
+        </form>
+        {% endif %}
+        {% if project.can_manage %}
+        {% if project.can_duplicate or project.status != 'archived' %}<div class="menu-separator" role="separator"></div>{% endif %}
+        {% if project.status == 'archived' %}
+        {% if project.can_restore %}
+        <form method="post" action="{% url 'project_restore' slug=project.slug %}" role="presentation" data-confirm="{% blocktranslate trimmed with name=project.name %}Restore “{{ name }}” as an active project?{% endblocktranslate %}" data-confirm-title="{% translate 'Restore Project' %}" data-confirm-button="{% translate 'Restore' %}" data-confirm-class="btn-primary">
+            {% csrf_token %}<button type="submit" class="menu-item" role="menuitem" tabindex="-1"><i class="bi bi-arrow-counterclockwise menu-item-icon" aria-hidden="true"></i><span class="menu-item-text">{% translate "Restore" %}</span></button>
+        </form>
+        {% else %}
+        <button type="button" class="menu-item" role="menuitem" tabindex="-1" aria-disabled="true"><i class="bi bi-arrow-counterclockwise menu-item-icon" aria-hidden="true"></i><span class="menu-item-text">{% translate "Restore" %}<span class="menu-item-hint">{% translate "Only an administrator can restore this project" %}</span></span></button>
+        {% endif %}
+        {% else %}
+        <form method="post" action="{% url 'project_archive' slug=project.slug %}" role="presentation" data-confirm="{% blocktranslate trimmed with name=project.name %}Archive “{{ name }}”? It moves to Archived and can be restored later.{% endblocktranslate %}" data-confirm-title="{% translate 'Archive Project' %}" data-confirm-button="{% translate 'Archive' %}" data-confirm-class="btn-warning">
+            {% csrf_token %}<button type="submit" class="menu-item" role="menuitem" tabindex="-1"><i class="bi bi-archive menu-item-icon" aria-hidden="true"></i><span class="menu-item-text">{% translate "Archive" %}</span></button>
+        </form>
+        {% endif %}
+        <button type="button" class="menu-item menu-item-danger" role="menuitem" tabindex="-1" data-modal-open="project_delete" data-project="{{ project.slug }}"><i class="bi bi-trash menu-item-icon" aria-hidden="true"></i><span class="menu-item-text">{% translate "Delete" %}</span></button>
+        {% endif %}
+    </div>
+</div>
+{% endif %}

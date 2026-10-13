@@ -1,0 +1,24 @@
+{% extends "emails/base.html" %}
+{% load i18n %}
+{% block title %}{% translate "Invitation to ArcSpec" %}{% endblock %}
+{% block preheader %}{% blocktranslate trimmed %}{{ inviter }} invited you to ArcSpec.{% endblocktranslate %}{% endblock %}
+{% block heading %}{% translate "You are invited to ArcSpec" %}{% endblock %}
+{% block content %}
+<p style="margin:0 0 16px 0;">{% blocktranslate trimmed with name=user.first_name|default:user.email %}Hi {{ name }},{% endblocktranslate %}</p>
+<p style="margin:0 0 16px 0;">{% blocktranslate trimmed %}{{ inviter }} invited you to ArcSpec.{% endblocktranslate %}</p>
+{% if link_url %}
+<p style="margin:0 0 16px 0;">{% blocktranslate trimmed count counter=link_days %}Set a password to activate your account. The link works once and expires in {{ counter }} day.{% plural %}Set a password to activate your account. The link works once and expires in {{ counter }} days.{% endblocktranslate %}</p>
+{% include "emails/_button.html" with url=link_url label=_("Set your password") %}
+{% if entra %}
+<p style="margin:0 0 20px 0;">{% blocktranslate trimmed with email=user.email %}You can also sign in at <a href="{{ site_url }}" style="color:#284e8a;">{{ site_url }}</a> with your Microsoft account {{ email }}.{% endblocktranslate %}</p>
+{% endif %}
+{% include "emails/_link_fallback.html" with url=link_url %}
+{% elif entra %}
+<p style="margin:0 0 16px 0;">{% blocktranslate trimmed with email=user.email %}Sign in with your Microsoft account {{ email }}.{% endblocktranslate %}</p>
+{% include "emails/_button.html" with url=site_url label=_("Sign in to ArcSpec") %}
+{% include "emails/_link_fallback.html" with url=site_url %}
+{% else %}
+<p style="margin:0;">{% translate "Ask your administrator how to sign in." %}</p>
+{% endif %}
+{% endblock %}
+{% block footer_note %}{% blocktranslate trimmed with email=user.email %}You received this email because {{ inviter }} invited {{ email }} to ArcSpec. If you did not expect it, you can ignore it.{% endblocktranslate %}{% endblock %}

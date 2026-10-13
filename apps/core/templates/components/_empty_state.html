@@ -1,0 +1,7 @@
+<div class="text-center py-5">
+    <i class="bi {{ icon }} text-muted" style="font-size: 3rem;"></i>
+    <p class="text-muted mt-2">{{ message }}</p>
+    {% if cta_url %}
+    <a href="{{ cta_url }}" class="btn btn-primary btn-sm">{{ cta_text }}</a>
+    {% endif %}
+</div>

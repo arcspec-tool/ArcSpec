@@ -1,0 +1,58 @@
+{% extends "components/_modal_shell.html" %}
+{% load i18n %}
+{% block modal_title %}<i class="bi bi-gear me-2"></i>{% translate "Project Structure" %}{% endblock %}
+{% block body_class %} p-0{% endblock %}
+{% block modal_body %}
+                <ul class="nav nav-tabs px-3 pt-3" id="manageStructureTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="tab-sections" data-bs-toggle="tab" data-bs-target="#pane-sections" type="button" role="tab">
+                            <i class="bi bi-list-nested me-1"></i>{% translate "Sections" %}
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="tab-attributes" data-bs-toggle="tab" data-bs-target="#pane-attributes" type="button" role="tab">
+                            <i class="bi bi-tags me-1"></i>{% translate "Attributes" %}
+                        </button>
+                    </li>
+                </ul>
+
+                <div class="tab-content p-3" id="mgmtRoot" data-project="{{ project.slug }}">
+                    <div class="tab-pane fade show active" id="pane-sections" role="tabpanel">
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <p class="text-muted small mb-0">{% translate "Drag sections to reorder or nest. Use arrows to move, indent, or outdent." %}</p>
+                            <button class="btn btn-sm btn-outline-primary" id="mgmtAddSectionBtn">
+                                <i class="bi bi-plus me-1"></i>{% translate "Add Section" %}
+                            </button>
+                        </div>
+                        <div id="mgmtSectionTree" class="section-tree">{% for section in sections %}{% include "projects/modals/_structure_section.html" %}{% endfor %}</div>
+                        <template id="mgmtSectionTemplate">{% include "projects/modals/_structure_section.html" with section=blank_section %}</template>
+                    </div>
+
+                    <div class="tab-pane fade" id="pane-attributes" role="tabpanel">
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <p class="text-muted small mb-0">{% translate "Define custom attributes for items in this project." %}</p>
+                            <button class="btn btn-sm btn-outline-primary" id="mgmtAddAttributeBtn">
+                                <i class="bi bi-plus me-1"></i>{% translate "Add Attribute" %}
+                            </button>
+                        </div>
+                        <div id="mgmtAttributesList">
+                            <div class="attribute-row attribute-row-builtin d-flex align-items-center gap-2 mb-2">
+                                <span class="form-control form-control-sm bg-light border">{% translate "Priority" %}</span>
+                                <span class="text-muted small">{% translate "Dropdown (built-in)" %}</span>
+                                <i class="bi bi-lock text-muted ms-auto"></i>
+                            </div>
+                            <div class="attribute-row attribute-row-builtin d-flex align-items-center gap-2 mb-2">
+                                <span class="form-control form-control-sm bg-light border">{% translate "Status" %}</span>
+                                <span class="text-muted small">{% translate "Dropdown (built-in)" %}</span>
+                                <i class="bi bi-lock text-muted ms-auto"></i>
+                            </div>
+                            {% for attribute in attributes %}{% include "projects/modals/_structure_attribute.html" %}{% endfor %}
+                        </div>
+                        <template id="mgmtAttributeTemplate">{% include "projects/modals/_structure_attribute.html" with attribute=blank_attribute %}</template>
+                    </div>
+                </div>
+{% endblock %}
+{% block modal_footer %}<button type="button" class="btn btn-sm btn-light" data-bs-dismiss="modal">{% translate "Cancel" %}</button>
+                <button type="button" class="btn btn-sm btn-primary" id="mgmtSaveBtn">
+                    <i class="bi bi-check-lg me-1"></i>{% translate "Save Changes" %}
+                </button>{% endblock %}

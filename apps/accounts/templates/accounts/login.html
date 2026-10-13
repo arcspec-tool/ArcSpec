@@ -1,0 +1,43 @@
+{% extends "accounts/login_base.html" %}
+{% load socialaccount i18n %}
+{% block title %}{% translate "Sign In" %} - ArcSpec{% endblock %}
+{% block heading %}{% translate "Sign in to ArcSpec" %}{% endblock %}
+{% block card %}
+{% if auth_methods.entra %}
+<a href="{% provider_login_url 'microsoft' %}" class="btn btn-microsoft w-100" id="loginBtn" data-busy-label="{% translate 'Redirecting to Microsoft...' %}">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 21 21" aria-hidden="true" focusable="false">
+        <rect x="1" y="1" width="9" height="9" fill="#f25022"/>
+        <rect x="11" y="1" width="9" height="9" fill="#7fba00"/>
+        <rect x="1" y="11" width="9" height="9" fill="#00a4ef"/>
+        <rect x="11" y="11" width="9" height="9" fill="#ffb900"/>
+    </svg>
+    <span>{% translate "Sign in with Microsoft" %}</span>
+</a>
+{% endif %}
+
+{% if auth_methods.entra and auth_methods.password %}
+<div class="d-flex align-items-center my-3" id="loginDivider">
+    <hr class="flex-grow-1 m-0">
+    <span class="px-2 text-muted small">{% translate "or" %}</span>
+    <hr class="flex-grow-1 m-0">
+</div>
+{% endif %}
+
+{% if auth_methods.password %}
+<form method="post" action="{% url 'login' %}" id="passwordLoginForm" data-busy-form>
+    {% csrf_token %}
+    <input type="hidden" name="next" value="{{ next }}">
+    <div class="mb-3">
+        <label for="{{ form.email.auto_id }}" class="form-label fw-medium">{% translate "Email" %}</label>
+        {{ form.email }}
+    </div>
+    {% include "accounts/includes/_password_field.html" with field=form.password label=_("Password") autocomplete="current-password" autofocus=form.password_first %}
+    <button type="submit" class="btn btn-primary w-100" data-busy-label="{% translate 'Signing in...' %}">{% translate "Sign in" %}</button>
+    <p class="login-aside"><a href="{% url 'forgot_password' %}">{% translate "Forgot password?" %}</a></p>
+</form>
+{% endif %}
+
+{% if not auth_methods.entra and not auth_methods.password %}
+<p class="login-text mb-0">{% translate "No sign-in method is enabled. Contact a system administrator." %}</p>
+{% endif %}
+{% endblock %}

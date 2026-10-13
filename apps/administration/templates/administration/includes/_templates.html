@@ -1,0 +1,46 @@
+{% load core_tags i18n %}
+<div class="card data-table-card">
+    <div class="table-responsive">
+        <table class="table data-table align-middle mb-0">
+            <thead>
+                <tr>
+                    <th scope="col">{% translate "Template" %}</th>
+                    <th scope="col">{% translate "Type" %}</th>
+                    <th scope="col" class="text-end">{% translate "Sections" %}</th>
+                    <th scope="col" class="text-end">{% translate "Projects" %}</th>
+                    <th scope="col">{% translate "Created by" %}</th>
+                    <th scope="col">{% translate "Visibility" %}</th>
+                    <th scope="col" class="data-table-actions"><span class="visually-hidden">{% translate "Actions" %}</span></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for t in global_templates %}
+                <tr>
+                    <td><div class="data-table-name">{{ t.name }}</div></td>
+                    <td class="text-muted">{{ t.get_doc_type_display }}</td>
+                    <td class="text-end">{{ t.section_total }}</td>
+                    <td class="text-end">{{ t.usage_count }}</td>
+                    <td class="text-muted">{% if t.is_builtin %}{% translate "System" %}{% elif t.created_by %}{{ t.created_by }}{% else %}-{% endif %}</td>
+                    <td>{% if t.is_builtin %}{% status_badge 'builtin' %}{% elif t.is_global %}{% status_badge 'public' %}{% else %}{% status_badge 'private' %}{% endif %}</td>
+                    <td class="data-table-actions">
+                        {% if not t.is_builtin %}
+                        {% if t.is_global %}
+                        <form method="post" action="{% url 'admin_template_toggle_visibility' public_key=t.public_key %}" data-confirm="{% blocktranslate trimmed with name=t.name %}Make “{{ name }}” private? Only its creator and administrators can see it. Projects already using it keep it.{% endblocktranslate %}" data-confirm-title="{% translate 'Make Template Private' %}" data-confirm-button="{% translate 'Make private' %}" data-confirm-class="btn-warning">
+                            {% csrf_token %}<button type="submit" class="btn btn-sm btn-light border-0" title="{% translate 'Make private' %}" aria-label="{% blocktranslate trimmed with name=t.name %}Make {{ name }} private{% endblocktranslate %}"><i class="bi bi-eye-slash"></i></button>
+                        </form>
+                        {% else %}
+                        <form method="post" action="{% url 'admin_template_toggle_visibility' public_key=t.public_key %}" data-confirm="{% blocktranslate trimmed with name=t.name %}Make “{{ name }}” public? Every user can see it and create projects from it.{% endblocktranslate %}" data-confirm-title="{% translate 'Make Template Public' %}" data-confirm-button="{% translate 'Make public' %}" data-confirm-class="btn-primary">
+                            {% csrf_token %}<button type="submit" class="btn btn-sm btn-light border-0" title="{% translate 'Make public' %}" aria-label="{% blocktranslate trimmed with name=t.name %}Make {{ name }} public{% endblocktranslate %}"><i class="bi bi-eye"></i></button>
+                        </form>
+                        {% endif %}
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="7" class="data-table-empty">{% translate "No templates." %}</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="card-footer data-table-footer">{% blocktranslate trimmed count counter=global_templates|length %}{{ counter }} template{% plural %}{{ counter }} templates{% endblocktranslate %}</div>
+</div>

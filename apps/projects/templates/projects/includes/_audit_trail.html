@@ -1,0 +1,29 @@
+{% load i18n %}<div class="audit-trail-backdrop" id="auditBackdrop"></div>
+<div class="audit-trail-panel" id="auditPanel" role="dialog" aria-label="{% translate 'Audit Log' %}" aria-modal="true">
+    <div class="audit-trail-header">
+        <div class="d-flex align-items-center gap-2">
+            <i class="bi bi-journal-text"></i>
+            <span class="fw-semibold">{% translate "Audit Log" %}</span>
+            <span class="badge bg-secondary bg-opacity-10 text-secondary" id="auditCount">0</span>
+        </div>
+        <button class="btn btn-sm btn-link text-muted p-0" id="closeAuditBtn" title="{% translate 'Close' %}"><i class="bi bi-x-lg"></i></button>
+    </div>
+    <div class="audit-trail-filters">
+        <select class="form-select form-select-sm" id="auditFilterType">
+            <option value="all">{% translate "All actions" %}</option>
+            <option value="created">{% translate "Created" %}</option>
+            <option value="updated">{% translate "Edited" %}</option>
+            <option value="status_changed">{% translate "Status changed" %}</option>
+            <option value="commented">{% translate "Comments" %}</option>
+            <option value="collaboration">{% translate "Collaboration" %}</option>
+        </select>
+        <select class="form-select form-select-sm" id="auditFilterUser">
+            <option value="">{% translate "All users" %}</option>
+            {% for m in memberships %}
+            <option value="{{ m.user_id }}">{{ m.user }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="audit-trail-body" id="auditBody">
+    </div>
+</div>

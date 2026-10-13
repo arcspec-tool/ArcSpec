@@ -1,0 +1,12 @@
+{% load i18n %}<div class="attribute-row attribute-row-custom mb-2">
+    <div class="d-flex align-items-center gap-2">
+        <input type="text" class="form-control form-control-sm" name="attr_name[]" placeholder="{% translate 'Attribute name' %}" value="{{ attribute.name }}">
+        <select class="form-select form-select-sm attr-type-select" name="attr_type[]" style="width: auto;">
+            {% for value, label in field_types %}<option value="{{ value }}"{% if value == attribute.field_type %} selected{% endif %}>{{ label }}</option>{% endfor %}
+        </select>
+        <button type="button" class="btn btn-sm btn-outline-danger" data-attribute-action="remove" title="{% translate 'Remove' %}"><i class="bi bi-x-lg"></i></button>
+    </div>
+    <div class="attr-options-wrapper mt-1"{% if attribute.field_type != 'dropdown' and attribute.field_type != 'multiselect' %} style="display:none;"{% endif %}>
+        <input type="text" class="form-control form-control-sm" name="attr_options[]" placeholder="{% translate 'Option1, Option2, Option3' %}" value="{{ attribute.options_text }}">
+    </div>
+</div>

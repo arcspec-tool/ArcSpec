@@ -1,0 +1,18 @@
+{% extends "components/_modal_shell.html" %}
+{% load i18n %}
+{% block modal_title %}<i class="bi bi-tag me-2"></i>{% translate "Add Tag Preset" %}{% endblock %}
+{% block after_header %}<form method="post" action="{{ form_action }}" data-modal-form>
+                {% csrf_token %}{% endblock %}
+{% block modal_body %}
+                    {% if form.non_field_errors %}<div class="alert alert-danger">{{ form.non_field_errors }}</div>{% endif %}
+                    {% for field in form %}
+                    <div class="mb-3">
+                        <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                        {% for error in field.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
+                    </div>
+                    {% endfor %}
+{% endblock %}
+{% block modal_footer %}<button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{% translate "Cancel" %}</button>
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-plus-lg me-1"></i>{% translate "Create" %}</button>{% endblock %}
+{% block after_footer %}</form>{% endblock %}

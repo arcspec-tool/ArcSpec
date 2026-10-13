@@ -1,0 +1,11 @@
+{% extends "components/_modal_shell.html" %}
+{% load i18n %}
+{% block modal_title %}<i class="bi bi-bookmark-plus me-2"></i>{% translate "Save View" %}{% endblock %}
+{% block modal_body %}
+                <div class="mb-3">
+                    <label for="saveViewName" class="form-label">{% translate "View Name" %}</label>
+                    <input type="text" class="form-control" id="saveViewName" placeholder="{% translate 'e.g. High Priority Draft Items' %}" autofocus>
+                </div>
+{% endblock %}
+{% block modal_footer %}<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% translate "Cancel" %}</button>
+                <button type="button" class="btn btn-primary" id="saveViewSubmit">{% translate "Save" %}</button>{% endblock %}

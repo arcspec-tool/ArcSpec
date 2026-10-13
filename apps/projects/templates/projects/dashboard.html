@@ -1,0 +1,259 @@
+{% extends "base.html" %}
+{% load core_tags static i18n %}
+
+{% block title %}{% translate "Dashboard" %} - ArcSpec{% endblock %}
+
+{% block content %}
+<div class="page-header d-flex align-items-center justify-content-between">
+    <div>
+        <h1 class="page-title">{% translate "Dashboard" %}</h1>
+        <p class="page-subtitle">{% blocktranslate trimmed with name=request.user.first_name|default:request.user %}Welcome back, {{ name }}{% endblocktranslate %}</p>
+    </div>
+    {% if not request.user.is_viewer %}
+    <button type="button" class="btn btn-primary btn-sm" data-modal-open="project_create">
+        <i class="bi bi-plus-lg me-1"></i> {% translate "New Project" %}
+    </button>
+    {% endif %}
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-sm-6 col-xl-3">
+        <div class="card stat-card">
+            <div class="card-body d-flex align-items-center gap-3">
+                <div class="stat-icon bg-primary bg-opacity-10 text-primary">
+                    <i class="bi bi-folder2-open"></i>
+                </div>
+                <div>
+                    <div class="stat-value">{{ active_projects_count }}</div>
+                    <div class="stat-label">{% translate "Active Projects" %}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="card stat-card">
+            <div class="card-body d-flex align-items-center gap-3">
+                <div class="stat-icon bg-success bg-opacity-10 text-success">
+                    <i class="bi bi-check2-circle"></i>
+                </div>
+                <div>
+                    <div class="stat-value">{{ approved_items_count }}</div>
+                    <div class="stat-label">{% translate "Approved Items" %}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="card stat-card">
+            <div class="card-body d-flex align-items-center gap-3">
+                <div class="stat-icon bg-warning bg-opacity-10 text-warning">
+                    <i class="bi bi-pencil-square"></i>
+                </div>
+                <div>
+                    <div class="stat-value">{{ in_review_items_count }}</div>
+                    <div class="stat-label">{% translate "In Review" %}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="card stat-card">
+            <div class="card-body d-flex align-items-center gap-3">
+                <div class="stat-icon bg-info bg-opacity-10 text-info">
+                    <i class="bi bi-people"></i>
+                </div>
+                <div>
+                    <div class="stat-value">{{ collaborators_count }}</div>
+                    <div class="stat-label">{% translate "Collaborators" %}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="dash-panels">
+    <section class="card dash-panel" aria-labelledby="recentProjectsTitle">
+        <div class="card-header">
+            <h2 class="dash-panel-title" id="recentProjectsTitle">{% translate "Recent Projects" %}</h2>
+        </div>
+        <div class="dash-feed">
+            {% for project in recent_projects %}
+            <a href="{{ project.get_absolute_url }}" class="dash-row dash-project">
+                <span class="project-icon" style="background: {{ project.color }};" aria-hidden="true"><i class="bi bi-file-earmark-text"></i></span>
+                <span class="dash-row-body">
+                    <span class="dash-row-title" title="{{ project.name }}">{{ project.name }}</span>
+                    <span class="dash-row-meta">{% blocktranslate trimmed count counter=project.item_count %}{{ counter }} item{% plural %}{{ counter }} items{% endblocktranslate %} &middot; {% translate "updated" %} <time datetime="{{ project.updated_at|date:'c' }}" title="{{ project.updated_at|date:'j M Y, H:i' }}">{{ project.updated_at|time_ago }}</time></span>
+                </span>
+                {% status_badge project.status %}
+            </a>
+            {% empty %}
+            <div class="dash-empty">
+                <i class="bi bi-folder2-open" aria-hidden="true"></i>
+                <p class="mb-3">{% translate "No projects yet" %}</p>
+                {% if not request.user.is_viewer %}
+                <button type="button" class="btn btn-primary btn-sm" data-modal-open="project_create"><i class="bi bi-plus-lg me-1"></i> {% translate "New Project" %}</button>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% if recent_projects %}
+        <div class="card-footer">
+            <a href="{% url 'project_list' %}" class="btn btn-sm btn-light w-100">{% translate "View all projects" %}</a>
+        </div>
+        {% endif %}
+    </section>
+
+    <section class="card dash-panel" aria-labelledby="recentActivityTitle">
+        <div class="card-header">
+            <h2 class="dash-panel-title" id="recentActivityTitle">{% translate "Recent Activity" %}</h2>
+        </div>
+        <div class="dash-feed" id="activityFeedList">
+            {% if activity_feed %}
+            {% include "projects/includes/_dashboard_activity.html" with activities=activity_feed %}
+            {% else %}
+            <div class="dash-empty">
+                <i class="bi bi-activity" aria-hidden="true"></i>
+                <p class="mb-0">{% translate "No activity yet" %}</p>
+            </div>
+            {% endif %}
+        </div>
+        {% if activity_has_more %}
+        <div class="card-footer">
+            <button type="button" class="btn btn-sm btn-light w-100" id="loadMoreActivity" data-url="{% url 'dashboard:dashboard_activity_feed' %}" data-list="activityFeedList" data-offset="{{ activity_feed|length }}" data-until="{{ activity_until }}">{% translate "Load more" %}</button>
+        </div>
+        {% endif %}
+    </section>
+
+    <section class="card dash-panel" aria-labelledby="notificationsTitle">
+        <div class="card-header">
+            <h2 class="dash-panel-title" id="notificationsTitle">
+                {% translate "Notifications" %}
+                {% if unread_notification_count %}<span class="badge rounded-pill bg-danger" id="notificationBadge" title="{% translate 'Unread notifications' %}">{{ unread_notification_count }}</span>{% endif %}
+            </h2>
+            {% if unread_notification_count %}
+            <button type="button" class="btn btn-link btn-sm p-0 text-decoration-none" id="markAllRead">{% translate "Mark all read" %}</button>
+            {% endif %}
+        </div>
+        <div class="dash-feed" id="notificationsList">
+            {% if notifications %}
+            {% include "projects/includes/_dashboard_notifications.html" %}
+            {% else %}
+            <div class="dash-empty">
+                <i class="bi bi-bell" aria-hidden="true"></i>
+                <p class="mb-0">{% translate "You're all caught up" %}</p>
+            </div>
+            {% endif %}
+        </div>
+        {% if notifications_has_more %}
+        <div class="card-footer">
+            <button type="button" class="btn btn-sm btn-light w-100" id="loadMoreNotifications" data-url="{% url 'dashboard:dashboard_notifications' %}" data-read="{{ notifications_cursor.read }}" data-before="{{ notifications_cursor.before }}" data-key="{{ notifications_cursor.key }}">{% translate "Load more" %}</button>
+        </div>
+        {% endif %}
+    </section>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/projects.js' %}"></script>
+{% translate "Could not mark the notification as read." as mark_read_error %}{% translate "Could not mark the notifications as read." as mark_all_read_error %}{% translate "No more notifications" as no_more_notifications %}<script nonce="{{ request.csp_nonce }}">
+(function() {
+    'use strict';
+
+    var notificationsList = document.getElementById('notificationsList');
+
+    function markRowRead(row) {
+        row.classList.remove('is-unread');
+        var hidden = row.querySelector('.dash-row-title .visually-hidden');
+        if (hidden) hidden.remove();
+        var dismiss = row.querySelector('.notification-dismiss');
+        if (dismiss) dismiss.remove();
+    }
+
+    function setUnreadCount(count) {
+        var badge = document.getElementById('notificationBadge');
+        if (badge) {
+            if (count > 0) badge.textContent = count;
+            else badge.remove();
+        }
+        if (count === 0) {
+            var markAll = document.getElementById('markAllRead');
+            if (markAll) markAll.remove();
+        }
+        var topBadge = document.getElementById('notifBadge');
+        if (topBadge) {
+            topBadge.textContent = count;
+            topBadge.style.display = count > 0 ? '' : 'none';
+        }
+    }
+
+    function post(url) {
+        return fetch(url, {
+            method: 'POST',
+            headers: {'X-CSRFToken': csrfToken()}
+        }).then(function(response) {
+            if (!response.ok) throw new Error(response.status);
+            return response.json();
+        });
+    }
+
+    notificationsList.addEventListener('click', function(e) {
+        var btn = e.target.closest('.notification-dismiss');
+        if (!btn) return;
+        e.preventDefault();
+        var row = btn.closest('.dash-notification');
+        post('/api/notifications/' + btn.getAttribute('data-notification-id') + '/read/').then(function(data) {
+            if (data.status !== 'ok') return;
+            markRowRead(row);
+            setUnreadCount(data.unread_count);
+        }).catch(function() {
+            window.showToast('{{ mark_read_error|escapejs }}', 'danger');
+        });
+    });
+
+    var markAllBtn = document.getElementById('markAllRead');
+    if (markAllBtn) {
+        markAllBtn.addEventListener('click', function() {
+            post('/api/notifications/read-all/').then(function(data) {
+                if (data.status !== 'ok') return;
+                notificationsList.querySelectorAll('.dash-notification.is-unread').forEach(markRowRead);
+                setUnreadCount(0);
+            }).catch(function() {
+                window.showToast('{{ mark_all_read_error|escapejs }}', 'danger');
+            });
+        });
+    }
+
+    var loadMoreNotifications = document.getElementById('loadMoreNotifications');
+    if (loadMoreNotifications) {
+        loadMoreNotifications.addEventListener('click', function() {
+            var btn = this;
+            window.loadMoreFeed(btn, notificationsList, {
+                read: btn.getAttribute('data-read'),
+                before: btn.getAttribute('data-before'),
+                key: btn.getAttribute('data-key')
+            }, '{{ no_more_notifications|escapejs }}', function(data, rows) {
+                var shown = {};
+                notificationsList.querySelectorAll('.dash-notification').forEach(function(row) {
+                    shown[row.getAttribute('data-notification-id')] = true;
+                });
+                var added = rows.filter(function(row) {
+                    return !shown[row.getAttribute('data-notification-id')];
+                });
+                added.forEach(function(row) { notificationsList.appendChild(row); });
+                if (data.cursor) {
+                    btn.setAttribute('data-read', data.cursor.read);
+                    btn.setAttribute('data-before', data.cursor.before);
+                    btn.setAttribute('data-key', data.cursor.key);
+                }
+                return added;
+            });
+        });
+    }
+
+    function csrfToken() {
+        var match = document.cookie.match(/(?:^|; )csrftoken=([^;]+)/);
+        return match ? match[1] : '';
+    }
+})();
+</script>
+{% endblock %}

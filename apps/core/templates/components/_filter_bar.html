@@ -1,0 +1,8 @@
+<div class="d-flex align-items-center gap-2 flex-wrap mb-3">
+    <div class="btn-group btn-group-sm" role="group">
+        {% for filter_value, filter_label in filters %}
+        <button type="button" class="btn btn-outline-secondary {% if filter_value == active_filter %}active{% endif %}" data-filter="{{ filter_value }}">{{ filter_label }}</button>
+        {% endfor %}
+    </div>
+    {% block filter_extras %}{% endblock %}
+</div>

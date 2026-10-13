@@ -1,0 +1,630 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-13 01:05+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: apps/accounts/static/js/auth.js:13
+msgid "Hide password"
+msgstr ""
+
+#: apps/accounts/static/js/auth.js:13
+msgid "Show password"
+msgstr ""
+
+#: apps/core/static/js/advanced.js:81
+msgid "%(shown)s of %(total)s item"
+msgid_plural "%(shown)s of %(total)s items"
+msgstr[0] ""
+msgstr[1] ""
+
+#: apps/core/static/js/advanced.js:82 apps/core/static/js/project.js:427
+msgid "%(count)s item"
+msgid_plural "%(count)s items"
+msgstr[0] ""
+msgstr[1] ""
+
+#: apps/core/static/js/advanced.js:200
+msgid "%(count)s selected"
+msgid_plural "%(count)s selected"
+msgstr[0] ""
+msgstr[1] ""
+
+#: apps/core/static/js/advanced.js:210
+msgid "Bulk operation completed"
+msgstr ""
+
+#: apps/core/static/js/advanced.js:213
+msgid "Bulk operation failed"
+msgstr ""
+
+#: apps/core/static/js/advanced.js:234
+msgid "Delete Items"
+msgstr ""
+
+#: apps/core/static/js/advanced.js:235
+msgid "Delete %(count)s item? This cannot be undone."
+msgid_plural "Delete %(count)s items? This cannot be undone."
+msgstr[0] ""
+msgstr[1] ""
+
+#: apps/core/static/js/advanced.js:236 apps/core/static/js/advanced.js:267
+#: apps/core/static/js/project.js:555 apps/core/static/js/project.js:609
+#: apps/core/static/js/project.js:1492 apps/core/static/js/project.js:1529
+msgid "Delete"
+msgstr ""
+
+#: apps/core/static/js/advanced.js:265
+msgid "Delete View"
+msgstr ""
+
+#: apps/core/static/js/advanced.js:266
+msgid "Delete the saved view \"%(name)s\"?"
+msgstr ""
+
+#: apps/core/static/js/advanced.js:271
+msgid "Failed to delete view"
+msgstr ""
+
+#: apps/core/static/js/advanced.js:297
+msgid "View saved"
+msgstr ""
+
+#: apps/core/static/js/advanced.js:301
+msgid "Failed to save view"
+msgstr ""
+
+#: apps/core/static/js/advanced.js:351
+msgid "Please select a target item"
+msgstr ""
+
+#: apps/core/static/js/advanced.js:366
+msgid "Link added"
+msgstr ""
+
+#: apps/core/static/js/advanced.js:369
+msgid "Failed to add link"
+msgstr ""
+
+#: apps/core/static/js/app.js:70
+msgid "Close"
+msgstr ""
+
+#: apps/core/static/js/app.js:153
+msgid "Projects"
+msgstr ""
+
+#: apps/core/static/js/app.js:162
+msgid "Items"
+msgstr ""
+
+#: apps/core/static/js/app.js:172
+msgid "No results found"
+msgstr ""
+
+#: apps/core/static/js/app.js:215 apps/core/static/js/project.js:636
+msgid "Loading..."
+msgstr ""
+
+#: apps/core/static/js/app.js:234 apps/core/static/js/app.js:240
+#: apps/core/static/js/collaboration.js:228
+msgid "Load more"
+msgstr ""
+
+#: apps/core/static/js/app.js:241
+msgid "Could not load more. Try again."
+msgstr ""
+
+#: apps/core/static/js/app.js:253
+msgid "No more activity"
+msgstr ""
+
+#: apps/core/static/js/app.js:755 apps/core/static/js/app.js:760
+msgid "The dialog could not be loaded."
+msgstr ""
+
+#: apps/core/static/js/app.js:903
+msgid "Are you sure?"
+msgstr ""
+
+#: apps/core/static/js/app.js:913 apps/core/static/js/app.js:915
+#: apps/core/static/js/app.js:940 apps/core/static/js/app.js:942
+msgid "Confirm"
+msgstr ""
+
+#: apps/core/static/js/app.js:978 apps/core/static/js/app.js:981
+msgid "The form could not be submitted."
+msgstr ""
+
+#: apps/core/static/js/collaboration.js:26
+msgid "Collaborator invited"
+msgstr ""
+
+#: apps/core/static/js/collaboration.js:31
+msgid "Failed to invite"
+msgstr ""
+
+#: apps/core/static/js/collaboration.js:49
+msgid "this collaborator"
+msgstr ""
+
+#: apps/core/static/js/collaboration.js:51
+msgid "Change Role"
+msgstr ""
+
+#: apps/core/static/js/collaboration.js:52
+msgid "Change the role of %(name)s to %(role)s?"
+msgstr ""
+
+#: apps/core/static/js/collaboration.js:53
+msgid "Change"
+msgstr ""
+
+#: apps/core/static/js/collaboration.js:62
+msgid "Role updated"
+msgstr ""
+
+#: apps/core/static/js/collaboration.js:67
+msgid "Failed to update role"
+msgstr ""
+
+#: apps/core/static/js/collaboration.js:81
+msgid "Remove Collaborator"
+msgstr ""
+
+#: apps/core/static/js/collaboration.js:82
+msgid "Are you sure you want to remove this collaborator?"
+msgstr ""
+
+#: apps/core/static/js/collaboration.js:83 apps/core/static/js/project.js:573
+#: apps/core/static/js/project.js:1217 apps/core/static/js/project.js:1508
+#: apps/core/static/js/project.js:2460
+msgid "Remove"
+msgstr ""
+
+#: apps/core/static/js/collaboration.js:89
+msgid "Collaborator removed"
+msgstr ""
+
+#: apps/core/static/js/collaboration.js:94
+msgid "Failed to remove collaborator"
+msgstr ""
+
+#: apps/core/static/js/collaboration.js:145
+msgid "No audit entries"
+msgstr ""
+
+#: apps/core/static/js/collaboration.js:211
+msgid "No version history"
+msgstr ""
+
+#: apps/core/static/js/collaboration.js:218
+msgid "v%(number)s"
+msgstr ""
+
+#: apps/core/static/js/collaboration.js:219
+msgid "by %(name)s"
+msgstr ""
+
+#: apps/core/static/js/collaboration.js:223
+msgid "(%(count)s items)"
+msgid_plural "(%(count)s items)"
+msgstr[0] ""
+msgstr[1] ""
+
+#: apps/core/static/js/collaboration.js:224
+msgid "Restore this version"
+msgstr ""
+
+#: apps/core/static/js/collaboration.js:249
+msgid "Restore Version"
+msgstr ""
+
+#: apps/core/static/js/collaboration.js:250
+msgid ""
+"Restore this version? Current items will be replaced. This cannot be undone."
+msgstr ""
+
+#: apps/core/static/js/collaboration.js:251
+msgid "Restore"
+msgstr ""
+
+#: apps/core/static/js/collaboration.js:258
+msgid "Version restored successfully"
+msgstr ""
+
+#: apps/core/static/js/collaboration.js:262
+msgid "Failed to restore version"
+msgstr ""
+
+#: apps/core/static/js/project.js:21 apps/core/static/js/project.js:48
+msgid "Expand sidebar"
+msgstr ""
+
+#: apps/core/static/js/project.js:48
+msgid "Collapse sidebar"
+msgstr ""
+
+#: apps/core/static/js/project.js:77
+msgid "The server refused the request."
+msgstr ""
+
+#: apps/core/static/js/project.js:130
+msgid "Loading editor"
+msgstr ""
+
+#: apps/core/static/js/project.js:427
+msgid "No items"
+msgstr ""
+
+#: apps/core/static/js/project.js:432
+msgid "No description"
+msgstr ""
+
+#: apps/core/static/js/project.js:480 apps/core/static/js/project.js:1629
+#: apps/core/static/js/project.js:1764
+msgid "Unassigned"
+msgstr ""
+
+#: apps/core/static/js/project.js:532
+msgid "No tags"
+msgstr ""
+
+#: apps/core/static/js/project.js:546
+msgid "No attachments"
+msgstr ""
+
+#: apps/core/static/js/project.js:553
+msgid "Download"
+msgstr ""
+
+#: apps/core/static/js/project.js:565
+msgid "No links"
+msgstr ""
+
+#: apps/core/static/js/project.js:579
+msgid "From"
+msgstr ""
+
+#: apps/core/static/js/project.js:589
+msgid "No comments yet"
+msgstr ""
+
+#: apps/core/static/js/project.js:606
+msgid "Reply"
+msgstr ""
+
+#: apps/core/static/js/project.js:642
+msgid "No history"
+msgstr ""
+
+#: apps/core/static/js/project.js:651
+msgid "Status: %(from)s → %(to)s"
+msgstr ""
+
+#: apps/core/static/js/project.js:653
+msgid "Priority: %(from)s → %(to)s"
+msgstr ""
+
+#: apps/core/static/js/project.js:673
+msgid "Failed to load history"
+msgstr ""
+
+#: apps/core/static/js/project.js:718 apps/core/static/js/project.js:871
+#: apps/core/static/js/project.js:1693
+msgid "Draft"
+msgstr ""
+
+#: apps/core/static/js/project.js:718
+msgid "In review"
+msgstr ""
+
+#: apps/core/static/js/project.js:718 apps/core/static/js/project.js:871
+#: apps/core/static/js/project.js:1695
+msgid "Approved"
+msgstr ""
+
+#: apps/core/static/js/project.js:718 apps/core/static/js/project.js:871
+#: apps/core/static/js/project.js:1696
+msgid "Rejected"
+msgstr ""
+
+#: apps/core/static/js/project.js:795
+msgid "Failed to save changes"
+msgstr ""
+
+#: apps/core/static/js/project.js:864
+msgid "Tags updated"
+msgstr ""
+
+#: apps/core/static/js/project.js:866
+msgid "Tags could not be saved"
+msgstr ""
+
+#: apps/core/static/js/project.js:871 apps/core/static/js/project.js:1694
+msgid "In Review"
+msgstr ""
+
+#: apps/core/static/js/project.js:873
+msgid "High"
+msgstr ""
+
+#: apps/core/static/js/project.js:873
+msgid "Medium"
+msgstr ""
+
+#: apps/core/static/js/project.js:873
+msgid "Low"
+msgstr ""
+
+#: apps/core/static/js/project.js:935
+msgid "Status updated"
+msgstr ""
+
+#: apps/core/static/js/project.js:935
+msgid "Priority updated"
+msgstr ""
+
+#: apps/core/static/js/project.js:937
+msgid "The change could not be saved"
+msgstr ""
+
+#: apps/core/static/js/project.js:979
+msgid "Duplicate Item"
+msgstr ""
+
+#: apps/core/static/js/project.js:980
+msgid "Duplicate %(id)s? A copy is added to the same section."
+msgstr ""
+
+#: apps/core/static/js/project.js:981
+msgid "Duplicate"
+msgstr ""
+
+#: apps/core/static/js/project.js:987
+msgid "Copied: %(id)s"
+msgstr ""
+
+#: apps/core/static/js/project.js:989 apps/core/static/js/project.js:995
+msgid "The browser refused the clipboard write"
+msgstr ""
+
+#: apps/core/static/js/project.js:993
+msgid "Link copied"
+msgstr ""
+
+#: apps/core/static/js/project.js:1056
+msgid "Failed to add item"
+msgstr ""
+
+#: apps/core/static/js/project.js:1096
+msgid "Failed to delete item"
+msgstr ""
+
+#: apps/core/static/js/project.js:1137
+msgid "Failed to update item"
+msgstr ""
+
+#: apps/core/static/js/project.js:1203
+msgid "Image updated"
+msgstr ""
+
+#: apps/core/static/js/project.js:1204
+msgid "Failed to upload image"
+msgstr ""
+
+#: apps/core/static/js/project.js:1215
+msgid "Remove Image"
+msgstr ""
+
+#: apps/core/static/js/project.js:1216
+msgid "Are you sure you want to remove this image?"
+msgstr ""
+
+#: apps/core/static/js/project.js:1222
+msgid "Image removed"
+msgstr ""
+
+#: apps/core/static/js/project.js:1223
+msgid "Failed to remove image"
+msgstr ""
+
+#: apps/core/static/js/project.js:1236
+msgid "%(text)s (Copy)"
+msgstr ""
+
+#: apps/core/static/js/project.js:1251
+msgid "Item duplicated"
+msgstr ""
+
+#: apps/core/static/js/project.js:1285
+msgid "Item moved up"
+msgstr ""
+
+#: apps/core/static/js/project.js:1285
+msgid "Item moved down"
+msgstr ""
+
+#: apps/core/static/js/project.js:1287
+msgid "The item could not be moved"
+msgstr ""
+
+#: apps/core/static/js/project.js:1377
+msgid "The new order was not saved"
+msgstr ""
+
+#: apps/core/static/js/project.js:1405
+msgid "Comment added"
+msgstr ""
+
+#: apps/core/static/js/project.js:1416
+msgid "Add a comment... (Shift+Enter for new line)"
+msgstr ""
+
+#: apps/core/static/js/project.js:1426
+msgid "Replying to %(name)s..."
+msgstr ""
+
+#: apps/core/static/js/project.js:1436
+msgid "Replying to %(name)s"
+msgstr ""
+
+#: apps/core/static/js/project.js:1437
+msgid "Cancel reply"
+msgstr ""
+
+#: apps/core/static/js/project.js:1472
+msgid "File uploaded"
+msgstr ""
+
+#: apps/core/static/js/project.js:1475 apps/core/static/js/project.js:1478
+msgid "Upload failed"
+msgstr ""
+
+#: apps/core/static/js/project.js:1490
+msgid "Delete Attachment"
+msgstr ""
+
+#: apps/core/static/js/project.js:1491
+msgid "Are you sure you want to delete this attachment?"
+msgstr ""
+
+#: apps/core/static/js/project.js:1506
+msgid "Remove Link"
+msgstr ""
+
+#: apps/core/static/js/project.js:1507
+msgid "Remove this traceability link?"
+msgstr ""
+
+#: apps/core/static/js/project.js:1512
+msgid "Link removed"
+msgstr ""
+
+#: apps/core/static/js/project.js:1515
+msgid "Failed to remove link"
+msgstr ""
+
+#: apps/core/static/js/project.js:1527
+msgid "Delete Comment"
+msgstr ""
+
+#: apps/core/static/js/project.js:1528
+msgid "Are you sure you want to delete this comment?"
+msgstr ""
+
+#: apps/core/static/js/project.js:1534
+msgid "Comment deleted"
+msgstr ""
+
+#: apps/core/static/js/project.js:1627
+msgid "Item"
+msgid_plural "Items"
+msgstr[0] ""
+msgstr[1] ""
+
+#: apps/core/static/js/project.js:1628
+msgid "Approved (%(approved)s of %(total)s)"
+msgstr ""
+
+#: apps/core/static/js/project.js:1630
+msgid "Sections without items (of %(count)s)"
+msgstr ""
+
+#: apps/core/static/js/project.js:1643
+msgid "No sections"
+msgstr ""
+
+#: apps/core/static/js/project.js:1654
+msgid "No recent changes"
+msgstr ""
+
+#: apps/core/static/js/project.js:1712
+msgid "just now"
+msgstr ""
+
+#: apps/core/static/js/project.js:1713
+msgid "%(count)sm ago"
+msgstr ""
+
+#: apps/core/static/js/project.js:1714
+msgid "%(count)sh ago"
+msgstr ""
+
+#: apps/core/static/js/project.js:1715
+msgid "%(count)sd ago"
+msgstr ""
+
+#: apps/core/static/js/project.js:1739
+msgid "Search..."
+msgstr ""
+
+#: apps/core/static/js/project.js:1796
+msgid "No results"
+msgstr ""
+
+#: apps/core/static/js/project.js:1887
+msgid "Tags"
+msgstr ""
+
+#: apps/core/static/js/project.js:1888
+msgid "Assignee"
+msgstr ""
+
+#: apps/core/static/js/project.js:1957
+msgid "Columns"
+msgstr ""
+
+#: apps/core/static/js/project.js:1966
+msgid "Custom Attributes"
+msgstr ""
+
+#: apps/core/static/js/project.js:2186 apps/core/static/js/project.js:2429
+#: apps/core/static/js/project.js:2579
+#: apps/doctemplates/static/js/templates.js:68
+msgid "New section"
+msgstr ""
+
+#: apps/core/static/js/project.js:2458
+msgid "Remove Attribute"
+msgstr ""
+
+#: apps/core/static/js/project.js:2459
+msgid ""
+"Remove attribute \"%(name)s\"? Its values on every item are deleted when you "
+"save."
+msgstr ""
+
+#: apps/core/static/js/project.js:2479
+msgid "Saving..."
+msgstr ""
+
+#: apps/core/static/js/project.js:2482
+msgid "Project structure saved."
+msgstr ""
+
+#: apps/core/static/js/project.js:2485
+msgid "Not saved: %(error)s"
+msgstr ""
+
+#: apps/core/static/js/project.js:2498
+msgid "The server refused the change."
+msgstr ""
+
+#: apps/doctemplates/static/js/templates.js:23
+msgid "Section name"
+msgstr ""

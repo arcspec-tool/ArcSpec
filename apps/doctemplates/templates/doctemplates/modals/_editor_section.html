@@ -1,0 +1,27 @@
+{% load i18n %}<div class="section-item" data-section-id="{{ section.id }}">
+    <div class="section-item-content">
+        <span class="section-drag-handle"><i class="bi bi-grip-vertical"></i></span>
+        {% if section.children %}<i class="bi bi-chevron-down section-toggle"></i>{% endif %}
+        <span class="section-number">{{ section.number }}</span>
+        <input type="text" class="form-control form-control-sm section-name-input" value="{{ section.title }}" placeholder="{% translate 'Section name' %}">
+        <div class="section-actions">
+            <button type="button" class="btn btn-sm btn-outline-secondary" data-section-action="up" title="{% translate 'Move up' %}"><i class="bi bi-arrow-up"></i></button>
+            <button type="button" class="btn btn-sm btn-outline-secondary" data-section-action="down" title="{% translate 'Move down' %}"><i class="bi bi-arrow-down"></i></button>
+            <span class="section-actions-divider"></span>
+            <button type="button" class="btn btn-sm btn-outline-secondary" data-section-action="outdent" title="{% translate 'Outdent section' %}"><i class="bi bi-arrow-bar-left"></i></button>
+            <button type="button" class="btn btn-sm btn-outline-secondary" data-section-action="indent" title="{% translate 'Indent section' %}"><i class="bi bi-arrow-bar-right"></i></button>
+            <span class="section-actions-divider"></span>
+            <button type="button" class="btn btn-sm {% if section.description %}btn-secondary{% else %}btn-outline-secondary{% endif %}" data-section-action="toggle-description" title="{% translate 'Toggle description' %}"><i class="bi bi-card-text"></i></button>
+            <button type="button" class="btn btn-sm btn-outline-secondary" data-section-action="add-child" title="{% translate 'Add sub-section' %}"><i class="bi bi-plus"></i></button>
+            <button type="button" class="btn btn-sm btn-outline-danger" data-section-action="remove" title="{% translate 'Remove section' %}"><i class="bi bi-trash"></i></button>
+        </div>
+    </div>
+    <div class="section-desc-wrapper"{% if not section.description %} style="display:none"{% endif %}>
+        <textarea class="form-control form-control-sm section-desc-input" rows="2" placeholder="{% translate 'Describe this section...' %}">{{ section.description }}</textarea>
+    </div>
+    {% if section.children %}
+    <div class="section-children">
+        {% for child in section.children %}{% include "doctemplates/modals/_editor_section.html" with section=child %}{% endfor %}
+    </div>
+    {% endif %}
+</div>

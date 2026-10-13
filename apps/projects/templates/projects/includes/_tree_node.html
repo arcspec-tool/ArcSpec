@@ -1,0 +1,21 @@
+{% load core_tags i18n %}
+{% for section in sections %}
+{% with children=children_map|get_item:section.pk %}
+<div class="tree-node{% if is_root and forloop.first %} active{% endif %}" data-section="{{ section.pk }}" data-number="{{ section.number }}">
+    {% if children %}
+    <span class="tree-toggle" data-expanded="true"><i class="bi bi-chevron-down"></i></span>
+    <i class="bi bi-folder2-open tree-icon text-primary"></i>
+    {% else %}
+    <span class="tree-toggle-placeholder"></span>
+    <i class="bi bi-file-text tree-icon text-muted"></i>
+    {% endif %}
+    <span class="tree-label" title="{{ section.number }} {{ section.title }}">{{ section.number }}{% if not section.parent_id %}.{% endif %} {{ section.title }}</span>
+    {% if section.total_items %}<span class="tree-count" title="{% if children %}{% blocktranslate trimmed count counter=section.total_items %}{{ counter }} item in this section and its subsections{% plural %}{{ counter }} items in this section and its subsections{% endblocktranslate %}{% else %}{% blocktranslate trimmed count counter=section.total_items %}{{ counter }} item{% plural %}{{ counter }} items{% endblocktranslate %}{% endif %}">{{ section.total_items }}</span>{% endif %}
+</div>
+{% if children %}
+<div class="tree-children">
+    {% include "projects/includes/_tree_node.html" with sections=children is_root=False %}
+</div>
+{% endif %}
+{% endwith %}
+{% endfor %}

@@ -1,0 +1,57 @@
+{% load static core_tags i18n %}
+<nav id="sidebar" class="sidebar">
+    <a href="{% url 'dashboard:dashboard' %}" class="sidebar-brand">
+        <img class="sidebar-logo" src="{% static 'img/logo-sidebar.png' %}" alt="ArcSpec" width="180" height="42">
+        <img class="sidebar-logo-icon" src="{% static 'img/icon-sidebar.png' %}" alt="ArcSpec" width="28" height="28">
+    </a>
+
+    <div class="sidebar-nav">
+        <div class="sidebar-section-label">{% translate "Main" %}</div>
+        <a href="{% url 'dashboard:dashboard' %}" class="sidebar-link {% active_link 'dashboard' %}" title="{% translate 'Dashboard' %}">
+            <i class="bi bi-grid-1x2"></i> {% translate "Dashboard" %}
+        </a>
+        <a href="{% url 'project_list' %}" class="sidebar-link {% active_link 'project_list' %}" title="{% translate 'Projects' %}">
+            <i class="bi bi-folder2-open"></i> {% translate "Projects" %}
+        </a>
+        <a href="{% url 'template_list' %}" class="sidebar-link {% active_link 'template_list' %}" title="{% translate 'Templates' %}">
+            <i class="bi bi-file-earmark-ruled"></i> {% translate "Templates" %}
+        </a>
+
+        <div class="sidebar-section-label">{% translate "Account" %}</div>
+        <a href="{% url 'profile' %}" class="sidebar-link {% active_link 'profile' %}" title="{% translate 'Profile' %}">
+            <i class="bi bi-person"></i> {% translate "Profile" %}
+        </a>
+        <a href="{% url 'settings' %}" class="sidebar-link {% active_link 'settings' %}" title="{% translate 'Settings' %}">
+            <i class="bi bi-gear"></i> {% translate "Settings" %}
+        </a>
+        {% if request.user.is_system_admin %}
+        <a href="{% url 'admin_panel' %}" class="sidebar-link {% active_link 'admin_panel' %}" title="{% translate 'Admin Panel' %}">
+            <i class="bi bi-shield-lock"></i> {% translate "Admin Panel" %}
+        </a>
+        {% endif %}
+    </div>
+
+    <button id="sidebarCollapseBtn" class="sidebar-collapse-btn" title="{% translate 'Collapse sidebar' %}" aria-label="{% translate 'Toggle sidebar collapse' %}">
+        <i class="bi bi-chevron-bar-left"></i>
+    </button>
+
+    <div class="sidebar-footer">
+        <a href="{% url 'profile' %}" class="sidebar-user">
+            <div class="sidebar-avatar" style="background: {{ request.user.avatar_color }}">
+                {{ request.user.get_initials }}
+            </div>
+            <div class="sidebar-user-info">
+                <div class="sidebar-user-name">{{ request.user.get_full_name|default:request.user }}</div>
+                <div class="sidebar-user-role">{{ request.user.get_system_role_display }}</div>
+            </div>
+        </a>
+        <a href="#" class="sidebar-signout" title="{% translate 'Sign Out' %}" aria-label="{% translate 'Sign Out' %}" data-modal-open="sign_out">
+            <i class="bi bi-box-arrow-left"></i>
+        </a>
+    </div>
+
+    <div class="sidebar-legal">
+        <span class="sidebar-legal-copyright">&copy; 2026 ArcSpec</span>
+        <a href="https://www.gnu.org/licenses/agpl-3.0.html" class="sidebar-legal-licence" target="_blank" rel="nofollow noopener noreferrer">AGPL-3.0</a>
+    </div>
+</nav>

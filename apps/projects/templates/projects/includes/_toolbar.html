@@ -1,0 +1,106 @@
+{% load core_tags i18n %}
+<div class="project-toolbar">
+    <div class="project-toolbar-left">
+        <button type="button" class="btn btn-sm btn-outline-secondary project-panel-toggle" data-panel="tree" title="{% translate 'Document sections' %}" aria-label="{% translate 'Document sections' %}" aria-controls="panelTree" aria-pressed="true">
+            <i class="bi bi-layout-sidebar"></i>
+        </button>
+        {% if is_editor %}
+        <button type="button" class="btn btn-sm btn-primary" id="addItemBtn" title="{% translate 'Add new item' %}" data-modal-open="add_item" data-project="{{ project.slug }}">
+            <i class="bi bi-plus-lg"></i><span class="btn-label ms-1">{% translate "Add Item" %}</span>
+        </button>
+        <button type="button" class="btn btn-sm btn-outline-secondary" id="bulkToggleBtn" title="{% translate 'Select multiple items (Ctrl+Shift+A)' %}" aria-label="{% translate 'Select multiple items' %}" aria-pressed="false">
+            <i class="bi bi-check2-square"></i>
+        </button>
+        {% endif %}
+        <div class="vr mx-1"></div>
+        <div class="input-group input-group-sm toolbar-item-search">
+            <span class="input-group-text bg-transparent border-end-0"><i class="bi bi-search" aria-hidden="true"></i></span>
+            <input type="search" class="form-control border-start-0" placeholder="{% translate 'Search items (/)' %}" aria-label="{% translate 'Search items' %}" id="itemSearch" autocomplete="off">
+        </div>
+        <button type="button" class="btn btn-sm btn-outline-secondary menu-trigger" id="filterMenuBtn" data-menu-open="filterPanel">
+            <i class="bi bi-funnel"></i><span class="btn-label ms-1">{% translate "Filter" %}</span> <span class="filter-active-badge d-none" id="filterBadge"></span><i class="bi bi-chevron-down menu-trigger-caret" aria-hidden="true"></i>
+        </button>
+        <div class="menu menu-panel" id="filterPanel" role="dialog" popover="manual" aria-label="{% translate 'Filter items' %}">
+            <div class="mb-2">
+                <label class="form-label small fw-medium mb-1" for="filterStatus">{% translate "Status" %}</label>
+                <select class="form-select form-select-sm" id="filterStatus">
+                    <option value="">{% translate "All statuses" %}</option>
+                    {% for value, label in status_choices %}
+                    <option value="{{ value }}">{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-2">
+                <label class="form-label small fw-medium mb-1" for="filterPriority">{% translate "Priority" %}</label>
+                <select class="form-select form-select-sm" id="filterPriority">
+                    <option value="">{% translate "All priorities" %}</option>
+                    {% for value, label in priority_choices %}
+                    <option value="{{ value }}">{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-label small fw-medium mb-1" for="advFilterTag">{% translate "Tag" %}</label>
+                <select class="form-select form-select-sm" id="advFilterTag">
+                    <option value="">{% translate "All tags" %}</option>
+                    {% for tag in project_tags %}
+                    <option value="{{ tag.name }}">{{ tag.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="d-flex gap-2">
+                <button type="button" class="btn btn-sm btn-primary flex-fill" id="advFilterApplyBtn" data-menu-close>{% translate "Apply" %}</button>
+                <button type="button" class="btn btn-sm btn-outline-secondary flex-fill" id="advFilterClearBtn" data-menu-close>{% translate "Clear" %}</button>
+            </div>
+            <hr class="my-2">
+            <button type="button" class="btn btn-sm btn-link text-decoration-none w-100 p-0" data-menu-close data-modal-open="save_view" data-project="{{ project.slug }}"><i class="bi bi-bookmark-plus me-1"></i>{% translate "Save as View" %}</button>
+        </div>
+        <button type="button" class="btn btn-sm btn-outline-secondary menu-trigger" id="savedViewsBtn" data-menu-open="savedViewsMenu" title="{% translate 'Saved Views' %}" aria-label="{% translate 'Saved views' %}">
+            <i class="bi bi-bookmarks"></i><i class="bi bi-chevron-down menu-trigger-caret" aria-hidden="true"></i>
+        </button>
+        <div class="menu" id="savedViewsMenu" role="menu" popover="manual" aria-label="{% translate 'Saved views' %}">
+            <div class="menu-heading" role="presentation">{% translate "Saved views" %}</div>
+            <div id="savedViewsList">
+                {% for sv in saved_views %}
+                <button type="button" class="menu-item saved-view-item" role="menuitem" tabindex="-1" data-view-id="{{ sv.pk }}" data-filters='{{ sv.filters|to_json }}'><i class="bi {% if sv.is_default %}bi-star-fill text-warning{% else %}bi-bookmark{% endif %} menu-item-icon" aria-hidden="true"></i><span class="menu-item-text">{{ sv.name }}</span></button>
+                {% empty %}
+                <div class="menu-note" role="presentation">{% translate "No saved views" %}</div>
+                {% endfor %}
+            </div>
+            {% if deletable_views %}
+            <div class="menu-separator" role="separator"></div>
+            <button type="button" class="menu-item menu-item-parent" role="menuitem" tabindex="-1" aria-haspopup="menu" aria-expanded="false" aria-controls="savedViewsDeleteMenu"><i class="bi bi-trash menu-item-icon" aria-hidden="true"></i><span class="menu-item-text">{% translate "Delete a view" %}</span><i class="bi bi-chevron-right menu-item-caret" aria-hidden="true"></i></button>
+            <div class="menu menu-sub" id="savedViewsDeleteMenu" role="menu" popover="manual" aria-label="{% translate 'Delete a view' %}">
+                {% for sv in deletable_views %}
+                <button type="button" class="menu-item" role="menuitem" tabindex="-1" data-action="delete-view" data-value="{{ sv.public_key }}"><span class="menu-item-text">{{ sv.name }}</span></button>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="project-toolbar-right">
+        <button type="button" class="btn btn-sm btn-outline-secondary menu-trigger" id="columnsMenuBtn" data-menu-open="columnsMenu" title="{% translate 'Show or hide columns' %}">
+            <i class="bi bi-layout-three-columns"></i><span class="btn-label ms-1">{% translate "Columns" %}</span><i class="bi bi-chevron-down menu-trigger-caret" aria-hidden="true"></i>
+        </button>
+        <div class="menu" id="columnsMenu" role="menu" popover="manual" aria-label="{% translate 'Columns' %}" data-menu-keep-open>
+            <div class="menu-heading" role="presentation">{% translate "Columns" %}</div>
+        </div>
+        <button type="button" class="btn btn-sm btn-outline-secondary" id="summaryToggleBtn" title="{% translate 'Project summary' %}" aria-label="{% translate 'Project summary' %}" aria-controls="projectSummary" aria-pressed="false">
+            <i class="bi bi-bar-chart-line"></i>
+        </button>
+        <div class="vr mx-1"></div>
+        <button type="button" class="btn btn-sm btn-outline-secondary project-panel-toggle" data-panel="details" title="{% translate 'Details' %}" aria-label="{% translate 'Details' %}" aria-controls="panelDetails" aria-pressed="false">
+            <i class="bi bi-layout-sidebar-reverse"></i>
+        </button>
+        <button type="button" class="btn btn-sm btn-outline-secondary menu-trigger" id="moreMenuBtn" data-menu-open="moreMenu" data-menu-align="end" title="{% translate 'More options' %}" aria-label="{% translate 'More options' %}">
+            <i class="bi bi-three-dots"></i>
+        </button>
+        <div class="menu" id="moreMenu" role="menu" popover="manual" aria-label="{% translate 'More options' %}">
+            <button type="button" class="menu-item" role="menuitem" tabindex="-1" data-modal-open="export" data-project="{{ project.slug }}" data-format="pdf"><i class="bi bi-file-earmark-pdf menu-item-icon" aria-hidden="true"></i><span class="menu-item-text">{% translate "Export to PDF" %}</span></button>
+            <button type="button" class="menu-item" role="menuitem" tabindex="-1" data-modal-open="export" data-project="{{ project.slug }}" data-format="docx"><i class="bi bi-file-earmark-word menu-item-icon" aria-hidden="true"></i><span class="menu-item-text">{% translate "Export to DOCX" %}</span></button>
+            <div class="menu-separator" role="separator"></div>
+            <button type="button" class="menu-item" role="menuitem" tabindex="-1" id="openVersionBtn"><i class="bi bi-clock-history menu-item-icon" aria-hidden="true"></i><span class="menu-item-text">{% translate "Version History" %}</span></button>
+            <button type="button" class="menu-item" role="menuitem" tabindex="-1" id="openAuditBtn"><i class="bi bi-journal-text menu-item-icon" aria-hidden="true"></i><span class="menu-item-text">{% translate "Audit Log" %}</span></button>
+        </div>
+    </div>
+</div>

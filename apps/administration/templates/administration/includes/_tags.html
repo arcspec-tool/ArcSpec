@@ -1,0 +1,46 @@
+{% load i18n %}<div class="page-toolbar">
+    <p class="toolbar-note">{% translate "Tag presets are offered in every project." %}</p>
+    <div class="toolbar-end">
+        <button type="button" class="btn btn-primary btn-sm" data-modal-open="tag_preset">
+            <i class="bi bi-plus-lg me-1"></i>{% translate "Add Preset" %}
+        </button>
+    </div>
+</div>
+
+<div class="card data-table-card">
+    <div class="table-responsive">
+        <table class="table data-table align-middle mb-0">
+            <thead>
+                <tr>
+                    <th scope="col">{% translate "Tag" %}</th>
+                    <th scope="col" class="text-end">{% translate "Items" %}</th>
+                    <th scope="col" class="data-table-actions"><span class="visually-hidden">{% translate "Actions" %}</span></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for tag in tag_presets %}
+                <tr>
+                    <td>
+                        <div class="data-table-entity">
+                            <span class="tag-preset-swatch" style="background: {{ tag.color }}" aria-hidden="true"></span>
+                            <div class="data-table-heading">
+                                <div class="data-table-name">{{ tag.name }}</div>
+                                <div class="data-table-sub font-monospace">{{ tag.color }}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="text-end">{{ tag.usage_count }}</td>
+                    <td class="data-table-actions">
+                        <form method="post" action="{% url 'admin_tag_preset_delete' public_key=tag.public_key %}" data-confirm="{% blocktranslate trimmed with name=tag.name %}Delete the preset “{{ name }}”?{% endblocktranslate %}{% if tag.usage_count %} {% blocktranslate trimmed count counter=tag.usage_count %}The tag is removed from {{ counter }} item that uses it.{% plural %}The tag is removed from {{ counter }} items that use it.{% endblocktranslate %}{% else %} {% translate 'No item uses it.' %}{% endif %}" data-confirm-title="{% translate 'Delete Tag Preset' %}" data-confirm-button="{% translate 'Delete' %}" data-confirm-class="btn-danger">
+                            {% csrf_token %}<button type="submit" class="btn btn-sm btn-light border-0 text-danger" title="{% translate 'Delete' %}" aria-label="{% blocktranslate trimmed with name=tag.name %}Delete {{ name }}{% endblocktranslate %}"><i class="bi bi-trash"></i></button>
+                        </form>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="3" class="data-table-empty">{% translate "No tag presets yet." %}</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="card-footer data-table-footer">{% blocktranslate trimmed count counter=tag_presets|length %}{{ counter }} tag preset{% plural %}{{ counter }} tag presets{% endblocktranslate %}</div>
+</div>

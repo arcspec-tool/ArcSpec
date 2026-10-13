@@ -1,0 +1,107 @@
+{% load i18n %}<div class="admin-settings-grid">
+    <section class="card dash-panel" aria-labelledby="generalHeading">
+        <div class="card-header">
+            <div>
+                <h2 class="dash-panel-title" id="generalHeading">{% translate "General" %}</h2>
+                <p class="settings-panel-sub">{% translate "The organisation name printed in export footers, and the upload limit." %}</p>
+            </div>
+        </div>
+        <form method="post" action="{% url 'admin_system_settings' %}" data-dirty-form>
+            {% csrf_token %}
+            <input type="hidden" name="form_type" value="general">
+            {% for field in general_form %}
+            <div class="settings-field">
+                <label class="settings-field-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% for error in field.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
+            </div>
+            {% endfor %}
+            <div class="settings-actions">
+                <button type="submit" class="btn btn-primary btn-sm" disabled><i class="bi bi-check-lg me-1"></i>{% translate "Save" %}</button>
+            </div>
+        </form>
+    </section>
+
+    <section class="card dash-panel" aria-labelledby="archivingHeading">
+        <div class="card-header">
+            <div>
+                <h2 class="dash-panel-title" id="archivingHeading">{% translate "Project archiving" %}</h2>
+                <p class="settings-panel-sub">{% translate "Archive inactive projects and delete archived ones after a period." %}</p>
+            </div>
+        </div>
+        <form method="post" action="{% url 'admin_system_settings' %}" data-dirty-form>
+            {% csrf_token %}
+            <input type="hidden" name="form_type" value="archiving">
+            <div class="settings-row">
+                <div class="settings-row-text">
+                    <label for="{{ archiving_form.auto_archive_enabled.id_for_label }}">{% translate "Auto-archive inactive projects" %}</label>
+                    <p>{% translate "Active projects with no change for the number of days below are archived." %}</p>
+                </div>
+                <div class="form-check form-switch">{{ archiving_form.auto_archive_enabled }}</div>
+            </div>
+            <div class="settings-field">
+                <label class="settings-field-label" for="{{ archiving_form.auto_archive_days.id_for_label }}">{% translate "Days without a change" %}</label>
+                {{ archiving_form.auto_archive_days }}
+                {% for error in archiving_form.auto_archive_days.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
+            </div>
+            <div class="settings-row">
+                <div class="settings-row-text">
+                    <label for="{{ archiving_form.allow_user_restore.id_for_label }}">{% translate "Users can restore archived projects" %}</label>
+                    <p>{% translate "When off, only administrators can restore an archived project." %}</p>
+                </div>
+                <div class="form-check form-switch">{{ archiving_form.allow_user_restore }}</div>
+            </div>
+            <div class="settings-row">
+                <div class="settings-row-text">
+                    <label for="{{ archiving_form.auto_delete_archived.id_for_label }}">{% translate "Auto-delete archived projects" %}</label>
+                    <p>{% translate "Projects archived for longer than the number of days below are deleted permanently." %}</p>
+                </div>
+                <div class="form-check form-switch">{{ archiving_form.auto_delete_archived }}</div>
+            </div>
+            <div class="settings-field">
+                <label class="settings-field-label" for="{{ archiving_form.auto_delete_days.id_for_label }}">{% translate "Days after archiving" %}</label>
+                {{ archiving_form.auto_delete_days }}
+                {% for error in archiving_form.auto_delete_days.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
+            </div>
+            <div class="settings-actions">
+                <button type="submit" class="btn btn-primary btn-sm" disabled><i class="bi bi-check-lg me-1"></i>{% translate "Save" %}</button>
+            </div>
+        </form>
+    </section>
+
+    <section class="card dash-panel" aria-labelledby="authenticationHeading">
+        <div class="card-header">
+            <div>
+                <h2 class="dash-panel-title" id="authenticationHeading">{% translate "Authentication" %}</h2>
+                <p class="settings-panel-sub">{% translate "At least one method stays on. Accounts are created by invitation only." %}</p>
+            </div>
+        </div>
+        <form method="post" action="{% url 'admin_system_settings' %}" id="authenticationForm" data-both-off="{{ authentication_form.both_off }}" data-dirty-form>
+            {% csrf_token %}
+            <input type="hidden" name="form_type" value="authentication">
+            <div class="settings-row">
+                <div class="settings-row-text">
+                    <label for="{{ authentication_form.entra_login_enabled.id_for_label }}">{% translate "Microsoft sign-in" %}</label>
+                    <p>
+                        {% if authentication_form.entra_configured %}
+                        {% translate 'The "Sign in with Microsoft" button and the Microsoft callback accept sign-ins.' %}
+                        {% else %}
+                        {% translate "Microsoft sign-in is not configured in this environment." %}
+                        {% endif %}
+                    </p>
+                </div>
+                <div class="form-check form-switch">{{ authentication_form.entra_login_enabled }}</div>
+            </div>
+            <div class="settings-row">
+                <div class="settings-row-text">
+                    <label for="{{ authentication_form.password_login_enabled.id_for_label }}">{% translate "Password sign-in" %}</label>
+                    <p>{% translate "An email and password form on the sign-in page, with password reset through an emailed link." %}</p>
+                </div>
+                <div class="form-check form-switch">{{ authentication_form.password_login_enabled }}</div>
+            </div>
+            <div class="settings-actions">
+                <button type="submit" class="btn btn-primary btn-sm" disabled><i class="bi bi-check-lg me-1"></i>{% translate "Save" %}</button>
+            </div>
+        </form>
+    </section>
+</div>

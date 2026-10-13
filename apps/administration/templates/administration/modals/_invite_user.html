@@ -1,0 +1,29 @@
+{% extends "components/_modal_shell.html" %}
+{% load i18n %}
+{% block modal_title %}<i class="bi bi-person-plus me-2"></i>{% translate "Invite User" %}{% endblock %}
+{% block after_header %}<form method="post" action="{{ form_action }}" data-modal-form>
+                {% csrf_token %}{% endblock %}
+{% block modal_body %}
+                    {% if form.non_field_errors %}<div class="alert alert-danger">{{ form.non_field_errors }}</div>{% endif %}
+                    <div class="mb-3">
+                        <label class="form-label" for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+                        {{ form.email }}
+                        {% for error in form.email.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col">
+                            <label class="form-label" for="{{ form.first_name.id_for_label }}">{{ form.first_name.label }}</label>
+                            {{ form.first_name }}
+                            {% for error in form.first_name.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
+                        </div>
+                        <div class="col">
+                            <label class="form-label" for="{{ form.last_name.id_for_label }}">{{ form.last_name.label }}</label>
+                            {{ form.last_name }}
+                            {% for error in form.last_name.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
+                        </div>
+                    </div>
+                    <p class="text-muted small mb-0">{% translate "The account is created with the User role and receives an email with a sign-in link. Change the role from the user list afterwards." %}</p>
+{% endblock %}
+{% block modal_footer %}<button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{% translate "Cancel" %}</button>
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-person-plus me-1"></i>{% translate "Invite" %}</button>{% endblock %}
+{% block after_footer %}</form>{% endblock %}

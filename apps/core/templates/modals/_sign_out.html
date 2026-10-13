@@ -1,0 +1,11 @@
+{% extends "components/_modal_shell.html" %}
+{% load i18n %}
+{% block header_class %} border-bottom-0 pb-0{% endblock %}
+{% block modal_title %}<i class="bi bi-box-arrow-left me-2"></i>{% translate "Sign Out" %}{% endblock %}
+{% block modal_body %}<p class="mb-0 text-muted">{% translate "Are you sure you want to sign out?" %}</p>{% endblock %}
+{% block footer_class %} border-top-0 pt-0{% endblock %}
+{% block modal_footer %}<button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">{% translate "Cancel" %}</button>
+                <form method="post" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-danger"><i class="bi bi-box-arrow-left me-1"></i>{% translate "Sign Out" %}</button>
+                </form>{% endblock %}

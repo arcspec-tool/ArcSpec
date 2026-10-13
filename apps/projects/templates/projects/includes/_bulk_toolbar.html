@@ -1,0 +1,32 @@
+{% load i18n %}<div class="bulk-toolbar d-none" id="bulkToolbar">
+    <div class="d-flex align-items-center gap-2">
+        <input type="checkbox" class="form-check-input" id="bulkSelectAll" title="{% translate 'Select All' %}">
+        <span class="small fw-semibold" id="bulkCount">{% translate "0 selected" %}</span>
+    </div>
+    <div class="d-flex align-items-center gap-2">
+        <button type="button" class="btn btn-sm btn-outline-secondary menu-trigger" data-menu-open="bulkStatusMenu"><i class="bi bi-circle me-1"></i>{% translate "Status" %}<i class="bi bi-chevron-down menu-trigger-caret" aria-hidden="true"></i></button>
+        <div class="menu" id="bulkStatusMenu" role="menu" popover="manual" aria-label="{% translate 'Set status of the selected items' %}">
+            {% for value, label in status_choices %}
+            <button type="button" class="menu-item" role="menuitem" tabindex="-1" data-bulk-status="{{ value }}"><span class="menu-item-icon menu-dot-{{ value }}" aria-hidden="true"><span class="menu-dot"></span></span><span class="menu-item-text">{{ label }}</span></button>
+            {% endfor %}
+        </div>
+        <button type="button" class="btn btn-sm btn-outline-secondary menu-trigger" data-menu-open="bulkPriorityMenu"><i class="bi bi-flag me-1"></i>{% translate "Priority" %}<i class="bi bi-chevron-down menu-trigger-caret" aria-hidden="true"></i></button>
+        <div class="menu" id="bulkPriorityMenu" role="menu" popover="manual" aria-label="{% translate 'Set priority of the selected items' %}">
+            {% for value, label in priority_choices %}
+            <button type="button" class="menu-item" role="menuitem" tabindex="-1" data-bulk-priority="{{ value }}"><i class="bi bi-flag-fill menu-item-icon menu-flag-{{ value }}" aria-hidden="true"></i><span class="menu-item-text">{{ label }}</span></button>
+            {% endfor %}
+        </div>
+        <button type="button" class="btn btn-sm btn-outline-secondary menu-trigger" data-menu-open="bulkTagMenu"><i class="bi bi-tag me-1"></i>{% translate "Tag" %}<i class="bi bi-chevron-down menu-trigger-caret" aria-hidden="true"></i></button>
+        <div class="menu" id="bulkTagMenu" role="menu" popover="manual" aria-label="{% translate 'Add a tag to the selected items' %}">
+            {% for tag in project_tags %}
+            <button type="button" class="menu-item" role="menuitem" tabindex="-1" data-bulk-tag="{{ tag.pk }}"><span class="menu-item-icon" aria-hidden="true"><span class="menu-swatch" style="background: {{ tag.color }}"></span></span><span class="menu-item-text">{{ tag.name }}</span></button>
+            {% empty %}
+            <div class="menu-note" role="presentation">{% translate "No tags available" %}</div>
+            {% endfor %}
+        </div>
+        <div class="vr"></div>
+        <button class="btn btn-sm btn-outline-danger" id="bulkDeleteBtn">
+            <i class="bi bi-trash me-1"></i>{% translate "Delete" %}
+        </button>
+    </div>
+</div>

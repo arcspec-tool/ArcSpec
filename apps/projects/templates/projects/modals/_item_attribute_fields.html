@@ -1,0 +1,16 @@
+{% load i18n %}{% if attribute_fields %}<hr class="my-3"><h6 class="small fw-semibold text-muted mb-2">{% translate "Custom Attributes" %}</h6>
+<div class="row g-2">
+    {% for field in attribute_fields %}{% with attribute=field.attribute %}
+    <div class="col-md-6 mb-2">
+        <label class="form-label small mb-1" for="{{ prefix }}_attr_{{ attribute.pk }}">{{ attribute.name }}</label>
+        {% if attribute.field_type == 'text' %}<input type="text" class="form-control form-control-sm attr-input" id="{{ prefix }}_attr_{{ attribute.pk }}" data-attr-id="{{ attribute.pk }}" value="{{ field.value }}">
+        {% elif attribute.field_type == 'number' %}<input type="number" class="form-control form-control-sm attr-input" id="{{ prefix }}_attr_{{ attribute.pk }}" data-attr-id="{{ attribute.pk }}" value="{{ field.value }}">
+        {% elif attribute.field_type == 'date' %}<input type="date" class="form-control form-control-sm attr-input" id="{{ prefix }}_attr_{{ attribute.pk }}" data-attr-id="{{ attribute.pk }}" value="{{ field.value }}">
+        {% elif attribute.field_type == 'boolean' %}<div class="form-check mt-1"><input type="checkbox" class="form-check-input attr-input" id="{{ prefix }}_attr_{{ attribute.pk }}" data-attr-id="{{ attribute.pk }}" data-type="boolean"{% if field.value == 'true' %} checked{% endif %}><label class="form-check-label small" for="{{ prefix }}_attr_{{ attribute.pk }}">{% translate "Yes" %}</label></div>
+        {% elif attribute.field_type == 'dropdown' %}<select class="form-select form-select-sm attr-input" id="{{ prefix }}_attr_{{ attribute.pk }}" data-attr-id="{{ attribute.pk }}"><option value="">{% translate "-- Select --" %}</option>{% for option in attribute.options %}<option value="{{ option }}"{% if option == field.value %} selected{% endif %}>{{ option }}</option>{% endfor %}</select>
+        {% elif attribute.field_type == 'multiselect' %}<select class="form-select form-select-sm attr-input" id="{{ prefix }}_attr_{{ attribute.pk }}" data-attr-id="{{ attribute.pk }}" data-type="multiselect" multiple size="3">{% for option in attribute.options %}<option value="{{ option }}"{% if option in field.selected %} selected{% endif %}>{{ option }}</option>{% endfor %}</select>
+        {% elif attribute.field_type == 'user' %}<select class="form-select form-select-sm attr-input" id="{{ prefix }}_attr_{{ attribute.pk }}" data-attr-id="{{ attribute.pk }}"><option value="">{% translate "-- Select --" %}</option>{% for m in field.users %}<option value="{{ m.user.pk }}"{% if field.value == m.user.pk|stringformat:"s" %} selected{% endif %}>{{ m.user }}</option>{% endfor %}</select>
+        {% endif %}
+    </div>
+    {% endwith %}{% endfor %}
+</div>{% endif %}

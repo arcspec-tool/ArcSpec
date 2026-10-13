@@ -1,0 +1,67 @@
+{% extends "components/_modal_shell.html" %}
+{% load core_tags i18n %}
+{% block modal_title %}<i class="bi bi-pencil-square me-2"></i>{% translate "Edit Item" %} <span class="text-muted small" id="editItemIdLabel">{{ item.item_id }}</span>{% endblock %}
+{% block modal_body %}
+                <form id="editItemForm" data-project="{{ project.slug }}" data-item-key="{{ item.public_key }}">
+                    <div class="mb-3">
+                        <label for="editItemSection" class="form-label">{% translate "Section" %}</label>
+                        <select class="form-select" id="editItemSection" required>
+                            {% for section in sections %}
+                            <option value="{{ section.pk }}"{% if section.pk == selected_section %} selected{% endif %}>{{ section.number }} {{ section.title }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editItemText" class="form-label">{% translate "Text" %}</label>
+                        <textarea class="form-control" id="editItemText" rows="6" required placeholder="{% translate 'Enter item text...' %}">{{ item.text }}</textarea>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label for="editItemStatus" class="form-label">{% translate "Status" %}</label>
+                            <select class="form-select" id="editItemStatus">
+                                {% for value, label in status_choices %}<option value="{{ value }}"{% if value == item.status %} selected{% endif %}>{{ label }}</option>{% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="editItemPriority" class="form-label">{% translate "Priority" %}</label>
+                            <select class="form-select" id="editItemPriority">
+                                {% for value, label in priority_choices %}<option value="{{ value }}"{% if value == item.priority %} selected{% endif %}>{{ label }}</option>{% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="editItemAssignee" class="form-label">{% translate "Assignee" %}</label>
+                            <div class="searchable-select" data-target="editItemAssignee">
+                                <select class="form-select" id="editItemAssignee">
+                                    <option value="">{% translate "Unassigned" %}</option>
+                                    {% for m in memberships %}
+                                    <option value="{{ m.user.pk }}" data-color="{{ m.user.avatar_color }}" data-initials="{{ m.user|initials }}"{% if m.user.pk == item.assignee_id %} selected{% endif %}>{{ m.user }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="editItemCustomAttributes">{% include "projects/modals/_item_attribute_fields.html" with prefix="editItemCustomAttributes" %}</div>
+                    <hr class="my-3">
+                    {% if image_url %}
+                    <div id="editItemImagePreview" class="mb-2">
+                        <img class="img-fluid rounded border" style="max-height: 150px;" id="editItemImageThumb" src="{{ image_url }}" alt="{{ item.image_caption }}">
+                        <div class="form-check mt-1">
+                            <input class="form-check-input" type="checkbox" id="editItemRemoveImage">
+                            <label class="form-check-label small" for="editItemRemoveImage">{% translate "Remove current image" %}</label>
+                        </div>
+                    </div>
+                    {% endif %}
+                    <label class="form-label">{% translate "Image" %} <span class="text-muted small">{% translate "(optional)" %}</span></label>
+                    <div class="row g-3 mb-1">
+                        <div class="col-7">
+                            <input type="file" class="form-control" id="editItemImage" accept="image/png,image/jpeg,image/gif,image/webp">
+                        </div>
+                        <div class="col-5">
+                            <input type="text" class="form-control" id="editItemImageCaption" maxlength="255" placeholder="{% translate 'Caption (optional)' %}" value="{{ item.image_caption }}">
+                        </div>
+                    </div>
+                    <div class="form-text">{% translate "Max 5 MB. PNG, JPG, GIF, WebP." %}</div>
+                </form>
+{% endblock %}
+{% block modal_footer %}<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% translate "Cancel" %}</button>
+                <button type="button" class="btn btn-primary" id="editItemSubmit"><i class="bi bi-check-lg me-1"></i>{% translate "Save Changes" %}</button>{% endblock %}

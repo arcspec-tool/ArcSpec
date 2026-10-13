@@ -1,0 +1,59 @@
+name: Deploy dev
+
+on:
+  push:
+    branches: [dev]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+env:
+  TARGET: ${{ secrets.DEPLOY_PATH }}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: cp .env.example .env
+      - run: docker compose -f docker-compose.dev.yml up -d --wait db
+      - run: docker compose -f docker-compose.dev.yml run --rm --no-deps web python manage.py test --noinput
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          printf '%s\n' "${{ secrets.SSH_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+
+      - name: Copy the repository to the server
+        run: |
+          rsync -rlptDz --delete --itemize-changes \
+            --exclude '/.env' --exclude '/.git/' --exclude '/.github/' \
+            --exclude '/docker-compose.dev.yml' --exclude '/media/' --exclude '/staticfiles/' \
+            -e "ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes -o BatchMode=yes -o StrictHostKeyChecking=yes -p ${{ secrets.SSH_PORT }}" \
+            ./ "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:$TARGET/"
+
+      - name: Build, migrate, health check
+        run: |
+          ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes -o BatchMode=yes -o StrictHostKeyChecking=yes \
+            -p "${{ secrets.SSH_PORT }}" "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}" "
+            set -e
+            cd $TARGET
+            echo '${{ github.sha }}' > REVISION
+            docker compose -f docker-compose.yml up -d --build --remove-orphans --wait
+            docker compose -f docker-compose.yml exec -T web python manage.py migrate --noinput
+            curl -fsS -H 'Host: localhost' http://127.0.0.1:27415/health/
+            echo
+          "

@@ -1,0 +1,5 @@
+{% load i18n %}{% for tag in project_tags %}
+<button type="button" class="menu-item" role="menuitemcheckbox" aria-checked="false" tabindex="-1" data-action="set-tag" data-value="{{ tag.pk }}" data-tag-name="{{ tag.name }}" data-tag-color="{{ tag.color }}"><span class="menu-item-icon" aria-hidden="true"><span class="menu-swatch" style="background: {{ tag.color }}"></span></span><span class="menu-item-text">{{ tag.name }}</span><i class="bi bi-check-lg menu-item-check" aria-hidden="true"></i></button>
+{% empty %}
+<div class="menu-note" role="presentation">{% translate "No tags available" %}</div>
+{% endfor %}

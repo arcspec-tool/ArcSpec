@@ -1,0 +1,10 @@
+<li>
+    <span class="section-num">{{ section.number }}</span>
+    <span class="section-label">{{ section.title }}</span>
+    {% if section.description %}<div class="text-muted small ms-4">{{ section.description }}</div>{% endif %}
+    {% if section.children %}
+    <ul class="view-section-tree">
+        {% for child in section.children %}{% include "doctemplates/modals/_view_section.html" with section=child %}{% endfor %}
+    </ul>
+    {% endif %}
+</li>

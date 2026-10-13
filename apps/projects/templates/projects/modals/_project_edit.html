@@ -1,0 +1,36 @@
+{% extends "components/_modal_shell.html" %}
+{% load i18n %}
+{% block header_class %} border-bottom{% endblock %}
+{% block modal_title %}{% translate "Edit Project" %}{% endblock %}
+{% block after_header %}<form method="post" id="editProjectForm" action="{{ form_action }}" data-modal-form>
+                {% csrf_token %}{% endblock %}
+{% block body_class %} p-4{% endblock %}
+{% block modal_body %}
+                    {% if form.non_field_errors %}<div class="alert alert-danger">{{ form.non_field_errors }}</div>{% endif %}
+                    <div class="mb-3">
+                        <label for="id_name" class="form-label fw-medium">{% translate "Project Name" %} <span class="text-danger">*</span></label>
+                        {{ form.name }}
+                        {% for error in form.name.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
+                    </div>
+                    <div class="mb-3">
+                        <label for="id_description" class="form-label fw-medium">{% translate "Description" %}</label>
+                        {{ form.description }}
+                        {% for error in form.description.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="id_status" class="form-label fw-medium">{% translate "Status" %}</label>
+                            {{ form.status }}
+                            {% for error in form.status.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-medium">{% translate "Color" %}</label>
+                            {% include "projects/modals/_color_picker.html" with picker_id="editColorPicker" %}
+                            {% for error in form.color.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
+                        </div>
+                    </div>
+{% endblock %}
+{% block footer_class %} border-top{% endblock %}
+{% block modal_footer %}<button type="button" class="btn btn-sm btn-light" data-bs-dismiss="modal">{% translate "Cancel" %}</button>
+                    <button type="submit" class="btn btn-sm btn-primary"><i class="bi bi-check-lg me-1"></i> {% translate "Save Changes" %}</button>{% endblock %}
+{% block after_footer %}</form>{% endblock %}
