@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-13 01:05+0300\n"
+"POT-Creation-Date: 2026-10-20 00:35+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -133,20 +133,20 @@ msgstr ""
 msgid "No more activity"
 msgstr ""
 
-#: apps/core/static/js/app.js:755 apps/core/static/js/app.js:760
+#: apps/core/static/js/app.js:766 apps/core/static/js/app.js:771
 msgid "The dialog could not be loaded."
 msgstr ""
 
-#: apps/core/static/js/app.js:903
+#: apps/core/static/js/app.js:916
 msgid "Are you sure?"
 msgstr ""
 
-#: apps/core/static/js/app.js:913 apps/core/static/js/app.js:915
-#: apps/core/static/js/app.js:940 apps/core/static/js/app.js:942
+#: apps/core/static/js/app.js:926 apps/core/static/js/app.js:928
+#: apps/core/static/js/app.js:953 apps/core/static/js/app.js:955
 msgid "Confirm"
 msgstr ""
 
-#: apps/core/static/js/app.js:978 apps/core/static/js/app.js:981
+#: apps/core/static/js/app.js:991 apps/core/static/js/app.js:994
 msgid "The form could not be submitted."
 msgstr ""
 

@@ -741,6 +741,17 @@
     return null;
   }
 
+  function followRedirect(target) {
+    var next = new URL(target, window.location.href);
+    var here = window.location;
+    if (next.origin === here.origin && next.pathname === here.pathname && next.search === here.search) {
+      history.replaceState(history.state, '', next.href);
+      window.location.reload();
+      return;
+    }
+    window.location.href = next.href;
+  }
+
   function fetchModal(name, params) {
     return fetch(modalUrl(name, params), {
       headers: { 'X-Requested-With': 'XMLHttpRequest' },
@@ -748,7 +759,7 @@
     }).then(function (response) {
       var target = redirectTarget(response);
       if (target) {
-        window.location.href = target;
+        followRedirect(target);
         return null;
       }
       if (!response.ok) {
@@ -856,6 +867,8 @@
     var current = state.el.querySelector('.modal-content');
     if (!fresh || !current) return false;
     current.replaceWith(fresh);
+    var focusTarget = fresh.querySelector('[autofocus]');
+    if (focusTarget) focusTarget.focus();
     state.el.dispatchEvent(new CustomEvent('modal:shown', { bubbles: true, detail: modalDetail(state, layer) }));
     return true;
   }
@@ -962,7 +975,7 @@
     }).then(function (response) {
       var target = redirectTarget(response);
       if (target) {
-        window.location.href = target;
+        followRedirect(target);
         return;
       }
       if (response.status === 422) {

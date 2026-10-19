@@ -1,3 +1,4 @@
+import re
 from datetime import datetime, timedelta
 from unittest.mock import patch
 from urllib.parse import urlsplit
@@ -8,6 +9,7 @@ from django.core import mail
 from django.core.cache import cache
 from django.core.mail.backends.base import BaseEmailBackend
 from django.test import Client, RequestFactory, TestCase, override_settings
+from django.urls import reverse
 
 from apps.accounts import views
 from apps.accounts.factories import UserFactory
@@ -20,6 +22,7 @@ from apps.core.keys import uuid7
 GOOD_PASSWORD = 'correct-horse-battery'
 NEW_PASSWORD = 'staple-garden-lamp'
 FAILING_BACKEND = 'apps.accounts.tests.test_password_views.FailingEmailBackend'
+AJAX = {'HTTP_X_REQUESTED_WITH': 'XMLHttpRequest'}
 
 
 class FailingEmailBackend(BaseEmailBackend):
@@ -33,6 +36,10 @@ def user_with_password(password=GOOD_PASSWORD, **kwargs):
     user.set_password(password)
     user.save()
     return user
+
+
+def input_tag(html, name):
+    return re.search(rf'<input[^>]*name="{name}"[^>]*>', html).group(0)
 
 
 def link_path(user):
@@ -406,80 +413,91 @@ class ChangePasswordTest(TestCase):
         self.user = user_with_password(email='changer@example.com')
         self.client.force_login(self.user)
 
-    def change(self, old, new, confirm=None):
+    def change(self, old, new, confirm=None, origin='profile', **headers):
         return self.client.post('/password/change/', {
-            'old_password': old, 'new_password1': new, 'new_password2': confirm or new,
-        })
+            'old_password': old, 'new_password1': new, 'new_password2': confirm or new, 'origin': origin,
+        }, **headers)
+
+    def dialog(self):
+        return self.client.get(reverse('modal', args=['change_password']), **AJAX)
 
     def test_anonymous_is_sent_to_sign_in(self):
         self.client.logout()
-        self.assertRedirects(self.client.get('/password/change/'), '/?next=/password/change/')
+        self.assertRedirects(self.change(GOOD_PASSWORD, NEW_PASSWORD), '/?next=/password/change/', fetch_redirect_response=False)
 
-    def test_redirects_with_the_message_when_off(self):
+    def test_the_dialog_is_refused_and_the_post_redirects_with_the_message_when_off(self):
         set_methods(True, False)
-        other = Client()
-        other.force_login(self.user)
-        responses = (self.client.get('/password/change/'), other.post('/password/change/', {
-            'old_password': GOOD_PASSWORD, 'new_password1': NEW_PASSWORD, 'new_password2': NEW_PASSWORD,
-        }))
-        for response in responses:
-            self.assertRedirects(response, '/', fetch_redirect_response=False)
-            self.assertEqual(messages_of(response), ['Password sign-in is turned off.'])
-        self.user.refresh_from_db()
-        self.assertTrue(self.user.check_password(GOOD_PASSWORD))
-
-    def test_get_renders_the_form(self):
-        response = self.client.get('/password/change/')
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'accounts/change_password.html')
-        self.assertContains(response, 'name="old_password"')
-
-    def test_the_form_requires_the_current_password(self):
-        response = self.change('not-the-current-one', NEW_PASSWORD)
-        self.assertEqual(response.status_code, 200)
-        self.assertIn('old_password', response.context['form'].errors)
-        self.user.refresh_from_db()
-        self.assertTrue(self.user.check_password(GOOD_PASSWORD))
-
-    def test_the_session_survives_the_change(self):
+        self.assertEqual(self.dialog().status_code, 403)
         response = self.change(GOOD_PASSWORD, NEW_PASSWORD)
-        self.assertRedirects(response, '/settings/#account', fetch_redirect_response=False)
-        self.assertEqual(messages_of(response), ['Password changed.'])
-        self.assertEqual(self.client.session['_auth_user_id'], str(self.user.pk))
-        self.assertEqual(self.client.get('/settings/').status_code, 200)
+        self.assertRedirects(response, '/', fetch_redirect_response=False)
+        self.assertEqual(messages_of(response), ['Password sign-in is turned off.'])
         self.user.refresh_from_db()
-        self.assertTrue(self.user.check_password(NEW_PASSWORD))
+        self.assertTrue(self.user.check_password(GOOD_PASSWORD))
+
+    def test_a_user_without_a_password_is_refused(self):
+        self.user.set_unusable_password()
+        self.user.save()
+        self.client.force_login(self.user)
+        self.assertEqual(self.dialog().status_code, 403)
+        self.assertEqual(self.change('', NEW_PASSWORD).status_code, 403)
+        self.user.refresh_from_db()
+        self.assertFalse(self.user.has_usable_password())
+
+    def test_a_refused_change_returns_the_dialog_with_focus_on_the_first_error(self):
+        for old, new, confirm, field in (
+            ('not-the-current-one', NEW_PASSWORD, NEW_PASSWORD, 'old_password'),
+            (GOOD_PASSWORD, NEW_PASSWORD, NEW_PASSWORD + 'x', 'new_password2'),
+        ):
+            with self.subTest(field=field):
+                response = self.change(old, new, confirm, **AJAX)
+                self.assertEqual(response.status_code, 422)
+                self.assertEqual(list(response.context['form'].errors), [field])
+                self.assertEqual(response.context['focus'], field)
+                self.assertIn('autofocus', input_tag(response.content.decode(), field))
+        self.user.refresh_from_db()
+        self.assertTrue(self.user.check_password(GOOD_PASSWORD))
+
+    def test_a_refused_change_without_the_dialog_returns_with_the_error(self):
+        response = self.change('not-the-current-one', NEW_PASSWORD, origin='settings')
+        self.assertRedirects(response, '/settings/#account', fetch_redirect_response=False)
+        self.assertEqual(len(messages_of(response)), 1)
+
+    def test_the_change_returns_to_the_page_the_dialog_was_opened_from(self):
+        for origin, target in (('profile', '/profile/'), ('settings', '/settings/#account'), ('https://example.com/', '/profile/')):
+            with self.subTest(origin=origin):
+                self.user.set_password(GOOD_PASSWORD)
+                self.user.save()
+                self.client = Client()
+                self.client.force_login(self.user)
+                response = self.change(GOOD_PASSWORD, NEW_PASSWORD, origin=origin)
+                self.assertRedirects(response, target, fetch_redirect_response=False)
+                self.assertEqual(messages_of(response), ['Password changed.'])
+                self.user.refresh_from_db()
+                self.assertTrue(self.user.check_password(NEW_PASSWORD))
+
+    def test_the_dialog_posts_back_its_origin(self):
+        for origin, expected in (('settings', 'settings'), ('elsewhere', 'profile')):
+            with self.subTest(origin=origin):
+                response = self.client.get(reverse('modal', args=['change_password']), {'origin': origin}, **AJAX)
+                self.assertEqual(response.context['origin'], expected)
 
     def test_eleven_characters_are_refused_and_twelve_accepted(self):
-        response = self.change(GOOD_PASSWORD, 'vb7-qx2-nn4')
+        response = self.change(GOOD_PASSWORD, 'vb7-qx2-nn4', **AJAX)
         self.assertIn('new_password2', response.context['form'].errors)
         response = self.change(GOOD_PASSWORD, 'vb7-qx2-nn4p')
         self.assertEqual(response.status_code, 302)
         self.user.refresh_from_db()
         self.assertTrue(self.user.check_password('vb7-qx2-nn4p'))
 
-    def test_a_user_without_a_password_sees_the_sentence_instead(self):
-        self.user.set_unusable_password()
-        self.user.save()
-        self.client.force_login(self.user)
-        response = self.client.get('/password/change/')
-        self.assertContains(response, 'You have no password yet. Sign out, then use Forgot password on the sign-in page to set one.')
-        self.assertNotContains(response, 'name="old_password"')
-        response = self.change('', NEW_PASSWORD)
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'You have no password yet. Sign out, then use Forgot password on the sign-in page to set one.')
-        self.user.refresh_from_db()
-        self.assertFalse(self.user.has_usable_password())
+    def test_profile_and_settings_offer_the_dialog_only_while_password_sign_in_is_on(self):
+        for path, origin in (('/profile/', 'profile'), ('/settings/', 'settings')):
+            with self.subTest(path=path):
+                set_methods(True, True)
+                self.assertContains(self.client.get(path), f'data-modal-open="change_password" data-origin="{origin}"')
+                set_methods(True, False)
+                self.assertNotContains(self.client.get(path), 'data-modal-open="change_password"')
 
-    def test_the_card_is_on_settings_only_when_password_sign_in_is_on(self):
-        response = self.client.get('/settings/')
-        self.assertContains(response, 'href="/password/change/"')
-        set_methods(True, False)
-        response = self.client.get('/settings/')
-        self.assertNotContains(response, '/password/change/')
-        self.assertContains(response, 'Password sign-in is turned off for ArcSpec.')
-
-    def test_no_page_response_contains_the_password(self):
-        response = self.change('not-the-current-one', NEW_PASSWORD)
-        self.assertNotContains(response, NEW_PASSWORD)
-        self.assertNotContains(response, 'not-the-current-one')
+    def test_no_response_contains_the_password(self):
+        response = self.change('not-the-current-one', NEW_PASSWORD, **AJAX)
+        self.assertNotContains(response, NEW_PASSWORD, status_code=422)
+        self.assertNotContains(response, 'not-the-current-one', status_code=422)

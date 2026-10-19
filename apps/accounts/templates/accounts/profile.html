@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load core_tags i18n %}
+{% load core_tags i18n static %}
 {% block title %}{% translate "Profile" %} - ArcSpec{% endblock %}
 {% block content %}
 <div class="page-header d-flex align-items-center justify-content-between">
@@ -39,7 +39,7 @@
             <dt>{% translate "Sign-in" %}</dt>
             <dd>
                 {% if sign_in.microsoft and sign_in.password %}{% translate "Microsoft account, password" %}{% elif sign_in.microsoft %}{% translate "Microsoft account" %}{% elif sign_in.password %}{% translate "Password" %}{% else %}<span class="profile-unset">{% translate "None" %}</span>{% endif %}
-                {% if sign_in.password and sign_in.password_enabled %}<a href="{% url 'change_password' %}" class="profile-inline-link">{% translate "Change password" %}</a>{% endif %}
+                {% if sign_in.password and sign_in.password_enabled %}<button type="button" class="btn btn-link border-0 p-0 align-baseline profile-inline-link" data-modal-open="change_password" data-origin="profile">{% translate "Change password" %}</button>{% endif %}
             </dd>
         </div>
         <div>
@@ -135,4 +135,7 @@
         {% endif %}
     </section>
 </div>
+{% endblock %}
+{% block extra_js %}
+<script src="{% static 'js/auth.js' %}"></script>
 {% endblock %}

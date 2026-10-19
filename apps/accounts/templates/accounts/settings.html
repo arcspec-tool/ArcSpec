@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n static %}
 {% block title %}{% translate "Settings" %} - ArcSpec{% endblock %}
 {% block content %}
 <div class="page-header">
@@ -155,7 +155,7 @@
             {% if sign_in.password_enabled or sign_in.password %}
             <div>
                 <dt>{% translate "Password" %}</dt>
-                <dd>{% if sign_in.password %}{% translate "Set" %}{% else %}{% translate "Not set" %}{% endif %}{% if sign_in.password_enabled and sign_in.password %}<a href="{% url 'change_password' %}" class="profile-inline-link">{% translate "Change password" %}</a>{% endif %}</dd>
+                <dd>{% if sign_in.password %}{% translate "Set" %}{% else %}{% translate "Not set" %}{% endif %}{% if sign_in.password_enabled and sign_in.password %}<button type="button" class="btn btn-link border-0 p-0 align-baseline profile-inline-link" data-modal-open="change_password" data-origin="settings">{% translate "Change password" %}</button>{% endif %}</dd>
                 <dd class="settings-detail-note">{% if not sign_in.password_enabled %}{% translate "Password sign-in is turned off for ArcSpec." %}{% elif sign_in.password %}{% translate "Your current password is required to change it." %}{% else %}{% translate "Sign out, then use Forgot password on the sign-in page to set one." %}{% endif %}</dd>
             </div>
             {% endif %}
@@ -165,6 +165,7 @@
 {% endblock %}
 
 {% block extra_js %}{% translate "Could not save the change. Try again." as save_failed_text %}
+<script src="{% static 'js/auth.js' %}"></script>
 <script nonce="{{ request.csp_nonce }}">
 (function() {
     'use strict';
