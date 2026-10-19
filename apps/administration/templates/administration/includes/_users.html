@@ -43,7 +43,7 @@
     </form>
     <nav class="segmented" aria-label="{% translate 'Filter by role' %}">
         {% for value, label, count in role_filters %}
-        <a href="{% if value %}{% querystring tab='users' role=value %}{% else %}{% querystring tab='users' role=None %}{% endif %}" class="segmented-link{% if role_filter == value %} active{% endif %}"{% if role_filter == value %} aria-current="page"{% endif %}>{{ label }} <span class="segmented-count">{{ count }}</span></a>
+        <a href="{% if value %}{% querystring tab='users' role=value page=None %}{% else %}{% querystring tab='users' role=None page=None %}{% endif %}" class="segmented-link{% if role_filter == value %} active{% endif %}"{% if role_filter == value %} aria-current="page"{% endif %}>{{ label }} <span class="segmented-count">{{ count }}</span></a>
         {% endfor %}
     </nav>
     <div class="toolbar-end">
@@ -114,5 +114,8 @@
             </tbody>
         </table>
     </div>
-    <div class="card-footer data-table-footer">{% if filters_active %}{% blocktranslate trimmed count counter=user_list|length %}{{ counter }} user matching{% plural %}{{ counter }} users matching{% endblocktranslate %}{% else %}{% blocktranslate trimmed count counter=user_list|length %}{{ counter }} user{% plural %}{{ counter }} users{% endblocktranslate %}{% endif %}</div>
+    <div class="card-footer data-table-footer">
+        <span>{% if page_obj.has_other_pages %}{% blocktranslate trimmed with start=page_obj.start_index end=page_obj.end_index total=page_obj.paginator.count %}Showing {{ start }}-{{ end }} of {{ total }}{% endblocktranslate %}{% elif filters_active %}{% blocktranslate trimmed count counter=page_obj.paginator.count %}{{ counter }} user matching{% plural %}{{ counter }} users matching{% endblocktranslate %}{% else %}{% blocktranslate trimmed count counter=page_obj.paginator.count %}{{ counter }} user{% plural %}{{ counter }} users{% endblocktranslate %}{% endif %}</span>
+        {% include "includes/_pagination.html" %}
+    </div>
 </div>

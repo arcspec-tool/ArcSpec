@@ -3,6 +3,7 @@ from smtplib import SMTPException
 
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
+from django.core.paginator import Paginator
 from django.db.models import Count, OuterRef, Q, Subquery
 from django.db.models.functions import Coalesce
 from django.shortcuts import get_object_or_404, redirect
@@ -30,6 +31,7 @@ logger = logging.getLogger(__name__)
 TABS = ('users', 'templates', 'tags', 'system')
 ROLE_LABELS = dict(User.SYSTEM_ROLE_CHOICES)
 ROLE_FILTERS = ('admin', 'user', 'viewer')
+USERS_PER_PAGE = 25
 
 
 def panel_url(tab):
@@ -84,7 +86,9 @@ class AdminPanelView(SystemAdminMixin, TemplateView):
                 | Q(display_name__icontains=user_search)
                 | Q(email__icontains=user_search)
             )
-        user_list = list(user_list.order_by('-is_active', 'last_name', 'first_name', 'email'))
+        paginator = Paginator(user_list.order_by('-is_active', 'last_name', 'first_name', 'email'), USERS_PER_PAGE)
+        page_obj = paginator.get_page(self.request.GET.get('page'))
+        user_list = list(page_obj)
         for user in user_list:
             user.can_resend = can_resend_invitation(user)
             user.is_self = user.pk == self.request.user.pk
@@ -99,6 +103,7 @@ class AdminPanelView(SystemAdminMixin, TemplateView):
             'admin_users': role_counts.get('admin', 0),
             'total_projects': Project.objects.count(),
             'user_list': user_list,
+            'page_obj': page_obj,
             'role_filter': role_filter,
             'role_filters': role_filters,
             'user_search': user_search,

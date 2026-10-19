@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-13 01:05+0300\n"
+"POT-Creation-Date: 2026-10-20 00:15+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1258,14 +1258,20 @@ msgstr ""
 msgid "No users yet."
 msgstr ""
 
-#: apps/administration/templates/administration/includes/_users.html:117
+#: apps/administration/templates/administration/includes/_users.html:118
+#: apps/projects/templates/projects/list.html:111
+#, python-format
+msgid "Showing %(start)s-%(end)s of %(total)s"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_users.html:118
 #, python-format
 msgid "%(counter)s user matching"
 msgid_plural "%(counter)s users matching"
 msgstr[0] ""
 msgstr[1] ""
 
-#: apps/administration/templates/administration/includes/_users.html:117
+#: apps/administration/templates/administration/includes/_users.html:118
 #, python-format
 msgid "%(counter)s user"
 msgid_plural "%(counter)s users"
@@ -1328,88 +1334,88 @@ msgstr ""
 msgid "Tag Presets"
 msgstr ""
 
-#: apps/administration/views.py:94 apps/doctemplates/views.py:64
+#: apps/administration/views.py:98 apps/doctemplates/views.py:64
 #: apps/projects/views.py:254
 msgid "All"
 msgstr ""
 
-#: apps/administration/views.py:133
+#: apps/administration/views.py:138
 #, python-format
 msgid ""
 "The invitation email to %(email)s could not be sent. Use \"Resend "
 "invitation\" later."
 msgstr ""
 
-#: apps/administration/views.py:135
+#: apps/administration/views.py:140
 #, python-format
 msgid "Invitation sent to %(email)s."
 msgstr ""
 
-#: apps/administration/views.py:167
+#: apps/administration/views.py:172
 #, python-format
 msgid ""
 "User \"%(user)s\" is deactivated. Reactivate the account before resending "
 "the invitation."
 msgstr ""
 
-#: apps/administration/views.py:169
+#: apps/administration/views.py:174
 #, python-format
 msgid "User \"%(user)s\" already has a password. No invitation was sent."
 msgstr ""
 
-#: apps/administration/views.py:171
+#: apps/administration/views.py:176
 #, python-format
 msgid "User \"%(user)s\" has already signed in. No invitation was sent."
 msgstr ""
 
-#: apps/administration/views.py:187
+#: apps/administration/views.py:192
 #, python-format
 msgid "Role for \"%(user)s\" updated to %(role)s."
 msgstr ""
 
-#: apps/administration/views.py:199
+#: apps/administration/views.py:204
 msgid "You cannot deactivate yourself."
 msgstr ""
 
-#: apps/administration/views.py:204
+#: apps/administration/views.py:209
 #, python-format
 msgid "User \"%(user)s\" reactivated."
 msgstr ""
 
-#: apps/administration/views.py:206
+#: apps/administration/views.py:211
 #, python-format
 msgid "User \"%(user)s\" deactivated."
 msgstr ""
 
-#: apps/administration/views.py:220
+#: apps/administration/views.py:225
 #, python-format
 msgid "Tag preset \"%(name)s\" created."
 msgstr ""
 
-#: apps/administration/views.py:236
+#: apps/administration/views.py:241
 #, python-format
 msgid "Tag preset \"%(name)s\" deleted."
 msgstr ""
 
-#: apps/administration/views.py:245
+#: apps/administration/views.py:250
 msgid "Built-in templates are always visible and cannot be toggled."
 msgstr ""
 
-#: apps/administration/views.py:250
+#: apps/administration/views.py:255
 #, python-format
 msgid "Template \"%(name)s\" is now visible to all users."
 msgstr ""
 
-#: apps/administration/views.py:252
+#: apps/administration/views.py:257
 #, python-format
 msgid "Template \"%(name)s\" is now private."
 msgstr ""
 
-#: apps/administration/views.py:261
+#: apps/administration/views.py:266
 msgid "Invalid form type."
 msgstr ""
 
-#: apps/administration/views.py:266
+#: apps/administration/views.py:271
 msgid "System settings saved."
 msgstr ""
 
@@ -3111,11 +3117,6 @@ msgstr[1] ""
 
 #: apps/projects/templates/projects/list.html:76
 msgid "Project"
-msgstr ""
-
-#: apps/projects/templates/projects/list.html:111
-#, python-format
-msgid "Showing %(start)s-%(end)s of %(total)s"
 msgstr ""
 
 #: apps/projects/templates/projects/list.html:120

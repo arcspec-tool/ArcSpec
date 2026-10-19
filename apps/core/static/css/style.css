@@ -1087,11 +1087,20 @@ a.dash-row:focus-visible,
 }
 
 .data-table-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: .5rem;
   padding: .5rem 1rem;
   font-size: .75rem;
   color: #64748b;
   background: #fff;
   border-top: 1px solid #eef2f6;
+}
+
+.data-table-footer .pagination {
+  margin: 0;
 }
 
 .toolbar-note {
