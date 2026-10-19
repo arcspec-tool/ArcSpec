@@ -5,9 +5,11 @@ from smtplib import SMTPException
 from allauth.socialaccount.providers.microsoft.views import oauth2_login
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth import login, logout, update_session_auth_hash
-from django.contrib.auth.forms import PasswordChangeForm, SetPasswordForm
+from django.contrib.auth import login, logout
+from django.contrib.auth.forms import SetPasswordForm
 from django.contrib.auth.hashers import check_password, make_password
+from django.contrib.auth.views import PasswordChangeView
+from django.core.exceptions import PermissionDenied
 from django.db.models import Count, OuterRef, Subquery
 from django.db.models.functions import Coalesce
 from django.http import JsonResponse
@@ -23,7 +25,7 @@ from django.views.generic import TemplateView, UpdateView
 from apps.accounts.auth_methods import current
 from apps.accounts.emails import link_days, send_password_link_email
 from apps.accounts.forms import EditProfileForm, EmailForm, ExportDefaultsForm, LoginForm, NotificationSettingsForm, microsoft_account_linked
-from apps.accounts.modals import edit_profile_context
+from apps.accounts.modals import change_password_context, edit_profile_context, password_origin, password_return_url
 from apps.accounts.models import User, UserSettings
 from apps.accounts.throttles import (
     ForgotAddressThrottle,
@@ -181,31 +183,35 @@ class SetPasswordView(TemplateView):
         return self.render_to_response(self.get_context_data(form=form))
 
 
-class ChangePasswordView(LoginRequiredMixin, TemplateView):
-    template_name = 'accounts/change_password.html'
+class ChangePasswordView(PasswordChangeView):
+    http_method_names = ['post']
 
     def dispatch(self, request, *args, **kwargs):
-        if request.user.is_authenticated and not current().password:
-            return password_login_off(request)
+        if request.user.is_authenticated:
+            if not current().password:
+                return password_login_off(request)
+            if not request.user.has_usable_password():
+                raise PermissionDenied
         return super().dispatch(request, *args, **kwargs)
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        if self.request.user.has_usable_password():
-            context.setdefault('form', PasswordChangeForm(self.request.user))
-        context['no_password_message'] = _('You have no password yet. Sign out, then use Forgot password on the sign-in page to set one.')
-        return context
+    def origin(self):
+        return password_origin(self.request.POST.get('origin'))
 
-    def post(self, request, *args, **kwargs):
-        if not request.user.has_usable_password():
-            return self.render_to_response(self.get_context_data())
-        form = PasswordChangeForm(request.user, request.POST)
-        if form.is_valid():
-            form.save()
-            update_session_auth_hash(request, form.user)
-            messages.success(request, _('Password changed.'))
-            return redirect(reverse('settings') + '#account')
-        return self.render_to_response(self.get_context_data(form=form))
+    def get_success_url(self):
+        return password_return_url(self.origin())
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, _('Password changed.'))
+        return response
+
+    def form_invalid(self, form):
+        if is_ajax(self.request):
+            return render_modal(self.request, 'change_password', change_password_context(self.request.user, form, self.origin()), status=422)
+        for errors in form.errors.values():
+            for error in errors:
+                messages.error(self.request, error)
+        return redirect(password_return_url(self.origin()))
 
 
 def profile_activity(user):

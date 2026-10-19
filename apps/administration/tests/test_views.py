@@ -134,6 +134,22 @@ class AdminUsersTabTest(TestCase):
         self.assertIn('Send the invitation email to invited@example.com again?', html)
         self.assertIn('They can no longer sign in. Their projects and memberships are kept.', html)
 
+    def test_the_user_list_is_paginated_to_25(self):
+        UserFactory.create_batch(30)
+        for page, expected in ((1, 25), (2, 6)):
+            with self.subTest(page=page):
+                self.assertEqual(len(self.page(page=page).context['user_list']), expected)
+
+    def test_page_links_keep_the_filters(self):
+        UserFactory.create_batch(30, first_name='Pat')
+        response = self.page(role='user', user_q='Pat', page=2)
+        self.assertContains(response, 'href="?tab=users&amp;role=user&amp;user_q=Pat&amp;page=1"')
+
+    def test_role_links_reset_the_page(self):
+        UserFactory.create_batch(30)
+        response = self.page(page=2)
+        self.assertContains(response, 'href="?tab=users&amp;role=viewer"')
+
     def test_the_users_tab_runs_a_fixed_number_of_queries(self):
         UserFactory.create_batch(2)
         self.page()

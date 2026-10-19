@@ -1,16 +1,10 @@
-import re
-
 from django.core.cache import cache
 from django.test import TestCase, override_settings
 
 from apps.accounts.factories import UserFactory
 from apps.accounts.tests.test_auth_methods import messages_of, set_methods
 from apps.accounts.tests.test_callback_prefix import ENTRA_CONFIGURED
-from apps.accounts.tests.test_password_views import GOOD_PASSWORD, link_path, user_with_password
-
-
-def input_tag(html, name):
-    return re.search(rf'<input[^>]*name="{name}"[^>]*>', html).group(0)
+from apps.accounts.tests.test_password_views import AJAX, GOOD_PASSWORD, input_tag, link_path, user_with_password
 
 
 @override_settings(SOCIALACCOUNT_PROVIDERS=ENTRA_CONFIGURED)
@@ -74,7 +68,7 @@ class PasswordFieldTest(TestCase):
         for field_id in ('id_new_password1', 'id_new_password2'):
             self.assert_toggle(html, field_id)
         self.client.force_login(user)
-        html = self.client.get('/password/change/').content.decode()
+        html = self.client.get('/modals/change_password/', **AJAX).content.decode()
         for field_id in ('id_old_password', 'id_new_password1', 'id_new_password2'):
             self.assert_toggle(html, field_id)
 
@@ -99,14 +93,3 @@ class PasswordFieldTest(TestCase):
         self.assertIn('aria-invalid="true"', input_tag(html, 'email'))
         self.assertIn('aria-describedby="id_email_error"', input_tag(html, 'email'))
         self.assertIn('id="id_email_error"', html)
-
-    def test_change_password_returns_to_the_account_section(self):
-        user = user_with_password(email='changer@example.com')
-        self.client.force_login(user)
-        self.assertContains(self.client.get('/password/change/'), 'href="/settings/#account"')
-        user.set_unusable_password()
-        user.save()
-        self.client.force_login(user)
-        response = self.client.get('/password/change/')
-        self.assertContains(response, 'href="/settings/#account"')
-        self.assertNotContains(response, '?tab=')

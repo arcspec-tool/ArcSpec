@@ -62,15 +62,16 @@ A confirmation page opens and ArcSpec sends you an email with a link.
 
 ## Change your password
 
-1. Open **Settings** and click **Change password** under **Account and sign-in**.
+1. Click **Change password**, either on your profile next to **Sign-in**, or in **Settings** under **Account and sign-in**.
 
 ![Account and sign-in section](images/02-settings-password.png)
 
-2. Enter your current password, then the new password twice.
+2. In the **Change Password** dialog, enter your current password, then the new password twice.
 3. Click **Change password**.
 
-![Change Password page](images/02-change-password.png)
+![Change Password dialog](images/02-change-password.png)
 
+You stay signed in and return to the page where you opened the dialog.
 If you do not have a password yet, sign out and use **Forgot password?** on the sign-in page to set one.
 
 ## Sign out

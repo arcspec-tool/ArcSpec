@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-13 01:05+0300\n"
+"POT-Creation-Date: 2026-10-20 00:35+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,11 +19,11 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: apps/accounts/adapters.py:22 apps/accounts/adapters.py:56
-#: apps/accounts/views.py:92
+#: apps/accounts/views.py:94
 msgid "Your account has been deactivated. Contact a system administrator."
 msgstr ""
 
-#: apps/accounts/adapters.py:34 apps/accounts/views.py:57
+#: apps/accounts/adapters.py:34 apps/accounts/views.py:59
 msgid "Microsoft sign-in is turned off."
 msgstr ""
 
@@ -47,12 +47,12 @@ msgstr ""
 msgid "Microsoft sign-in failed. Try again or contact a system administrator."
 msgstr ""
 
-#: apps/accounts/auth_methods.py:30 apps/administration/forms.py:90
+#: apps/accounts/auth_methods.py:34 apps/administration/forms.py:90
 #: apps/administration/models.py:24
 msgid "At least one sign-in method must stay on."
 msgstr ""
 
-#: apps/accounts/auth_methods.py:32
+#: apps/accounts/auth_methods.py:36
 msgid ""
 "Microsoft sign-in cannot be turned on: it is not configured in this "
 "environment."
@@ -150,72 +150,6 @@ msgstr ""
 
 #: apps/accounts/models.py:71
 msgid "Landscape"
-msgstr ""
-
-#: apps/accounts/templates/accounts/change_password.html:3
-#: apps/accounts/templates/accounts/change_password.html:6
-msgid "Change Password"
-msgstr ""
-
-#: apps/accounts/templates/accounts/change_password.html:7
-msgid "Change the password you sign in with"
-msgstr ""
-
-#: apps/accounts/templates/accounts/change_password.html:14
-#: apps/accounts/templates/accounts/login.html:34
-#: apps/accounts/templates/accounts/profile.html:41
-#: apps/accounts/templates/accounts/settings.html:157
-msgid "Password"
-msgstr ""
-
-#: apps/accounts/templates/accounts/change_password.html:24
-msgid "Current password"
-msgstr ""
-
-#: apps/accounts/templates/accounts/change_password.html:25
-#: apps/accounts/templates/accounts/set_password.html:13
-msgid "New password"
-msgstr ""
-
-#: apps/accounts/templates/accounts/change_password.html:26
-#: apps/accounts/templates/accounts/set_password.html:14
-msgid "Confirm new password"
-msgstr ""
-
-#: apps/accounts/templates/accounts/change_password.html:28
-#: apps/accounts/templates/accounts/modals/_edit_profile.html:45
-#: apps/administration/templates/administration/modals/_edit_role.html:11
-#: apps/administration/templates/administration/modals/_invite_user.html:27
-#: apps/administration/templates/administration/modals/_tag_preset.html:16
-#: apps/core/templates/modals/_confirm.html:7
-#: apps/core/templates/modals/_sign_out.html:7
-#: apps/doctemplates/templates/doctemplates/modals/_template_editor.html:73
-#: apps/projects/templates/projects/modals/_add_item.html:57
-#: apps/projects/templates/projects/modals/_add_link.html:18
-#: apps/projects/templates/projects/modals/_delete_item.html:7
-#: apps/projects/templates/projects/modals/_edit_item.html:66
-#: apps/projects/templates/projects/modals/_export.html:48
-#: apps/projects/templates/projects/modals/_manage_sections.html:55
-#: apps/projects/templates/projects/modals/_project_create.html:39
-#: apps/projects/templates/projects/modals/_project_delete.html:7
-#: apps/projects/templates/projects/modals/_project_edit.html:34
-#: apps/projects/templates/projects/modals/_save_view.html:10
-msgid "Cancel"
-msgstr ""
-
-#: apps/accounts/templates/accounts/change_password.html:29
-#: apps/accounts/templates/accounts/set_password.html:15
-msgid "Saving..."
-msgstr ""
-
-#: apps/accounts/templates/accounts/change_password.html:29
-#: apps/accounts/templates/accounts/profile.html:42
-#: apps/accounts/templates/accounts/settings.html:158
-msgid "Change password"
-msgstr ""
-
-#: apps/accounts/templates/accounts/change_password.html:34
-msgid "Back to settings"
 msgstr ""
 
 #: apps/accounts/templates/accounts/email/invitation.html:3
@@ -387,6 +321,12 @@ msgstr ""
 msgid "or"
 msgstr ""
 
+#: apps/accounts/templates/accounts/login.html:34
+#: apps/accounts/templates/accounts/profile.html:41
+#: apps/accounts/templates/accounts/settings.html:157
+msgid "Password"
+msgstr ""
+
 #: apps/accounts/templates/accounts/login.html:35
 msgid "Signing in..."
 msgstr ""
@@ -401,6 +341,51 @@ msgstr ""
 
 #: apps/accounts/templates/accounts/login.html:41
 msgid "No sign-in method is enabled. Contact a system administrator."
+msgstr ""
+
+#: apps/accounts/templates/accounts/modals/_change_password.html:3
+msgid "Change Password"
+msgstr ""
+
+#: apps/accounts/templates/accounts/modals/_change_password.html:10
+msgid "Current password"
+msgstr ""
+
+#: apps/accounts/templates/accounts/modals/_change_password.html:11
+#: apps/accounts/templates/accounts/set_password.html:13
+msgid "New password"
+msgstr ""
+
+#: apps/accounts/templates/accounts/modals/_change_password.html:12
+#: apps/accounts/templates/accounts/set_password.html:14
+msgid "Confirm new password"
+msgstr ""
+
+#: apps/accounts/templates/accounts/modals/_change_password.html:14
+#: apps/accounts/templates/accounts/modals/_edit_profile.html:45
+#: apps/administration/templates/administration/modals/_edit_role.html:11
+#: apps/administration/templates/administration/modals/_invite_user.html:27
+#: apps/administration/templates/administration/modals/_tag_preset.html:16
+#: apps/core/templates/modals/_confirm.html:7
+#: apps/core/templates/modals/_sign_out.html:7
+#: apps/doctemplates/templates/doctemplates/modals/_template_editor.html:73
+#: apps/projects/templates/projects/modals/_add_item.html:57
+#: apps/projects/templates/projects/modals/_add_link.html:18
+#: apps/projects/templates/projects/modals/_delete_item.html:7
+#: apps/projects/templates/projects/modals/_edit_item.html:66
+#: apps/projects/templates/projects/modals/_export.html:48
+#: apps/projects/templates/projects/modals/_manage_sections.html:55
+#: apps/projects/templates/projects/modals/_project_create.html:39
+#: apps/projects/templates/projects/modals/_project_delete.html:7
+#: apps/projects/templates/projects/modals/_project_edit.html:34
+#: apps/projects/templates/projects/modals/_save_view.html:10
+msgid "Cancel"
+msgstr ""
+
+#: apps/accounts/templates/accounts/modals/_change_password.html:15
+#: apps/accounts/templates/accounts/profile.html:42
+#: apps/accounts/templates/accounts/settings.html:158
+msgid "Change password"
 msgstr ""
 
 #: apps/accounts/templates/accounts/modals/_edit_profile.html:3
@@ -584,6 +569,10 @@ msgstr ""
 #: apps/accounts/templates/accounts/set_password.html:5
 #, python-format
 msgid "Choose a password for <strong>%(email)s</strong>."
+msgstr ""
+
+#: apps/accounts/templates/accounts/set_password.html:15
+msgid "Saving..."
 msgstr ""
 
 #: apps/accounts/templates/accounts/set_password.html:15
@@ -775,50 +764,44 @@ msgstr ""
 msgid "Could not save the change. Try again."
 msgstr ""
 
-#: apps/accounts/views.py:51
+#: apps/accounts/views.py:53
 msgid "Password sign-in is turned off."
 msgstr ""
 
-#: apps/accounts/views.py:82 apps/accounts/views.py:144
+#: apps/accounts/views.py:84 apps/accounts/views.py:146
 msgid "Too many attempts. Try again in a few minutes."
 msgstr ""
 
-#: apps/accounts/views.py:88
+#: apps/accounts/views.py:90
 msgid "Incorrect email address or password."
 msgstr ""
 
-#: apps/accounts/views.py:154
+#: apps/accounts/views.py:156
 msgid "The email could not be sent. Try again later."
 msgstr ""
 
-#: apps/accounts/views.py:179
+#: apps/accounts/views.py:181
 msgid "Password set. You can sign in now."
 msgstr ""
 
-#: apps/accounts/views.py:196
-msgid ""
-"You have no password yet. Sign out, then use Forgot password on the sign-in "
-"page to set one."
-msgstr ""
-
-#: apps/accounts/views.py:206
+#: apps/accounts/views.py:205
 msgid "Password changed."
 msgstr ""
 
-#: apps/accounts/views.py:234
+#: apps/accounts/views.py:240
 msgid "Profile updated successfully."
 msgstr ""
 
-#: apps/accounts/views.py:240 apps/doctemplates/views.py:82
+#: apps/accounts/views.py:246 apps/doctemplates/views.py:82
 #: apps/projects/views.py:296 apps/projects/views.py:314
 msgid "Please correct the errors below."
 msgstr ""
 
-#: apps/accounts/views.py:283
+#: apps/accounts/views.py:289
 msgid "Email notification settings saved."
 msgstr ""
 
-#: apps/accounts/views.py:284
+#: apps/accounts/views.py:290
 msgid "Export defaults saved."
 msgstr ""
 
@@ -1258,14 +1241,20 @@ msgstr ""
 msgid "No users yet."
 msgstr ""
 
-#: apps/administration/templates/administration/includes/_users.html:117
+#: apps/administration/templates/administration/includes/_users.html:118
+#: apps/projects/templates/projects/list.html:111
+#, python-format
+msgid "Showing %(start)s-%(end)s of %(total)s"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_users.html:118
 #, python-format
 msgid "%(counter)s user matching"
 msgid_plural "%(counter)s users matching"
 msgstr[0] ""
 msgstr[1] ""
 
-#: apps/administration/templates/administration/includes/_users.html:117
+#: apps/administration/templates/administration/includes/_users.html:118
 #, python-format
 msgid "%(counter)s user"
 msgid_plural "%(counter)s users"
@@ -1328,88 +1317,88 @@ msgstr ""
 msgid "Tag Presets"
 msgstr ""
 
-#: apps/administration/views.py:94 apps/doctemplates/views.py:64
+#: apps/administration/views.py:98 apps/doctemplates/views.py:64
 #: apps/projects/views.py:254
 msgid "All"
 msgstr ""
 
-#: apps/administration/views.py:133
+#: apps/administration/views.py:138
 #, python-format
 msgid ""
 "The invitation email to %(email)s could not be sent. Use \"Resend "
 "invitation\" later."
 msgstr ""
 
-#: apps/administration/views.py:135
+#: apps/administration/views.py:140
 #, python-format
 msgid "Invitation sent to %(email)s."
 msgstr ""
 
-#: apps/administration/views.py:167
+#: apps/administration/views.py:172
 #, python-format
 msgid ""
 "User \"%(user)s\" is deactivated. Reactivate the account before resending "
 "the invitation."
 msgstr ""
 
-#: apps/administration/views.py:169
+#: apps/administration/views.py:174
 #, python-format
 msgid "User \"%(user)s\" already has a password. No invitation was sent."
 msgstr ""
 
-#: apps/administration/views.py:171
+#: apps/administration/views.py:176
 #, python-format
 msgid "User \"%(user)s\" has already signed in. No invitation was sent."
 msgstr ""
 
-#: apps/administration/views.py:187
+#: apps/administration/views.py:192
 #, python-format
 msgid "Role for \"%(user)s\" updated to %(role)s."
 msgstr ""
 
-#: apps/administration/views.py:199
+#: apps/administration/views.py:204
 msgid "You cannot deactivate yourself."
 msgstr ""
 
-#: apps/administration/views.py:204
+#: apps/administration/views.py:209
 #, python-format
 msgid "User \"%(user)s\" reactivated."
 msgstr ""
 
-#: apps/administration/views.py:206
+#: apps/administration/views.py:211
 #, python-format
 msgid "User \"%(user)s\" deactivated."
 msgstr ""
 
-#: apps/administration/views.py:220
+#: apps/administration/views.py:225
 #, python-format
 msgid "Tag preset \"%(name)s\" created."
 msgstr ""
 
-#: apps/administration/views.py:236
+#: apps/administration/views.py:241
 #, python-format
 msgid "Tag preset \"%(name)s\" deleted."
 msgstr ""
 
-#: apps/administration/views.py:245
+#: apps/administration/views.py:250
 msgid "Built-in templates are always visible and cannot be toggled."
 msgstr ""
 
-#: apps/administration/views.py:250
+#: apps/administration/views.py:255
 #, python-format
 msgid "Template \"%(name)s\" is now visible to all users."
 msgstr ""
 
-#: apps/administration/views.py:252
+#: apps/administration/views.py:257
 #, python-format
 msgid "Template \"%(name)s\" is now private."
 msgstr ""
 
-#: apps/administration/views.py:261
+#: apps/administration/views.py:266
 msgid "Invalid form type."
 msgstr ""
 
-#: apps/administration/views.py:266
+#: apps/administration/views.py:271
 msgid "System settings saved."
 msgstr ""
 
@@ -3111,11 +3100,6 @@ msgstr[1] ""
 
 #: apps/projects/templates/projects/list.html:76
 msgid "Project"
-msgstr ""
-
-#: apps/projects/templates/projects/list.html:111
-#, python-format
-msgid "Showing %(start)s-%(end)s of %(total)s"
 msgstr ""
 
 #: apps/projects/templates/projects/list.html:120

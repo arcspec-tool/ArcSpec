@@ -24,6 +24,10 @@ def current(stored=None):
     )
 
 
+def can_change_password(user):
+    return current().password and user.has_usable_password()
+
+
 def validate(entra, password):
     errors = []
     if not entra and not password:

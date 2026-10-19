@@ -33,23 +33,23 @@
     control.classList.remove('is-busy');
   }
 
-  document.querySelectorAll('[data-password-toggle]').forEach(function (button) {
-    button.addEventListener('click', function () {
-      setVisible(button, button.getAttribute('aria-pressed') !== 'true');
-      var input = passwordInput(button);
-      if (input) input.focus();
-    });
+  document.addEventListener('click', function (event) {
+    var button = event.target.closest('[data-password-toggle]');
+    if (!button) return;
+    setVisible(button, button.getAttribute('aria-pressed') !== 'true');
+    var input = passwordInput(button);
+    if (input) input.focus();
   });
 
   document.addEventListener('submit', function (event) {
     var form = event.target;
+    form.querySelectorAll('[data-password-toggle]').forEach(function (button) { setVisible(button, false); });
     if (!form.hasAttribute('data-busy-form')) return;
     if (form.dataset.submitting === 'true') {
       event.preventDefault();
       return;
     }
     form.dataset.submitting = 'true';
-    form.querySelectorAll('[data-password-toggle]').forEach(function (button) { setVisible(button, false); });
     setBusy(event.submitter || form.querySelector('[type="submit"]'));
   });
 

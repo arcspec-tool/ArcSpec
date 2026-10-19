@@ -16,6 +16,7 @@ To give them another role, see [Change a user's role](#change-a-users-role).
 
 The **Users** tab lists every account with its role, number of projects, last sign-in and status.
 Use **Search users**, or click **Administrator**, **User** or **Viewer**, to find an account.
+The list shows 25 accounts per page. 
 
 ![Users tab](images/09-users.png)
 

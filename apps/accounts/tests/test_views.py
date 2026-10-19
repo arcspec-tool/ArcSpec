@@ -8,7 +8,6 @@ from django.utils import timezone
 
 from apps.accounts.factories import UserFactory
 from apps.accounts.models import UserSettings
-from apps.administration.models import SystemSettings
 from apps.projects.models import Project
 from apps.notifications.factories import AuditLogFactory
 from apps.notifications.models import AuditLog
@@ -220,18 +219,6 @@ class ProfilePageTest(TestCase):
         self.assertIn(f'<a href="{project.get_absolute_url()}" class="dash-row dash-activity">', html)
         self.assertIn('<span class="dash-row-title">Created item <span class="dash-target">REQ-007</span>', html)
         self.assertNotIn('class="dash-actor"', html)
-
-    def test_password_sign_in_offers_change_password_when_enabled(self):
-        self.user.set_password('a-long-throwaway-password')
-        self.user.save()
-        self.client.force_login(self.user)
-        stored = SystemSettings.load()
-        stored.password_login_enabled = True
-        stored.save()
-        self.assertContains(self.client.get('/profile/'), 'Change password')
-        stored.password_login_enabled = False
-        stored.save()
-        self.assertNotContains(self.client.get('/profile/'), 'Change password')
 
     def test_microsoft_sign_in_is_named(self):
         SocialAccount.objects.create(user=self.user, provider='microsoft', uid='ms-uid-1')
