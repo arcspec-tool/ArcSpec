@@ -87,6 +87,16 @@ The built-in templates are included:
 | NIS2 Compliance Documentation | Custom | 31 |
 | EU AI Act Compliance Documentation | Custom | 46 |
 
+## MCP server
+
+Endpoint: `<SITE_URL>/mcp/`, Streamable HTTP. Off by default; an administrator turns it on in Admin Panel, System Settings.
+
+Clients sign in with OAuth 2.1; ArcSpec is the authorization server. Clients identify themselves with a Client ID Metadata Document. Clients that support only Dynamic Client Registration cannot connect.
+
+13 read tools and 6 item write tools. Each tool applies the user's project roles. No tool deletes data.
+
+An access token is valid for 1 hour. A sign-in is valid for 30 days. Users disconnect clients in Settings, Connected apps.
+
 ## Scheduled jobs
 
 Add these lines with `crontab -e`, replacing `/path/to/arcspec` with the directory holding `docker-compose.yml`:
@@ -95,6 +105,7 @@ Add these lines with `crontab -e`, replacing `/path/to/arcspec` with the directo
 17 2 * * * cd /path/to/arcspec && docker compose exec -T web python manage.py auto_archive_projects
 47 2 * * * cd /path/to/arcspec && docker compose exec -T web python manage.py auto_delete_archived
 0 7 * * 1 cd /path/to/arcspec && docker compose exec -T web python manage.py send_weekly_digest
+17 3 * * * cd /path/to/arcspec && docker compose exec -T web sh -c 'python manage.py cleartokens && python manage.py clearcimdapplications'
 ```
 
 ## Screenshots
