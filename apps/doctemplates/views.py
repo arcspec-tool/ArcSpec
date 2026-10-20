@@ -1,7 +1,6 @@
 from django.contrib import messages
 from django.db import transaction
-from django.db.models import Count, OuterRef, Subquery
-from django.db.models.functions import Coalesce
+from django.db.models import Count
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
@@ -15,11 +14,7 @@ from apps.core.modals import is_ajax, render_modal
 from apps.doctemplates.forms import TemplateForm
 from apps.doctemplates.modals import attributes_from_post, editor_context, sections_from_post
 from apps.doctemplates.models import Template, TemplateAttribute, TemplateSection
-
-
-def count_per_template(queryset):
-    counted = queryset.filter(template=OuterRef('pk')).order_by().values('template').annotate(n=Count('pk')).values('n')[:1]
-    return Coalesce(Subquery(counted), 0)
+from apps.doctemplates.queries import template_list_queryset
 
 
 class TemplateListView(LoginRequiredMixin, ListView):
@@ -32,20 +27,7 @@ class TemplateListView(LoginRequiredMixin, ListView):
         return doc_type if doc_type in dict(Template.DOC_TYPE_CHOICES) else ''
 
     def get_queryset(self):
-        from apps.projects.models import Project
-        user = self.request.user
-        qs = Template.objects.visible_to(user).select_related('created_by').annotate(
-            usage_count=count_per_template(Project.objects.all()),
-            section_total=count_per_template(TemplateSection.objects.all()),
-            attribute_total=count_per_template(TemplateAttribute.objects.all()),
-        ).order_by('-is_builtin', 'display_order', 'name')
-        q = self.request.GET.get('q', '').strip()
-        if q:
-            qs = qs.filter(name__icontains=q)
-        doc_type = self.get_type()
-        if doc_type:
-            qs = qs.filter(doc_type=doc_type)
-        return qs
+        return template_list_queryset(self.request.user, self.request.GET.get('q', '').strip(), self.get_type())
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

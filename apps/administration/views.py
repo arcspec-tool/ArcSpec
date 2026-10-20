@@ -24,6 +24,7 @@ from apps.administration.models import SystemSettings
 from apps.core.mixins import SystemAdminMixin
 from apps.core.modals import is_ajax, render_modal
 from apps.doctemplates.models import Template, TemplateSection
+from apps.doctemplates.queries import count_per_template
 from apps.projects.models import Project, ProjectMembership, Tag
 
 logger = logging.getLogger(__name__)
@@ -40,11 +41,6 @@ def panel_url(tab):
 
 def count_per_user(queryset):
     counted = queryset.filter(user=OuterRef('pk')).order_by().values('user').annotate(n=Count('pk')).values('n')[:1]
-    return Coalesce(Subquery(counted), 0)
-
-
-def count_per_template(queryset):
-    counted = queryset.filter(template=OuterRef('pk')).order_by().values('template').annotate(n=Count('pk')).values('n')[:1]
     return Coalesce(Subquery(counted), 0)
 
 

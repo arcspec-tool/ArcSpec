@@ -114,6 +114,47 @@ class ItemAPITests(TestCase):
         data = response.json()
         self.assertEqual(data['item_id'], 'REQ-001')
 
+    def test_a_patch_with_a_section_of_another_project_is_refused(self):
+        foreign = SectionFactory(project=ProjectFactory(), number='1', title='Foreign')
+        url = reverse('api_item_detail', kwargs={'slug': self.project.slug, 'public_key': self.item.public_key})
+        response = self.client.patch(url, data=json.dumps({'section': foreign.pk}), content_type='application/json')
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(list(response.json()), ['section'])
+        self.item.refresh_from_db()
+        self.assertEqual(self.item.section, self.section)
+
+    def test_an_inactive_or_non_member_assignee_is_refused_on_every_write_path(self):
+        inactive = UserFactory(is_active=False)
+        ProjectMembershipFactory(project=self.project, user=inactive, role='editor')
+        stranger = UserFactory()
+        create_url = reverse('api_item_list', kwargs={'slug': self.project.slug})
+        patch_url = reverse('api_item_detail', kwargs={'slug': self.project.slug, 'public_key': self.item.public_key})
+        inline_url = reverse('api_item_inline_edit', kwargs={'slug': self.project.slug, 'public_key': self.item.public_key})
+        paths = (
+            ('create', 'post', create_url, 'assignee', lambda pk: {'section': self.section.pk, 'text': 'Assigned', 'status': 'draft', 'priority': 'medium', 'assignee': pk}),
+            ('patch', 'patch', patch_url, 'assignee', lambda pk: {'assignee': pk}),
+            ('inline', 'patch', inline_url, 'error', lambda pk: {'field': 'assignee', 'value': str(pk)}),
+        )
+        for path, method, url, key, payload in paths:
+            for case, user in (('inactive', inactive), ('non-member', stranger)):
+                with self.subTest(path=path, case=case):
+                    response = getattr(self.client, method)(url, data=json.dumps(payload(user.pk)), content_type='application/json')
+                    self.assertEqual(response.status_code, 400)
+                    self.assertEqual(list(response.json()), [key])
+        self.item.refresh_from_db()
+        self.assertIsNone(self.item.assignee)
+        self.assertEqual(Item.objects.filter(project=self.project).count(), 1)
+
+    def test_a_patch_with_item_id_and_order_leaves_both_unchanged(self):
+        Item.objects.filter(pk=self.item.pk).update(order=3)
+        url = reverse('api_item_detail', kwargs={'slug': self.project.slug, 'public_key': self.item.public_key})
+        response = self.client.patch(url, data=json.dumps({
+            'item_id': 'REQ-999', 'order': 42, 'text': '<p>Renumbered</p>',
+        }), content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+        self.item.refresh_from_db()
+        self.assertEqual((self.item.item_id, self.item.order, self.item.text), ('REQ-001', 3, '<p>Renumbered</p>'))
+
     def test_inline_edit_status(self):
         url = reverse('api_item_inline_edit', kwargs={'slug': self.project.slug, 'public_key': self.item.public_key})
         response = self.client.patch(url, data=json.dumps({
@@ -313,6 +354,19 @@ class CommentAPITests(TestCase):
         }), content_type='application/json')
         self.assertEqual(response.status_code, 201)
         self.assertTrue(Comment.objects.filter(item=self.item, text='Nice work!').exists())
+
+    def test_a_reply_to_a_comment_on_another_item_is_refused_and_notifies_nobody(self):
+        other_item = ItemFactory(project=self.project, section=self.section, item_id='REQ-002', created_by=self.user)
+        author = UserFactory()
+        ProjectMembershipFactory(project=self.project, user=author, role='editor')
+        parent = CommentFactory(item=other_item, author=author, text='Elsewhere')
+        Notification.objects.all().delete()
+        url = reverse('api_comment_list', kwargs={'slug': self.project.slug, 'item_key': self.item.public_key})
+        response = self.client.post(url, data=json.dumps({'text': 'Reply', 'parent': parent.pk}), content_type='application/json')
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(list(response.json()), ['parent'])
+        self.assertEqual(Comment.objects.filter(parent=parent).count(), 0)
+        self.assertEqual(Notification.objects.filter(user=author).count(), 0)
 
     def test_delete_own_comment(self):
         comment = CommentFactory(item=self.item, author=self.user)
@@ -684,6 +738,20 @@ class TraceabilityLinkAPITests(TestCase):
             source_item=self.item1, target_item=self.item2
         ).exists())
 
+    def test_a_link_to_itself_or_into_an_archived_project_is_refused(self):
+        archived = ProjectFactory(status='archived')
+        ProjectMembershipFactory(project=archived, user=self.user, role='editor')
+        archived_item = ItemFactory(project=archived, section=SectionFactory(project=archived), item_id='TC-001', created_by=self.user)
+        url = reverse('api_link_list', kwargs={'slug': self.project.slug, 'item_key': self.item1.public_key})
+        for case, target in (('itself', self.item1), ('archived project', archived_item)):
+            with self.subTest(case=case):
+                response = self.client.post(url, data=json.dumps({
+                    'source_item': self.item1.pk, 'target_item': target.pk, 'link_type': 'related-to',
+                }), content_type='application/json')
+                self.assertEqual(response.status_code, 400)
+                self.assertEqual(list(response.json()), ['target_item'])
+        self.assertEqual(TraceabilityLink.objects.count(), 0)
+
     def test_delete_link(self):
         link = TraceabilityLinkFactory(
             source_item=self.item1, target_item=self.item2, created_by=self.user
@@ -886,6 +954,18 @@ class AuditLogFilterAPITests(TestCase):
             sorted(entry['action'] for entry in response.json()['results']),
             ['collaborator_added', 'collaborator_removed', 'collaborator_role_changed'],
         )
+
+    def test_a_page_parameter_that_is_not_a_whole_number_answers_400(self):
+        user = UserFactory()
+        project = ProjectFactory()
+        ProjectMembershipFactory(project=project, user=user, role='viewer')
+        self.client.force_login(user)
+        url = reverse('api_audit_log', kwargs={'slug': project.slug})
+        for parameter, value in (('offset', 'x'), ('limit', 'x'), ('offset', '-1')):
+            with self.subTest(parameter=parameter, value=value):
+                response = self.client.get(url, {parameter: value})
+                self.assertEqual(response.status_code, 400)
+                self.assertEqual(list(response.json()), [parameter])
 
 
 class ItemReorderAPITests(TestCase):
@@ -1121,6 +1201,21 @@ class VersionHistoryAPITests(TestCase):
         self.project = ProjectFactory()
         ProjectMembershipFactory(project=self.project, user=self.user, role='admin')
         self.client.force_login(self.user)
+
+    def test_the_version_list_runs_a_constant_number_of_queries_without_loading_snapshots(self):
+        from django.db import connection
+        from django.test.utils import CaptureQueriesContext
+        url = reverse('api_version_list', kwargs={'slug': self.project.slug})
+        for n in range(2):
+            ProjectVersionFactory(project=self.project, changed_by=self.user, version_number=f'0.{n}', snapshot={'sections': [], 'items': [{'id': n}]})
+        with CaptureQueriesContext(connection) as few:
+            self.assertEqual(self.client.get(url).json()['count'], 2)
+        for n in range(2, 7):
+            ProjectVersionFactory(project=self.project, changed_by=self.user, version_number=f'0.{n}', snapshot={'sections': [], 'items': [{'id': n}]})
+        with CaptureQueriesContext(connection) as many:
+            self.assertEqual(self.client.get(url).json()['count'], 7)
+        self.assertEqual(len(many), len(few))
+        self.assertEqual([query['sql'] for query in many if '"snapshot"' in query['sql']], [])
 
     def test_restore_version(self):
         version = ProjectVersionFactory(project=self.project, changed_by=self.user)
@@ -1456,23 +1551,49 @@ class ItemAttributeValueAPITests(TestCase):
         self.assertEqual(len(item_data['attribute_values']), 1)
         self.assertEqual(item_data['attribute_values'][0]['value'], 'A note')
 
-    def test_attribute_from_wrong_project_ignored(self):
-        from apps.projects.factories import ProjectAttributeFactory
-        other_project = ProjectFactory()
-        other_attr = ProjectAttributeFactory(project=other_project, name='Other')
+    def test_an_attribute_value_that_fails_its_rule_is_refused(self):
+        from apps.projects.factories import ItemAttributeValueFactory, ProjectAttributeFactory
+        from apps.projects.models import ItemAttributeValue
+        attr_number = ProjectAttributeFactory(project=self.project, name='Effort', field_type='number')
+        attr_builtin = ProjectAttributeFactory(project=self.project, name='Fixed', field_type='text', is_builtin=True)
+        other_attr = ProjectAttributeFactory(project=ProjectFactory(), name='Other')
+        item = ItemFactory(project=self.project, section=self.section, item_id='REQ-001', text='Checked', created_by=self.user)
+        ItemAttributeValueFactory(item=item, attribute=self.attr_text, value='Kept')
+        url = reverse('api_item_detail', kwargs={'slug': self.project.slug, 'public_key': item.public_key})
+        cases = (
+            ('wrong type', attr_number.pk, 'soon', 'Effort'),
+            ('outside the options', self.attr_dropdown.pk, 'Extreme', 'Risk Level'),
+            ('unknown attribute', other_attr.pk, 'Elsewhere', 'attribute_values'),
+            ('malformed id', 'garbage', 'Nowhere', 'attribute_values'),
+            ('built-in attribute', attr_builtin.pk, 'Fixed', 'Fixed'),
+        )
+        for case, attribute, value, key in cases:
+            with self.subTest(case=case):
+                response = self.client.patch(url, data=json.dumps({
+                    'attribute_values': [{'attribute': self.attr_text.pk, 'value': 'Changed'}, {'attribute': attribute, 'value': value}],
+                }), content_type='application/json')
+                self.assertEqual(response.status_code, 400)
+                self.assertEqual(list(response.json()), [key])
+        self.assertEqual(list(ItemAttributeValue.objects.filter(item=item).values_list('attribute_id', 'value')), [(self.attr_text.pk, 'Kept')])
+
+    def test_the_version_written_by_an_item_create_holds_its_attribute_values(self):
         url = reverse('api_item_list', kwargs={'slug': self.project.slug})
         response = self.client.post(url, data=json.dumps({
-            'section': self.section.pk,
-            'text': 'Wrong attr item',
-            'status': 'draft',
-            'priority': 'medium',
+            'section': self.section.pk, 'text': 'Versioned', 'status': 'draft', 'priority': 'medium',
             'attribute_values': [
-                {'attribute': other_attr.pk, 'value': 'Should not save'},
+                {'attribute': self.attr_dropdown.pk, 'value': 'Low'},
+                {'attribute': self.attr_text.pk, 'value': 'A note'},
             ],
         }), content_type='application/json')
         self.assertEqual(response.status_code, 201)
-        item = Item.objects.get(text='Wrong attr item')
-        self.assertEqual(item.attribute_values.count(), 0)
+        item = Item.objects.get(text='Versioned')
+        version = ProjectVersion.objects.filter(project=self.project).order_by('-changed_at').first()
+        self.assertEqual(version.change_summary, f'Created item {item.item_id}')
+        snapshot_item = next(entry for entry in version.snapshot['items'] if entry['id'] == item.pk)
+        self.assertEqual(
+            sorted((av['attribute_id'], av['value']) for av in snapshot_item['attribute_values']),
+            sorted([(self.attr_dropdown.pk, 'Low'), (self.attr_text.pk, 'A note')]),
+        )
 
     def test_update_replaces_attribute_values(self):
         from apps.projects.factories import ItemAttributeValueFactory
@@ -1493,45 +1614,6 @@ class ItemAttributeValueAPITests(TestCase):
         self.assertEqual(
             ItemAttributeValue.objects.get(item=item).value, 'New'
         )
-
-    def test_a_patch_with_only_malformed_attribute_ids_leaves_no_values(self):
-        from apps.projects.factories import ItemAttributeValueFactory
-        from apps.projects.models import ItemAttributeValue
-        item = ItemFactory(
-            project=self.project, section=self.section,
-            item_id='REQ-005', text='Wipe test', created_by=self.user
-        )
-        ItemAttributeValueFactory(item=item, attribute=self.attr_text, value='Important data')
-        self.assertEqual(ItemAttributeValue.objects.filter(item=item).count(), 1)
-
-        url = reverse('api_item_detail', kwargs={'slug': self.project.slug, 'public_key': item.public_key})
-        response = self.client.patch(url, data=json.dumps({
-            'attribute_values': [
-                {'attribute': 'invalid_not_numeric', 'value': 'test'},
-            ],
-        }), content_type='application/json')
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(ItemAttributeValue.objects.filter(item=item).count(), 0)
-
-    def test_malformed_attr_ids_mixed_with_valid(self):
-        from apps.projects.models import ItemAttributeValue
-        item = ItemFactory(
-            project=self.project, section=self.section,
-            item_id='REQ-006', text='Mixed test', created_by=self.user
-        )
-        url = reverse('api_item_detail', kwargs={'slug': self.project.slug, 'public_key': item.public_key})
-        response = self.client.patch(url, data=json.dumps({
-            'attribute_values': [
-                {'attribute': 'garbage', 'value': 'skip me'},
-                {'attribute': self.attr_text.pk, 'value': 'Keep this'},
-            ],
-        }), content_type='application/json')
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(ItemAttributeValue.objects.filter(item=item).count(), 1)
-        self.assertEqual(
-            ItemAttributeValue.objects.get(item=item).value, 'Keep this'
-        )
-
 
 class MemberPreferencesAPITests(TestCase):
 

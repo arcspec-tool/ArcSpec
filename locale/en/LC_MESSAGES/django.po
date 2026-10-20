@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-20 15:10+0300\n"
+"POT-Creation-Date: 2026-10-20 22:39+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -772,7 +772,7 @@ msgstr ""
 msgid "Sign out, then use Forgot password on the sign-in page to set one."
 msgstr ""
 
-#: apps/accounts/templates/accounts/settings.html:167
+#: apps/accounts/templates/accounts/settings.html:171
 msgid "Could not save the change. Try again."
 msgstr ""
 
@@ -805,8 +805,8 @@ msgstr ""
 msgid "Profile updated successfully."
 msgstr ""
 
-#: apps/accounts/views.py:261 apps/doctemplates/views.py:82
-#: apps/projects/views.py:296 apps/projects/views.py:314
+#: apps/accounts/views.py:261 apps/doctemplates/views.py:64
+#: apps/projects/views.py:264 apps/projects/views.py:282
 msgid "Please correct the errors below."
 msgstr ""
 
@@ -1040,7 +1040,7 @@ msgstr ""
 #: apps/doctemplates/templates/doctemplates/includes/_template_card.html:17
 #: apps/doctemplates/templates/doctemplates/includes/_template_card.html:19
 #: apps/doctemplates/templates/doctemplates/includes/_template_card.html:22
-#: apps/projects/serializers.py:296
+#: apps/projects/serializers.py:264
 #: apps/projects/templates/projects/includes/_bulk_toolbar.html:29
 #: apps/projects/templates/projects/includes/_project_actions.html:28
 #: apps/projects/templates/projects/modals/_delete_item.html:8
@@ -1361,88 +1361,88 @@ msgstr ""
 msgid "Tag Presets"
 msgstr ""
 
-#: apps/administration/views.py:98 apps/doctemplates/views.py:64
-#: apps/projects/views.py:254
+#: apps/administration/views.py:94 apps/doctemplates/views.py:46
+#: apps/projects/views.py:222
 msgid "All"
 msgstr ""
 
-#: apps/administration/views.py:138
+#: apps/administration/views.py:134
 #, python-format
 msgid ""
 "The invitation email to %(email)s could not be sent. Use \"Resend "
 "invitation\" later."
 msgstr ""
 
-#: apps/administration/views.py:140
+#: apps/administration/views.py:136
 #, python-format
 msgid "Invitation sent to %(email)s."
 msgstr ""
 
-#: apps/administration/views.py:172
+#: apps/administration/views.py:168
 #, python-format
 msgid ""
 "User \"%(user)s\" is deactivated. Reactivate the account before resending "
 "the invitation."
 msgstr ""
 
-#: apps/administration/views.py:174
+#: apps/administration/views.py:170
 #, python-format
 msgid "User \"%(user)s\" already has a password. No invitation was sent."
 msgstr ""
 
-#: apps/administration/views.py:176
+#: apps/administration/views.py:172
 #, python-format
 msgid "User \"%(user)s\" has already signed in. No invitation was sent."
 msgstr ""
 
-#: apps/administration/views.py:192
+#: apps/administration/views.py:188
 #, python-format
 msgid "Role for \"%(user)s\" updated to %(role)s."
 msgstr ""
 
-#: apps/administration/views.py:204
+#: apps/administration/views.py:200
 msgid "You cannot deactivate yourself."
 msgstr ""
 
-#: apps/administration/views.py:209
+#: apps/administration/views.py:205
 #, python-format
 msgid "User \"%(user)s\" reactivated."
 msgstr ""
 
-#: apps/administration/views.py:211
+#: apps/administration/views.py:207
 #, python-format
 msgid "User \"%(user)s\" deactivated."
 msgstr ""
 
-#: apps/administration/views.py:225
+#: apps/administration/views.py:221
 #, python-format
 msgid "Tag preset \"%(name)s\" created."
 msgstr ""
 
-#: apps/administration/views.py:241
+#: apps/administration/views.py:237
 #, python-format
 msgid "Tag preset \"%(name)s\" deleted."
 msgstr ""
 
-#: apps/administration/views.py:250
+#: apps/administration/views.py:246
 msgid "Built-in templates are always visible and cannot be toggled."
 msgstr ""
 
-#: apps/administration/views.py:255
+#: apps/administration/views.py:251
 #, python-format
 msgid "Template \"%(name)s\" is now visible to all users."
 msgstr ""
 
-#: apps/administration/views.py:257
+#: apps/administration/views.py:253
 #, python-format
 msgid "Template \"%(name)s\" is now private."
 msgstr ""
 
-#: apps/administration/views.py:266
+#: apps/administration/views.py:262
 msgid "Invalid form type."
 msgstr ""
 
-#: apps/administration/views.py:271
+#: apps/administration/views.py:267
 msgid "System settings saved."
 msgstr ""
 
@@ -1483,28 +1483,28 @@ msgstr ""
 msgid "Something went wrong. Please try again later."
 msgstr ""
 
-#: apps/core/templates/base.html:27
+#: apps/core/templates/base.html:29
 msgid "Toggle sidebar"
 msgstr ""
 
-#: apps/core/templates/base.html:34
+#: apps/core/templates/base.html:36
 msgid "Search projects, items... (Ctrl+K)"
 msgstr ""
 
-#: apps/core/templates/base.html:34
+#: apps/core/templates/base.html:36
 msgid "Search projects and items"
 msgstr ""
 
-#: apps/core/templates/base.html:36
+#: apps/core/templates/base.html:38
 msgid "Search results"
 msgstr ""
 
-#: apps/core/templates/base.html:43
+#: apps/core/templates/base.html:45
 #: apps/projects/templates/projects/dashboard.html:130
 msgid "Notifications"
 msgstr ""
 
-#: apps/core/templates/base.html:51
+#: apps/core/templates/base.html:53
 #: apps/core/templates/includes/_sidebar.html:48
 #: apps/core/templates/modals/_sign_out.html:4
 #: apps/core/templates/modals/_sign_out.html:10
@@ -1562,24 +1562,24 @@ msgid "Are you sure you want to sign out?"
 msgstr ""
 
 #: apps/core/templatetags/core_tags.py:40 apps/projects/models.py:28
-#: apps/projects/views.py:255
+#: apps/projects/views.py:223
 msgid "Active"
 msgstr ""
 
 #: apps/core/templatetags/core_tags.py:41 apps/projects/models.py:30
-#: apps/projects/models.py:186 apps/projects/views.py:257
+#: apps/projects/models.py:186 apps/projects/views.py:225
 msgid "Draft"
 msgstr ""
 
 #: apps/core/templatetags/core_tags.py:42 apps/projects/models.py:29
 #: apps/projects/models.py:187
 #: apps/projects/templates/projects/dashboard.html:54
-#: apps/projects/views.py:256
+#: apps/projects/views.py:224
 msgid "In Review"
 msgstr ""
 
 #: apps/core/templatetags/core_tags.py:43 apps/notifications/models.py:30
-#: apps/projects/models.py:31 apps/projects/views.py:258
+#: apps/projects/models.py:31 apps/projects/views.py:226
 msgid "Archived"
 msgstr ""
 
@@ -2017,34 +2017,34 @@ msgstr ""
 msgid "Duplicate as Custom"
 msgstr ""
 
-#: apps/doctemplates/views.py:98
+#: apps/doctemplates/views.py:80
 #, python-format
 msgid "Template \"%(name)s\" created."
 msgstr ""
 
-#: apps/doctemplates/views.py:118
+#: apps/doctemplates/views.py:100
 #, python-format
 msgid "Template \"%(name)s\" updated."
 msgstr ""
 
-#: apps/doctemplates/views.py:219
+#: apps/doctemplates/views.py:201
 #, python-format
 msgid "Cannot delete \"%(name)s\": it is used by %(count)d project."
 msgid_plural "Cannot delete \"%(name)s\": it is used by %(count)d projects."
 msgstr[0] ""
 msgstr[1] ""
 
-#: apps/doctemplates/views.py:227
+#: apps/doctemplates/views.py:209
 #, python-format
 msgid "Template \"%(name)s\" deleted."
 msgstr ""
 
-#: apps/doctemplates/views.py:238 apps/projects/views.py:353
+#: apps/doctemplates/views.py:220 apps/projects/views.py:321
 #, python-format
 msgid "%(name)s (Copy)"
 msgstr ""
 
-#: apps/doctemplates/views.py:270
+#: apps/doctemplates/views.py:252
 #, python-format
 msgid "Template duplicated as \"%(name)s\"."
 msgstr ""
@@ -2246,128 +2246,109 @@ msgstr ""
 msgid "Not found"
 msgstr ""
 
-#: apps/projects/api.py:297
-msgid "Assignee user not found or inactive."
+#: apps/projects/api.py:172
+msgid "Send a list of attribute values."
 msgstr ""
 
-#: apps/projects/api.py:306
-msgid "Assignee must be a project member."
-msgstr ""
-
-#: apps/projects/api.py:319
-#, python-format
-msgid "Invalid status. Must be one of: %(choices)s"
-msgstr ""
-
-#: apps/projects/api.py:326
-#, python-format
-msgid "Invalid priority. Must be one of: %(choices)s"
-msgstr ""
-
-#: apps/projects/api.py:356 apps/projects/views.py:706
+#: apps/projects/api.py:279 apps/projects/views.py:645
 msgid "One or more sections do not belong to this project."
 msgstr ""
 
-#: apps/projects/api.py:393
+#: apps/projects/api.py:316
 msgid "Tag not found."
 msgstr ""
 
-#: apps/projects/api.py:420
+#: apps/projects/api.py:343
 #, python-format
 msgid "Deleted %(count)d items"
 msgid_plural "Deleted %(count)d items"
 msgstr[0] ""
 msgstr[1] ""
 
-#: apps/projects/api.py:436
+#: apps/projects/api.py:359
 msgid "No image file provided."
 msgstr ""
 
-#: apps/projects/api.py:442 apps/projects/serializers.py:20
+#: apps/projects/api.py:365 apps/projects/serializers.py:20
 #, python-format
 msgid "Image type \"%(ext)s\" is not allowed. Use PNG, JPG, GIF, or WebP."
 msgstr ""
 
-#: apps/projects/api.py:447 apps/projects/serializers.py:23
+#: apps/projects/api.py:370 apps/projects/serializers.py:23
 msgid "Image size exceeds 5 MB limit."
 msgstr ""
 
-#: apps/projects/api.py:572
-#, python-format
-msgid "Tag %(tag)s is not available for this project."
-msgstr ""
-
-#: apps/projects/api.py:625
+#: apps/projects/api.py:525
 msgid "No file was uploaded."
 msgstr ""
 
-#: apps/projects/api.py:631
+#: apps/projects/api.py:531
 #, python-format
 msgid "File type \"%(ext)s\" is not allowed."
 msgstr ""
 
-#: apps/projects/api.py:639
+#: apps/projects/api.py:539
 #, python-format
 msgid "File size exceeds the %(size)s MB limit."
 msgstr ""
 
-#: apps/projects/api.py:775
+#: apps/projects/api.py:674
 msgid "preferences must be a JSON object."
 msgstr ""
 
-#: apps/projects/api.py:804
+#: apps/projects/api.py:703
 msgid "Invalid role."
 msgstr ""
 
-#: apps/projects/api.py:810
+#: apps/projects/api.py:709
 msgid "User not found or inactive."
 msgstr ""
 
-#: apps/projects/api.py:816
+#: apps/projects/api.py:715
 msgid "User is already a collaborator."
 msgstr ""
 
-#: apps/projects/api.py:846
+#: apps/projects/api.py:745
 msgid "Cannot demote the last project admin."
 msgstr ""
 
-#: apps/projects/api.py:860
+#: apps/projects/api.py:759
 msgid "Cannot remove the last project admin."
 msgstr ""
 
-#: apps/projects/api.py:888
+#: apps/projects/api.py:785
 msgid "This version has no snapshot data to restore."
 msgstr ""
 
-#: apps/projects/api.py:904
+#: apps/projects/api.py:801
 #, python-format
 msgid "Restored version %(version)s"
 msgstr ""
 
-#: apps/projects/api.py:908
+#: apps/projects/api.py:805
 #, python-format
 msgid "Restored to version %(version)s"
 msgstr ""
 
-#: apps/projects/api.py:1078 apps/projects/api.py:1125
+#: apps/projects/api.py:943 apps/projects/api.py:982
 msgid "Name is required."
 msgstr ""
 
-#: apps/projects/api.py:1082 apps/projects/api.py:1134
+#: apps/projects/api.py:947 apps/projects/api.py:991
 #, python-format
 msgid "Invalid field type: %(type)s"
 msgstr ""
 
-#: apps/projects/api.py:1085 apps/projects/api.py:1127
+#: apps/projects/api.py:950 apps/projects/api.py:984
 #, python-format
 msgid "Attribute \"%(name)s\" already exists."
 msgstr ""
 
-#: apps/projects/api.py:1119
+#: apps/projects/api.py:976
 msgid "Cannot modify built-in attributes."
 msgstr ""
 
-#: apps/projects/api.py:1159
+#: apps/projects/api.py:1008
 msgid "Cannot delete built-in attributes."
 msgstr ""
 
@@ -2423,15 +2404,15 @@ msgstr ""
 msgid "Brief description of the project..."
 msgstr ""
 
-#: apps/projects/forms.py:76 apps/projects/views.py:625
+#: apps/projects/forms.py:76 apps/projects/views.py:564
 msgid "Title is required."
 msgstr ""
 
-#: apps/projects/forms.py:84 apps/projects/views.py:638
+#: apps/projects/forms.py:84 apps/projects/views.py:577
 msgid "A section cannot be its own parent."
 msgstr ""
 
-#: apps/projects/forms.py:87 apps/projects/views.py:643
+#: apps/projects/forms.py:87 apps/projects/views.py:582
 msgid "Parent section does not belong to this project."
 msgstr ""
 
@@ -2483,100 +2464,89 @@ msgstr ""
 msgid "This project is archived. Restore it to make changes."
 msgstr ""
 
-#: apps/projects/serializers.py:137
-msgid "Source item must belong to the current project."
+#: apps/projects/queries.py:152
+#, python-format
+msgid "%(name)s must be a whole number of 0 or more."
 msgstr ""
 
-#: apps/projects/serializers.py:145
-msgid "You do not have access to the target item's project."
-msgstr ""
-
-#: apps/projects/serializers.py:258
+#: apps/projects/serializers.py:238
 msgid "Send insert_before or insert_after, not both."
 msgstr ""
 
-#: apps/projects/serializers.py:262
-msgid "The item is not in the chosen section."
-msgstr ""
-
-#: apps/projects/serializers.py:276
-msgid "Section does not belong to this project."
-msgstr ""
-
-#: apps/projects/serializers.py:293
+#: apps/projects/serializers.py:261
 #: apps/projects/templates/projects/includes/_context_menu.html:6
 msgid "Set Status"
 msgstr ""
 
-#: apps/projects/serializers.py:294
+#: apps/projects/serializers.py:262
 #: apps/projects/templates/projects/includes/_context_menu.html:12
 msgid "Set Priority"
 msgstr ""
 
-#: apps/projects/serializers.py:295
+#: apps/projects/serializers.py:263
 msgid "Add Tag"
 msgstr ""
 
-#: apps/projects/serializers.py:311
+#: apps/projects/serializers.py:279
 #, python-format
 msgid "Invalid status \"%(value)s\". Must be one of: %(choices)s"
 msgstr ""
 
-#: apps/projects/serializers.py:317
+#: apps/projects/serializers.py:285
 #, python-format
 msgid "Invalid priority \"%(value)s\". Must be one of: %(choices)s"
 msgstr ""
 
-#: apps/projects/serializers.py:321
+#: apps/projects/serializers.py:289
 msgid "Give the id of the tag to add."
 msgstr ""
 
-#: apps/projects/signals.py:146
+#: apps/projects/signals.py:115
 #, python-format
 msgid "Created item %(item)s"
 msgstr ""
 
-#: apps/projects/signals.py:151
+#: apps/projects/signals.py:120
 #, python-format
 msgid "New item %(item)s created in %(project)s"
 msgstr ""
 
-#: apps/projects/signals.py:168
+#: apps/projects/signals.py:172
 #, python-format
 msgid "%(item)s status changed to %(status)s in %(project)s"
 msgstr ""
 
-#: apps/projects/signals.py:176
+#: apps/projects/signals.py:180
 #, python-format
 msgid "Item %(item)s status changed to %(status)s"
 msgstr ""
 
-#: apps/projects/signals.py:217
+#: apps/projects/signals.py:221
 #, python-format
 msgid "Deleted item %(item)s"
 msgstr ""
 
-#: apps/projects/signals.py:302
+#: apps/projects/signals.py:306
 #, python-format
 msgid "You were added to %(project)s as %(role)s"
 msgstr ""
 
-#: apps/projects/signals.py:312
+#: apps/projects/signals.py:316
 #, python-format
 msgid "%(user)s was added to %(project)s as %(role)s"
 msgstr ""
 
-#: apps/projects/signals.py:340
+#: apps/projects/signals.py:344
 #, python-format
 msgid "Your role in %(project)s was changed to %(role)s"
 msgstr ""
 
-#: apps/projects/signals.py:367
+#: apps/projects/signals.py:371
 #, python-format
 msgid "You were removed from %(project)s"
 msgstr ""
 
-#: apps/projects/signals.py:399
+#: apps/projects/signals.py:403
 #, python-format
 msgid "New comment on %(item)s in %(project)s"
 msgstr ""
@@ -2635,15 +2605,15 @@ msgstr ""
 msgid "You're all caught up"
 msgstr ""
 
-#: apps/projects/templates/projects/dashboard.html:158
+#: apps/projects/templates/projects/dashboard.html:161
 msgid "Could not mark the notification as read."
 msgstr ""
 
-#: apps/projects/templates/projects/dashboard.html:158
+#: apps/projects/templates/projects/dashboard.html:161
 msgid "Could not mark the notifications as read."
 msgstr ""
 
-#: apps/projects/templates/projects/dashboard.html:158
+#: apps/projects/templates/projects/dashboard.html:161
 msgid "No more notifications"
 msgstr ""
 
@@ -3315,44 +3285,122 @@ msgstr ""
 msgid "e.g. High Priority Draft Items"
 msgstr ""
 
-#: apps/projects/views.py:292
+#: apps/projects/views.py:260
 #, python-format
 msgid "Project \"%(name)s\" created."
 msgstr ""
 
-#: apps/projects/views.py:310
+#: apps/projects/views.py:278
 #, python-format
 msgid "Project \"%(name)s\" updated."
 msgstr ""
 
-#: apps/projects/views.py:324
+#: apps/projects/views.py:292
 #, python-format
 msgid "Project \"%(name)s\" archived."
 msgstr ""
 
-#: apps/projects/views.py:336
+#: apps/projects/views.py:304
 #, python-format
 msgid "Project \"%(name)s\" restored."
 msgstr ""
 
-#: apps/projects/views.py:345
+#: apps/projects/views.py:313
 #, python-format
 msgid "Project \"%(name)s\" deleted."
 msgstr ""
 
-#: apps/projects/views.py:390
+#: apps/projects/views.py:358
 #, python-format
 msgid "Project duplicated as \"%(name)s\"."
 msgstr ""
 
-#: apps/projects/views.py:648
+#: apps/projects/views.py:587
 msgid "This move would create a circular hierarchy."
 msgstr ""
 
-#: apps/projects/views.py:683
+#: apps/projects/views.py:622
 msgid "Cannot delete section that contains items. Move or delete items first."
 msgstr ""
 
-#: apps/projects/views.py:719
+#: apps/projects/views.py:658
 msgid "This reorder would create a circular hierarchy."
+msgstr ""
+
+#: apps/projects/writes.py:28
+msgid "Section does not belong to this project."
+msgstr ""
+
+#: apps/projects/writes.py:39 apps/projects/writes.py:41
+#: apps/projects/writes.py:87
+msgid "Assignee user not found or inactive."
+msgstr ""
+
+#: apps/projects/writes.py:43
+msgid "Assignee must be a project member."
+msgstr ""
+
+#: apps/projects/writes.py:49
+#, python-format
+msgid "Invalid %(field)s. Must be one of: %(choices)s"
+msgstr ""
+
+#: apps/projects/writes.py:59
+msgid "The item is not in the chosen section."
+msgstr ""
+
+#: apps/projects/writes.py:76
+msgid "Enter a number."
+msgstr ""
+
+#: apps/projects/writes.py:81
+msgid "Enter a date as YYYY-MM-DD."
+msgstr ""
+
+#: apps/projects/writes.py:84
+msgid "Enter true or false."
+msgstr ""
+
+#: apps/projects/writes.py:90
+#, python-format
+msgid "Choose one of: %(options)s"
+msgstr ""
+
+#: apps/projects/writes.py:95
+#, python-format
+msgid "Choose from: %(options)s"
+msgstr ""
+
+#: apps/projects/writes.py:106
+#, python-format
+msgid "Attribute %(id)s is not available for this project."
+msgstr ""
+
+#: apps/projects/writes.py:108
+msgid "Built-in attributes cannot be set."
+msgstr ""
+
+#: apps/projects/writes.py:127
+#, python-format
+msgid "Tag %(tag)s is not available for this project."
+msgstr ""
+
+#: apps/projects/writes.py:199
+msgid "The parent comment is on another item."
+msgstr ""
+
+#: apps/projects/writes.py:205
+msgid "Source item must belong to the current project."
+msgstr ""
+
+#: apps/projects/writes.py:207
+msgid "An item cannot link to itself."
+msgstr ""
+
+#: apps/projects/writes.py:209
+msgid "You do not have access to the target item's project."
+msgstr ""
+
+#: apps/projects/writes.py:211
+msgid "The target project is archived."
 msgstr ""
