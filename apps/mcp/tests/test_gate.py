@@ -7,12 +7,12 @@ from asgiref.testing import ApplicationCommunicator
 from django.conf import settings
 from django.test import SimpleTestCase, TransactionTestCase
 from django.utils import timezone
-from oauth2_provider.models import AccessToken, set_token_value
 
 from apps.accounts.factories import UserFactory
-from apps.administration.models import SystemSettings
 from apps.core.site import site_host
 from apps.mcp.asgi import McpGateway
+from apps.mcp.models import Connection
+from apps.mcp.tests.support import client_application, mint, switch
 from config.asgi import application
 
 METADATA = f'{settings.SITE_URL}/.well-known/oauth-protected-resource/mcp/'
@@ -56,23 +56,6 @@ async def call(app, method='POST', path='/mcp/', headers=None, body=b''):
             break
     await communicator.wait(5)
     return start['status'], {key.decode().lower(): value.decode() for key, value in start['headers']}, b''.join(chunks)
-
-
-def mint(user, raw='phase-two-token', scope='read', resource=None, expires=None):
-    token = AccessToken(
-        user=user, scope=scope,
-        expires=expires or timezone.now() + timedelta(hours=1),
-        resource=[settings.SITE_URL + '/mcp/'] if resource is None else resource,
-    )
-    set_token_value(token, raw)
-    token.save()
-    return raw
-
-
-def switch(on):
-    row = SystemSettings.load()
-    row.mcp_enabled = on
-    row.save()
 
 
 def sse_result(body):
@@ -184,3 +167,24 @@ class GateTests(TransactionTestCase):
         result = sse_result(body)['result']
         self.assertEqual(result['isError'], False)
         self.assertEqual(result['structuredContent'], {'name': str(self.user), 'email': self.user.email, 'system_role': 'user'})
+
+    async def test_last_used_at_is_written_once_per_five_minutes(self):
+        await sync_to_async(switch)(True)
+        application = await sync_to_async(client_application)()
+        connection = await sync_to_async(Connection.objects.create)(user=self.user, application=application, scope='read')
+        raw = await sync_to_async(mint)(self.user, application=application)
+        read = sync_to_async(lambda: Connection.objects.values_list('last_used_at', flat=True).get(pk=connection.pk))
+        gateway = McpGateway()
+        async with gateway.running():
+            started = timezone.now()
+            await call(gateway, headers={'authorization': f'Bearer {raw}'}, body=CALL_WHOAMI)
+            first = await read()
+            await call(gateway, headers={'authorization': f'Bearer {raw}'}, body=CALL_WHOAMI)
+            second = await read()
+            stale = timezone.now() - timedelta(minutes=6)
+            await sync_to_async(Connection.objects.filter(pk=connection.pk).update)(last_used_at=stale)
+            await call(gateway, headers={'authorization': f'Bearer {raw}'}, body=CALL_WHOAMI)
+            third = await read()
+        self.assertLessEqual(started, first)
+        self.assertEqual(second, first)
+        self.assertLessEqual(stale + timedelta(minutes=6), third)

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-20 23:12+0300\n"
+"POT-Creation-Date: 2026-10-20 23:45+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -381,6 +381,7 @@ msgstr ""
 #: apps/core/templates/modals/_confirm.html:7
 #: apps/core/templates/modals/_sign_out.html:7
 #: apps/doctemplates/templates/doctemplates/modals/_template_editor.html:73
+#: apps/mcp/templates/mcp/authorize.html:26
 #: apps/projects/templates/projects/modals/_add_item.html:57
 #: apps/projects/templates/projects/modals/_add_link.html:18
 #: apps/projects/templates/projects/modals/_delete_item.html:7
@@ -2079,33 +2080,78 @@ msgstr ""
 msgid "Template duplicated as \"%(name)s\"."
 msgstr ""
 
-#: apps/mcp/asgi.py:93
+#: apps/mcp/asgi.py:88
 msgid "The Host header does not name this site."
 msgstr ""
 
-#: apps/mcp/asgi.py:96
+#: apps/mcp/asgi.py:91
 msgid "The Origin header does not name this site."
 msgstr ""
 
-#: apps/mcp/asgi.py:101
+#: apps/mcp/asgi.py:96
 msgid "The MCP server is turned off."
 msgstr ""
 
-#: apps/mcp/asgi.py:103
+#: apps/mcp/asgi.py:98
 msgid "Only POST is accepted."
 msgstr ""
 
-#: apps/mcp/asgi.py:107
+#: apps/mcp/asgi.py:102
 msgid "A valid access token is required."
 msgstr ""
 
-#: apps/mcp/server.py:63
+#: apps/mcp/forms.py:8
+msgid "Read only"
+msgstr ""
+
+#: apps/mcp/forms.py:8
+msgid "Read and write"
+msgstr ""
+
+#: apps/mcp/server.py:62
 #, python-format
 msgid "Not found: tool %(name)s."
 msgstr ""
 
 #: apps/mcp/services.py:11
 msgid "Not found: your account."
+msgstr ""
+
+#: apps/mcp/templates/mcp/authorize.html:3
+msgid "Allow Access"
+msgstr ""
+
+#: apps/mcp/templates/mcp/authorize.html:5
+msgid "The request cannot be completed"
+msgstr ""
+
+#: apps/mcp/templates/mcp/authorize.html:5
+msgid "Allow access to your account"
+msgstr ""
+
+#: apps/mcp/templates/mcp/authorize.html:6
+#, python-format
+msgid ""
+"<strong data-client-name>%(name)s</strong> at <strong data-client-"
+"host>%(host)s</strong> asks to use your ArcSpec account."
+msgstr ""
+
+#: apps/mcp/templates/mcp/authorize.html:14
+msgid ""
+"Read access covers the projects you are a member of. Write access also lets "
+"the app create and change items in them, under your name."
+msgstr ""
+
+#: apps/mcp/templates/mcp/authorize.html:25
+msgid "Allow"
+msgstr ""
+
+#: apps/mcp/views.py:70
+msgid "The resource must be the MCP server of this site."
+msgstr ""
+
+#: apps/mcp/views.py:91
+msgid "Unnamed app"
 msgstr ""
 
 #: apps/notifications/jobs.py:41

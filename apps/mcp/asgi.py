@@ -5,7 +5,6 @@ from django.conf import settings
 from django.core import signals
 from django.utils.translation import gettext as _
 
-from apps.administration.models import SystemSettings
 from apps.core.site import site_host
 from apps.mcp import auth
 from apps.mcp.server import build_application, build_server
@@ -42,10 +41,6 @@ def no_store(send):
             message = {**message, 'headers': headers}
         await send(message)
     return wrapped
-
-
-def mcp_enabled():
-    return SystemSettings.load().mcp_enabled
 
 
 class McpGateway:
@@ -97,7 +92,7 @@ class McpGateway:
         authorization = header(scope, 'authorization')
         error = 'invalid_token' if authorization else None
         challenge = [(b'www-authenticate', auth.challenge(error).encode('latin-1'))]
-        if not await sync_to_async(mcp_enabled)():
+        if not await sync_to_async(auth.mcp_enabled)():
             return await respond(send, 401, auth.error_body(_('The MCP server is turned off.'), error), challenge)
         if scope['method'] != 'POST':
             return await respond(send, 405, auth.error_body(_('Only POST is accepted.')), [(b'allow', b'POST')])

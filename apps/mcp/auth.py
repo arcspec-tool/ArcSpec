@@ -3,12 +3,20 @@ import json
 from contextvars import ContextVar
 
 from django.conf import settings
+from django.utils import timezone
 from mcp.server.auth.provider import AccessToken as GrantedToken
 from oauth2_provider.models import AccessToken
+
+from apps.administration.models import SystemSettings
+from apps.mcp import connections
 
 SCOPES = ('read', 'write')
 
 current_token = ContextVar('mcp_current_token', default=None)
+
+
+def mcp_enabled():
+    return SystemSettings.load().mcp_enabled
 
 
 def resource_url():
@@ -34,6 +42,7 @@ def authenticate(raw_token):
     granted = set(token.scope.split())
     if 'read' not in granted:
         return None
+    connections.touch(token.user, token.application, timezone.now())
     return GrantedToken(
         token='',
         client_id=token.application.client_id if token.application else '',
