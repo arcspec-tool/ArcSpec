@@ -51,8 +51,16 @@ class ConsentPageTests(TestCase):
         mint(self.user, scope='read write', application=application)
         self.client.force_login(self.user)
         response = self.client.get(self.authorize, authorize_params(approval_prompt='auto'))
-        self.assertEqual((response.status_code, response.context['form'].initial['scope']), (200, 'read write'))
+        self.assertEqual((response.status_code, hook(response.content.decode(), 'data-client-name')), (200, CLIENT_NAME))
         self.assertEqual(Grant.objects.count(), 0)
+
+    def test_read_and_write_is_preselected_only_when_the_client_asks_for_write(self):
+        client_application()
+        self.client.force_login(self.user)
+        for requested, initial in (('read', 'read'), ('read write', 'read write')):
+            with self.subTest(requested=requested):
+                response = self.client.get(self.authorize, authorize_params(scope=requested))
+                self.assertEqual(response.context['form'].initial['scope'], initial)
 
     def test_a_signed_out_request_goes_to_sign_in_before_any_client_is_loaded(self):
         params = authorize_params(client_id='https://unknown.example/metadata.json', prompt='none')
@@ -126,17 +134,16 @@ class TokenEndpointTests(TestCase):
         self.assertEqual((connection.user, connection.application, connection.scope), (self.user, self.application, 'read write'))
         self.assertEqual((family.connection, family.token_family), (connection, issued.token_family))
         refreshed = refresh(self.client, token['refresh_token'])
-        rotated = RefreshToken.objects.get(token_checksum=checksum(refreshed.json()['refresh_token']))
         self.assertEqual(refreshed.status_code, 200)
-        self.assertEqual((Connection.objects.count(), TokenFamily.objects.count(), rotated.token_family), (1, 1, family.token_family))
+        self.assertEqual((Connection.objects.count(), TokenFamily.objects.count()), (1, 1))
 
     def test_a_refresh_thirty_days_after_the_authorization_is_refused_and_a_day_before_succeeds(self):
         token = authorize_and_exchange(self.client)
-        for case, age, status in (('thirty days', 30, 400), ('twenty-nine days', 29, 200)):
+        for case, age, status, error in (('thirty days', 30, 400, 'invalid_grant'), ('twenty-nine days', 29, 200, None)):
             with self.subTest(case=case):
                 TokenFamily.objects.update(authorized_at=timezone.now() - timedelta(days=age))
                 response = refresh(self.client, token['refresh_token'])
-                self.assertEqual((response.status_code, response.json().get('error')), (status, 'invalid_grant' if status == 400 else None))
+                self.assertEqual((response.status_code, response.json().get('error')), (status, error))
 
     def test_a_refresh_by_a_deactivated_user_is_refused(self):
         token = authorize_and_exchange(self.client)

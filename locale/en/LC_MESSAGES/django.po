@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-20 23:45+0300\n"
+"POT-Creation-Date: 2026-10-21 00:38+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2100,6 +2100,19 @@ msgstr ""
 msgid "A valid access token is required."
 msgstr ""
 
+#: apps/mcp/errors.py:34
+#, python-format
+msgid "Not found: %(what)s."
+msgstr ""
+
+#: apps/mcp/errors.py:36
+msgid "Your role in this project does not allow this."
+msgstr ""
+
+#: apps/mcp/errors.py:41
+msgid "A conflicting change was saved at the same time. Nothing was saved."
+msgstr ""
+
 #: apps/mcp/forms.py:8
 msgid "Read only"
 msgstr ""
@@ -2108,13 +2121,53 @@ msgstr ""
 msgid "Read and write"
 msgstr ""
 
+#: apps/mcp/identifiers.py:21
+#, python-format
+msgid "Not found: item %(item)s."
+msgstr ""
+
+#: apps/mcp/identifiers.py:29
+#, python-format
+msgid "Not found: section %(section)s."
+msgstr ""
+
+#: apps/mcp/identifiers.py:38
+#, python-format
+msgid "Not found: tag %(tag)s."
+msgstr ""
+
+#: apps/mcp/identifiers.py:40
+#, python-format
+msgid "Tag %(tag)s names more than one tag; give a key: %(keys)s."
+msgstr ""
+
+#: apps/mcp/identifiers.py:50
+#, python-format
+msgid "Not found: attribute %(attribute)s."
+msgstr ""
+
+#: apps/mcp/identifiers.py:57 apps/mcp/identifiers.py:64
+#, python-format
+msgid "Not found: user %(email)s."
+msgstr ""
+
 #: apps/mcp/server.py:62
 #, python-format
 msgid "Not found: tool %(name)s."
 msgstr ""
 
-#: apps/mcp/services.py:11
+#: apps/mcp/services.py:29
 msgid "Not found: your account."
+msgstr ""
+
+#: apps/mcp/services.py:33
+#, python-format
+msgid "project %(slug)s"
+msgstr ""
+
+#: apps/mcp/services.py:149
+#, python-format
+msgid "Not found: template %(template)s."
 msgstr ""
 
 #: apps/mcp/templates/mcp/authorize.html:3

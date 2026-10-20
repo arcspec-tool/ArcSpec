@@ -174,17 +174,14 @@ class GateTests(TransactionTestCase):
         connection = await sync_to_async(Connection.objects.create)(user=self.user, application=application, scope='read')
         raw = await sync_to_async(mint)(self.user, application=application)
         read = sync_to_async(lambda: Connection.objects.values_list('last_used_at', flat=True).get(pk=connection.pk))
+        started = timezone.now()
+        instants = (started, started + timedelta(minutes=4), started + timedelta(minutes=6))
         gateway = McpGateway()
         async with gateway.running():
-            started = timezone.now()
-            await call(gateway, headers={'authorization': f'Bearer {raw}'}, body=CALL_WHOAMI)
-            first = await read()
-            await call(gateway, headers={'authorization': f'Bearer {raw}'}, body=CALL_WHOAMI)
-            second = await read()
-            stale = timezone.now() - timedelta(minutes=6)
-            await sync_to_async(Connection.objects.filter(pk=connection.pk).update)(last_used_at=stale)
-            await call(gateway, headers={'authorization': f'Bearer {raw}'}, body=CALL_WHOAMI)
-            third = await read()
-        self.assertLessEqual(started, first)
-        self.assertEqual(second, first)
-        self.assertLessEqual(stale + timedelta(minutes=6), third)
+            with patch('apps.mcp.auth.timezone') as clock:
+                clock.now.side_effect = instants
+                written = []
+                for _ in instants:
+                    await call(gateway, headers={'authorization': f'Bearer {raw}'}, body=CALL_WHOAMI)
+                    written.append(await read())
+        self.assertEqual(written, [started, started, started + timedelta(minutes=6)])
