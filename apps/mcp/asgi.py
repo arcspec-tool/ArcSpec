@@ -1,3 +1,4 @@
+import json
 from contextlib import AsyncExitStack, asynccontextmanager
 
 from asgiref.sync import ThreadSensitiveContext, sync_to_async
@@ -30,6 +31,36 @@ async def respond(send, status, body=b'', headers=()):
         ],
     })
     await send({'type': 'http.response.body', 'body': body})
+
+
+class BodyTooLarge(Exception):
+    pass
+
+
+async def read_body(receive, limit):
+    chunks = []
+    size = 0
+    while True:
+        message = await receive()
+        if message['type'] == 'http.disconnect':
+            return None
+        chunk = message.get('body', b'')
+        size += len(chunk)
+        if limit is not None and size > limit:
+            raise BodyTooLarge
+        chunks.append(chunk)
+        if not message.get('more_body'):
+            return b''.join(chunks)
+
+
+def replay(body, receive):
+    pending = [{'type': 'http.request', 'body': body, 'more_body': False}]
+
+    async def replayed():
+        if pending:
+            return pending.pop()
+        return await receive()
+    return replayed
 
 
 def no_store(send):
@@ -100,6 +131,23 @@ class McpGateway:
         token = await sync_to_async(auth.authenticate)(raw_token) if raw_token else None
         if token is None:
             return await respond(send, 401, auth.error_body(_('A valid access token is required.'), error), challenge)
+        if 'write' not in token.scopes:
+            try:
+                body = await read_body(receive, settings.DATA_UPLOAD_MAX_MEMORY_SIZE)
+            except BodyTooLarge:
+                return await respond(send, 413, auth.error_body(_('The request body is too large.')))
+            if body is None:
+                return
+            try:
+                payload = json.loads(body)
+            except ValueError:
+                return await respond(send, 400, auth.error_body(_('The request body is not valid JSON.')))
+            if auth.calls_write_tool(payload):
+                insufficient = [(b'www-authenticate', auth.challenge('insufficient_scope', 'write').encode('latin-1'))]
+                return await respond(
+                    send, 403, auth.error_body(_('This connection is read only.'), 'insufficient_scope'), insufficient,
+                )
+            receive = replay(body, receive)
         if self.application is None:
             raise RuntimeError('The MCP application has not started.')
         reset = auth.current_token.set(token)

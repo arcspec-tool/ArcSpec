@@ -77,8 +77,8 @@ def get_tool_input_schema(name):
 
 
 def build_server():
-    from apps.mcp import tools_read
-    TOOLS.update({spec.name: spec for spec in tools_read.TOOLS})
+    from apps.mcp import tools_read, tools_write
+    TOOLS.update({spec.name: spec for spec in tools_read.TOOLS + tools_write.TOOLS})
     return Server(
         'ArcSpec',
         on_list_tools=on_list_tools,

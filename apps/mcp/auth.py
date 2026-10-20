@@ -11,6 +11,7 @@ from apps.administration.models import SystemSettings
 from apps.mcp import connections
 
 SCOPES = ('read', 'write')
+WRITE_TOOLS = ('create_item', 'create_items', 'update_item', 'set_item_tags', 'add_comment', 'add_link')
 
 current_token = ContextVar('mcp_current_token', default=None)
 
@@ -59,13 +60,23 @@ class ContextTokenVerifier:
         return current_token.get()
 
 
-def challenge(error=None):
+def challenge(error=None, scope='read'):
     parts = []
     if error:
         parts.append(f'error="{error}"')
     parts.append(f'resource_metadata="{metadata_url()}"')
-    parts.append('scope="read"')
+    parts.append(f'scope="{scope}"')
     return 'Bearer ' + ', '.join(parts)
+
+
+def calls_write_tool(payload):
+    for message in payload if isinstance(payload, list) else [payload]:
+        if not isinstance(message, dict) or message.get('method') != 'tools/call':
+            continue
+        params = message.get('params')
+        if isinstance(params, dict) and params.get('name') in WRITE_TOOLS:
+            return True
+    return False
 
 
 def error_body(description, error=None):

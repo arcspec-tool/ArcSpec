@@ -20,4 +20,5 @@ def push_notification(notification):
         return
 
     transaction.on_commit(lambda: notify(notification.user_id, notification.pk), robust=True)
-    transaction.on_commit(lambda: send_email_notification(notification), robust=True)
+    if not getattr(notification, '_skip_email', False):
+        transaction.on_commit(lambda: send_email_notification(notification), robust=True)

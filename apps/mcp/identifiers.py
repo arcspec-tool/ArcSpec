@@ -1,5 +1,6 @@
 import uuid
 
+from django.db.models import Q
 from django.utils.translation import gettext as _
 
 from apps.accounts.models import User
@@ -55,6 +56,23 @@ def assignee(project, email):
     found = User.objects.filter(email__iexact=email, assigned_items__project=project).first()
     if found is None:
         raise ToolRefusal(_('Not found: user %(email)s.') % {'email': email})
+    return found
+
+
+def member(project, email):
+    found = User.objects.filter(email__iexact=email, is_active=True).filter(
+        Q(system_role='admin') | Q(project_memberships__project=project)
+    ).first()
+    if found is None:
+        raise ToolRefusal(_('Not found: user %(email)s.') % {'email': email})
+    return found
+
+
+def comment(item, value):
+    key = as_key(value)
+    found = item.comments.filter(public_key=key).first() if key else None
+    if found is None:
+        raise ToolRefusal(_('Not found: comment %(comment)s.') % {'comment': value})
     return found
 
 

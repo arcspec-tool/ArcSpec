@@ -12,12 +12,14 @@ from apps.accounts.factories import UserFactory
 from apps.core.site import site_host
 from apps.mcp.asgi import McpGateway
 from apps.mcp.models import Connection
+from apps.mcp.server import TOOLS
 from apps.mcp.tests.support import client_application, mint, switch
 from config.asgi import application
 
 METADATA = f'{settings.SITE_URL}/.well-known/oauth-protected-resource/mcp/'
 CHALLENGE = f'Bearer resource_metadata="{METADATA}", scope="read"'
 INVALID = f'Bearer error="invalid_token", resource_metadata="{METADATA}", scope="read"'
+INSUFFICIENT = f'Bearer error="insufficient_scope", resource_metadata="{METADATA}", scope="write"'
 CALL_WHOAMI = json.dumps({'jsonrpc': '2.0', 'id': 1, 'method': 'tools/call', 'params': {'name': 'whoami', 'arguments': {}}}).encode()
 
 
@@ -167,6 +169,27 @@ class GateTests(TransactionTestCase):
         result = sse_result(body)['result']
         self.assertEqual(result['isError'], False)
         self.assertEqual(result['structuredContent'], {'name': str(self.user), 'email': self.user.email, 'system_role': 'user'})
+
+    async def test_a_read_only_token_gets_403_insufficient_scope_for_every_tool_that_is_not_read_only(self):
+        await sync_to_async(switch)(True)
+        raw = await sync_to_async(mint)(self.user)
+        gateway = McpGateway()
+        async with gateway.running():
+            for spec in [spec for spec in TOOLS.values() if not spec.annotations.read_only_hint]:
+                with self.subTest(tool=spec.name):
+                    body = json.dumps({
+                        'jsonrpc': '2.0', 'id': 1, 'method': 'tools/call', 'params': {'name': spec.name, 'arguments': {}},
+                    }).encode()
+                    status, headers, response = await call(gateway, headers={'authorization': f'Bearer {raw}'}, body=body)
+                    self.assertEqual((status, headers['www-authenticate']), (403, INSUFFICIENT))
+
+    async def test_a_read_only_token_with_a_body_that_does_not_parse_gets_400(self):
+        await sync_to_async(switch)(True)
+        raw = await sync_to_async(mint)(self.user)
+        gateway = McpGateway()
+        async with gateway.running():
+            status, headers, body = await call(gateway, headers={'authorization': f'Bearer {raw}'}, body=b'{not json')
+        self.assertEqual((status, json.loads(body)), (400, {'error_description': 'The request body is not valid JSON.'}))
 
     async def test_last_used_at_is_written_once_per_five_minutes(self):
         await sync_to_async(switch)(True)

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-21 00:38+0300\n"
+"POT-Creation-Date: 2026-10-21 01:10+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2080,24 +2080,36 @@ msgstr ""
 msgid "Template duplicated as \"%(name)s\"."
 msgstr ""
 
-#: apps/mcp/asgi.py:88
+#: apps/mcp/asgi.py:119
 msgid "The Host header does not name this site."
 msgstr ""
 
-#: apps/mcp/asgi.py:91
+#: apps/mcp/asgi.py:122
 msgid "The Origin header does not name this site."
 msgstr ""
 
-#: apps/mcp/asgi.py:96
+#: apps/mcp/asgi.py:127
 msgid "The MCP server is turned off."
 msgstr ""
 
-#: apps/mcp/asgi.py:98
+#: apps/mcp/asgi.py:129
 msgid "Only POST is accepted."
 msgstr ""
 
-#: apps/mcp/asgi.py:102
+#: apps/mcp/asgi.py:133
 msgid "A valid access token is required."
+msgstr ""
+
+#: apps/mcp/asgi.py:138
+msgid "The request body is too large."
+msgstr ""
+
+#: apps/mcp/asgi.py:144
+msgid "The request body is not valid JSON."
+msgstr ""
+
+#: apps/mcp/asgi.py:148 apps/mcp/tools_write.py:114
+msgid "This connection is read only."
 msgstr ""
 
 #: apps/mcp/errors.py:34
@@ -2121,34 +2133,40 @@ msgstr ""
 msgid "Read and write"
 msgstr ""
 
-#: apps/mcp/identifiers.py:21
+#: apps/mcp/identifiers.py:22
 #, python-format
 msgid "Not found: item %(item)s."
 msgstr ""
 
-#: apps/mcp/identifiers.py:29
+#: apps/mcp/identifiers.py:30
 #, python-format
 msgid "Not found: section %(section)s."
 msgstr ""
 
-#: apps/mcp/identifiers.py:38
+#: apps/mcp/identifiers.py:39
 #, python-format
 msgid "Not found: tag %(tag)s."
 msgstr ""
 
-#: apps/mcp/identifiers.py:40
+#: apps/mcp/identifiers.py:41
 #, python-format
 msgid "Tag %(tag)s names more than one tag; give a key: %(keys)s."
 msgstr ""
 
-#: apps/mcp/identifiers.py:50
+#: apps/mcp/identifiers.py:51
 #, python-format
 msgid "Not found: attribute %(attribute)s."
 msgstr ""
 
-#: apps/mcp/identifiers.py:57 apps/mcp/identifiers.py:64
+#: apps/mcp/identifiers.py:58 apps/mcp/identifiers.py:67
+#: apps/mcp/identifiers.py:82
 #, python-format
 msgid "Not found: user %(email)s."
+msgstr ""
+
+#: apps/mcp/identifiers.py:75
+#, python-format
+msgid "Not found: comment %(comment)s."
 msgstr ""
 
 #: apps/mcp/server.py:62
@@ -2156,18 +2174,49 @@ msgstr ""
 msgid "Not found: tool %(name)s."
 msgstr ""
 
-#: apps/mcp/services.py:29
+#: apps/mcp/services.py:38
 msgid "Not found: your account."
 msgstr ""
 
-#: apps/mcp/services.py:33
+#: apps/mcp/services.py:42 apps/mcp/services.py:47
 #, python-format
 msgid "project %(slug)s"
 msgstr ""
 
-#: apps/mcp/services.py:149
+#: apps/mcp/services.py:114
+#, python-format
+msgid "Give only one of: %(names)s."
+msgstr ""
+
+#: apps/mcp/services.py:125 apps/projects/writes.py:58
+msgid "The item is not in the chosen section."
+msgstr ""
+
+#: apps/mcp/services.py:206
+#, python-format
+msgid "Created %(count)d item"
+msgid_plural "Created %(count)d items"
+msgstr[0] ""
+msgstr[1] ""
+
+#: apps/mcp/services.py:210
+#, python-format
+msgid "%(count)d new item created in %(project)s"
+msgid_plural "%(count)d new items created in %(project)s"
+msgstr[0] ""
+msgstr[1] ""
+
+#: apps/mcp/services.py:327
 #, python-format
 msgid "Not found: template %(template)s."
+msgstr ""
+
+#: apps/mcp/services.py:409
+msgid "Enter the comment text."
+msgstr ""
+
+#: apps/mcp/services.py:424
+msgid "This link already exists."
 msgstr ""
 
 #: apps/mcp/templates/mcp/authorize.html:3
@@ -2197,6 +2246,10 @@ msgstr ""
 
 #: apps/mcp/templates/mcp/authorize.html:25
 msgid "Allow"
+msgstr ""
+
+#: apps/mcp/text.py:17
+msgid "The text is empty after conversion."
 msgstr ""
 
 #: apps/mcp/views.py:70
@@ -3503,10 +3556,6 @@ msgstr ""
 msgid "Invalid %(field)s. Must be one of: %(choices)s"
 msgstr ""
 
-#: apps/projects/writes.py:58
-msgid "The item is not in the chosen section."
-msgstr ""
-
 #: apps/projects/writes.py:75
 msgid "Enter a number."
 msgstr ""
@@ -3538,27 +3587,27 @@ msgstr ""
 msgid "Built-in attributes cannot be set."
 msgstr ""
 
-#: apps/projects/writes.py:126
+#: apps/projects/writes.py:131
 #, python-format
 msgid "Tag %(tag)s is not available for this project."
 msgstr ""
 
-#: apps/projects/writes.py:198
+#: apps/projects/writes.py:203
 msgid "The parent comment is on another item."
 msgstr ""
 
-#: apps/projects/writes.py:204
+#: apps/projects/writes.py:209
 msgid "Source item must belong to the current project."
 msgstr ""
 
-#: apps/projects/writes.py:206
+#: apps/projects/writes.py:211
 msgid "An item cannot link to itself."
 msgstr ""
 
-#: apps/projects/writes.py:208
+#: apps/projects/writes.py:213
 msgid "You do not have access to the target item's project."
 msgstr ""
 
-#: apps/projects/writes.py:210
+#: apps/projects/writes.py:215
 msgid "The target project is archived."
 msgstr ""

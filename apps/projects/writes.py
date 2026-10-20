@@ -51,13 +51,13 @@ def _choice(field, value, choices):
     return value
 
 
-def place_item(project, section, before=None, after=None):
+def place_item(project, section, before=None, after=None, count=1):
     anchor = before or after
     if anchor is not None:
         if anchor.section_id != section.pk:
             raise ValidationError({'before' if before else 'after': _('The item is not in the chosen section.')})
         order = anchor.order if before else anchor.order + 1
-        Item.objects.filter(project=project, section=section, order__gte=order).update(order=F('order') + 1)
+        Item.objects.filter(project=project, section=section, order__gte=order).update(order=F('order') + count)
         return order
     max_order = Item.objects.filter(project=project, section=section).aggregate(m=models.Max('order'))['m']
     return (max_order or 0) + 1
@@ -96,8 +96,8 @@ def _checked_value(attribute, value):
     return value
 
 
-def set_attribute_values(item, values, merge=False):
-    attributes = {attribute.pk: attribute for attribute in item.project.attributes.all()}
+def checked_attribute_values(project, values):
+    attributes = {attribute.pk: attribute for attribute in project.attributes.all()}
     checked = {}
     for key, value in (values or {}).items():
         attribute = attributes.get(key) if isinstance(key, int) and not isinstance(key, bool) else None
@@ -106,6 +106,11 @@ def set_attribute_values(item, values, merge=False):
         if attribute.is_builtin:
             raise ValidationError({attribute.name: _('Built-in attributes cannot be set.')})
         checked[attribute] = _checked_value(attribute, value)
+    return checked
+
+
+def set_attribute_values(item, values, merge=False):
+    checked = checked_attribute_values(item.project, values)
     with transaction.atomic():
         if merge:
             item.attribute_values.filter(attribute__in=checked).delete()
