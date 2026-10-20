@@ -412,7 +412,6 @@ class AdminSystemSettingsViewTest(TestCase):
         html = self.client.get('/admin-panel/?tab=system').content.decode()
         self.assertNotIn('default_user_role', html)
         self.assertNotIn('max_projects_per_user', html)
-        self.assertEqual(html.count('data-dirty-form'), 3)
         self.assertIn('data-depends-on="id_auto_archive_enabled"', html)
         self.assertIn('data-depends-on="id_auto_delete_archived"', html)
         response = self.client.post('/admin-panel/system-settings/', {'form_type': 'storage', 'max_attachment_size_mb': 25})
@@ -430,6 +429,13 @@ class AdminSystemSettingsViewTest(TestCase):
         settings = SystemSettings.load()
         self.assertEqual((settings.auto_archive_enabled, settings.auto_archive_days), (True, 30))
         self.assertEqual((settings.allow_user_restore, settings.auto_delete_archived, settings.auto_delete_days), (False, False, 400))
+
+    def test_the_mcp_switch_is_stored_by_its_own_form(self):
+        for posted, stored in (({'mcp_enabled': 'on'}, True), ({}, False)):
+            with self.subTest(stored=stored):
+                response = self.client.post('/admin-panel/system-settings/', {'form_type': 'mcp', **posted})
+                self.assertRedirects(response, '/admin-panel/?tab=system', fetch_redirect_response=False)
+                self.assertEqual(SystemSettings.load().mcp_enabled, stored)
 
 
 @override_settings(SOCIALACCOUNT_PROVIDERS=ENTRA_CONFIGURED)

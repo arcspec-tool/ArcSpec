@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-20 22:39+0300\n"
+"POT-Creation-Date: 2026-10-20 23:12+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -48,7 +48,7 @@ msgid "Microsoft sign-in failed. Try again or contact a system administrator."
 msgstr ""
 
 #: apps/accounts/auth_methods.py:34 apps/administration/forms.py:91
-#: apps/administration/models.py:30
+#: apps/administration/models.py:31
 msgid "At least one sign-in method must stay on."
 msgstr ""
 
@@ -878,7 +878,7 @@ msgstr ""
 msgid "hCaptcha"
 msgstr ""
 
-#: apps/administration/models.py:24 apps/administration/models.py:25
+#: apps/administration/models.py:25 apps/administration/models.py:26
 #: apps/administration/templates/administration/panel.html:14
 msgid "System Settings"
 msgstr ""
@@ -894,6 +894,8 @@ msgstr ""
 #: apps/administration/templates/administration/includes/_system.html:20
 #: apps/administration/templates/administration/includes/_system.html:67
 #: apps/administration/templates/administration/includes/_system.html:114
+#: apps/administration/templates/administration/includes/_system.html:126
+#: apps/administration/templates/administration/includes/_system.html:137
 #: apps/administration/templates/administration/modals/_edit_role.html:12
 #: apps/projects/templates/projects/modals/_save_view.html:11
 msgid "Save"
@@ -985,6 +987,34 @@ msgstr ""
 #: apps/administration/templates/administration/includes/_system.html:105
 #, python-format
 msgid "Not configured in this environment: %(providers)s."
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_system.html:122
+msgid "MCP server"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_system.html:123
+msgid "Access for AI assistants through the Model Context Protocol."
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_system.html:126
+msgid ""
+"While the server is on, every active user may connect an AI assistant and "
+"use it with their own roles. While it is off, every connection is refused."
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_system.html:126
+msgid "Save MCP Server Setting"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_system.html:131
+msgid "Connections from AI assistants"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_system.html:132
+msgid ""
+"On: every active user may connect an AI assistant, which works with the "
+"user's own project roles. Off: every request to the server is refused."
 msgstr ""
 
 #: apps/administration/templates/administration/includes/_tags.html:2
@@ -2047,6 +2077,35 @@ msgstr ""
 #: apps/doctemplates/views.py:252
 #, python-format
 msgid "Template duplicated as \"%(name)s\"."
+msgstr ""
+
+#: apps/mcp/asgi.py:93
+msgid "The Host header does not name this site."
+msgstr ""
+
+#: apps/mcp/asgi.py:96
+msgid "The Origin header does not name this site."
+msgstr ""
+
+#: apps/mcp/asgi.py:101
+msgid "The MCP server is turned off."
+msgstr ""
+
+#: apps/mcp/asgi.py:103
+msgid "Only POST is accepted."
+msgstr ""
+
+#: apps/mcp/asgi.py:107
+msgid "A valid access token is required."
+msgstr ""
+
+#: apps/mcp/server.py:63
+#, python-format
+msgid "Not found: tool %(name)s."
+msgstr ""
+
+#: apps/mcp/services.py:11
+msgid "Not found: your account."
 msgstr ""
 
 #: apps/notifications/jobs.py:41
@@ -3327,80 +3386,80 @@ msgstr ""
 msgid "This reorder would create a circular hierarchy."
 msgstr ""
 
-#: apps/projects/writes.py:28
+#: apps/projects/writes.py:27
 msgid "Section does not belong to this project."
 msgstr ""
 
-#: apps/projects/writes.py:39 apps/projects/writes.py:41
-#: apps/projects/writes.py:87
+#: apps/projects/writes.py:38 apps/projects/writes.py:40
+#: apps/projects/writes.py:86
 msgid "Assignee user not found or inactive."
 msgstr ""
 
-#: apps/projects/writes.py:43
+#: apps/projects/writes.py:42
 msgid "Assignee must be a project member."
 msgstr ""
 
-#: apps/projects/writes.py:49
+#: apps/projects/writes.py:48
 #, python-format
 msgid "Invalid %(field)s. Must be one of: %(choices)s"
 msgstr ""
 
-#: apps/projects/writes.py:59
+#: apps/projects/writes.py:58
 msgid "The item is not in the chosen section."
 msgstr ""
 
-#: apps/projects/writes.py:76
+#: apps/projects/writes.py:75
 msgid "Enter a number."
 msgstr ""
 
-#: apps/projects/writes.py:81
+#: apps/projects/writes.py:80
 msgid "Enter a date as YYYY-MM-DD."
 msgstr ""
 
-#: apps/projects/writes.py:84
+#: apps/projects/writes.py:83
 msgid "Enter true or false."
 msgstr ""
 
-#: apps/projects/writes.py:90
+#: apps/projects/writes.py:89
 #, python-format
 msgid "Choose one of: %(options)s"
 msgstr ""
 
-#: apps/projects/writes.py:95
+#: apps/projects/writes.py:94
 #, python-format
 msgid "Choose from: %(options)s"
 msgstr ""
 
-#: apps/projects/writes.py:106
+#: apps/projects/writes.py:105
 #, python-format
 msgid "Attribute %(id)s is not available for this project."
 msgstr ""
 
-#: apps/projects/writes.py:108
+#: apps/projects/writes.py:107
 msgid "Built-in attributes cannot be set."
 msgstr ""
 
-#: apps/projects/writes.py:127
+#: apps/projects/writes.py:126
 #, python-format
 msgid "Tag %(tag)s is not available for this project."
 msgstr ""
 
-#: apps/projects/writes.py:199
+#: apps/projects/writes.py:198
 msgid "The parent comment is on another item."
 msgstr ""
 
-#: apps/projects/writes.py:205
+#: apps/projects/writes.py:204
 msgid "Source item must belong to the current project."
 msgstr ""
 
-#: apps/projects/writes.py:207
+#: apps/projects/writes.py:206
 msgid "An item cannot link to itself."
 msgstr ""
 
-#: apps/projects/writes.py:209
+#: apps/projects/writes.py:208
 msgid "You do not have access to the target item's project."
 msgstr ""
 
-#: apps/projects/writes.py:211
+#: apps/projects/writes.py:210
 msgid "The target project is archived."
 msgstr ""

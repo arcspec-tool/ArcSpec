@@ -120,8 +120,18 @@ class SystemSettingsAuthenticationForm(forms.ModelForm):
         return cleaned
 
 
+class SystemSettingsMcpForm(forms.ModelForm):
+    class Meta:
+        model = SystemSettings
+        fields = ['mcp_enabled']
+        widgets = {
+            'mcp_enabled': BootstrapSwitchInput(attrs={'class': 'form-check-input', 'role': 'switch'}),
+        }
+
+
 SETTINGS_FORMS = {
     'general': SystemSettingsGeneralForm,
     'archiving': SystemSettingsArchivingForm,
     'authentication': SystemSettingsAuthenticationForm,
+    'mcp': SystemSettingsMcpForm,
 }

@@ -19,6 +19,7 @@ class SystemSettings(models.Model):
         default='',
         choices=[('', _('Off')), ('turnstile', _('Cloudflare Turnstile')), ('hcaptcha', _('hCaptcha'))],
     )
+    mcp_enabled = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = _('System Settings')

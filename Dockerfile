@@ -26,4 +26,4 @@ EXPOSE 27415
 CMD python manage.py collectstatic --noinput \
     && python manage.py compress \
     && exec uvicorn config.asgi:application --host 0.0.0.0 --port 27415 \
-        --lifespan off --timeout-graceful-shutdown 5
+        --timeout-graceful-shutdown 5

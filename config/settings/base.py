@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_bootstrap5',
     'compressor',
+    'oauth2_provider',
 
     'apps.core',
     'apps.accounts',
@@ -37,6 +38,7 @@ INSTALLED_APPS = [
     'apps.projects',
     'apps.administration',
     'apps.notifications',
+    'apps.mcp',
 ]
 
 MIDDLEWARE = [
@@ -75,6 +77,18 @@ LOGIN_REDIRECT_URL = '/dashboard/'
 PASSWORD_RESET_TIMEOUT = 86400
 AUTH_CALLBACK_PREFIX = env('AUTH_CALLBACK_PREFIX')
 SITE_URL = env('SITE_URL').rstrip('/')
+
+OAUTH2_PROVIDER = {
+    'COMPLIANT_BCP_RFC9700_TOKEN_STORAGE': True,
+    'REFRESH_TOKEN_GRACE_PERIOD_SECONDS': 0,
+    'ACCESS_TOKEN_EXPIRE_SECONDS': 3600,
+    'REFRESH_TOKEN_EXPIRE_SECONDS': 2592000,
+    'SCOPES': {'read': 'Read', 'write': 'Write'},
+    'DEFAULT_SCOPES': ['read'],
+    'OIDC_ENABLED': False,
+    'OIDC_ISS_ENDPOINT': SITE_URL,
+    'OAUTH2_PROTECTED_RESOURCE_IDENTIFIER': f'{SITE_URL}/mcp/',
+}
 
 SOCIALACCOUNT_PROVIDERS = {
     'microsoft': {
