@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_bootstrap5',
     'compressor',
+    'oauth2_provider',
 
     'apps.core',
     'apps.accounts',
@@ -37,6 +38,7 @@ INSTALLED_APPS = [
     'apps.projects',
     'apps.administration',
     'apps.notifications',
+    'apps.mcp',
 ]
 
 MIDDLEWARE = [
@@ -75,6 +77,42 @@ LOGIN_REDIRECT_URL = '/dashboard/'
 PASSWORD_RESET_TIMEOUT = 86400
 AUTH_CALLBACK_PREFIX = env('AUTH_CALLBACK_PREFIX')
 SITE_URL = env('SITE_URL').rstrip('/')
+
+OAUTH2_PROVIDER_APPLICATION_MODEL = 'oauth2_provider.Application'
+OAUTH2_PROVIDER = {
+    'CIMD_ENABLED': True,
+    'CIMD_REGISTRATION_PERMISSION_CLASSES': ('apps.mcp.oauth.AuthorizeEndpointCIMDPermission',),
+    'DCR_ENABLED': False,
+    'PKCE_REQUIRED': True,
+    'COMPLIANT_BCP_RFC9700_PKCE_METHOD': True,
+    'COMPLIANT_BCP_RFC9700_PKCE_REQUIRED': True,
+    'COMPLIANT_BCP_RFC9700_IMPLICIT_GRANT': True,
+    'COMPLIANT_BCP_RFC9700_PASSWORD_GRANT': True,
+    'COMPLIANT_BCP_RFC9700_ACCESS_TOKEN_TRANSPORT': True,
+    'COMPLIANT_BCP_RFC9700_AUTHZ_RESPONSE_ISS': True,
+    'COMPLIANT_BCP_RFC9700_TOKEN_STORAGE': True,
+    'COMPLIANT_BCP_RFC9700_REFRESH_TOKEN': True,
+    'COMPLIANT_BCP_RFC9700_REDIRECT_URI_SCHEME': False,
+    'COMPLIANT_BCP_RFC9700_REDIRECT_URI_MATCHING': True,
+    'OAUTH2_RESPONSE_TYPES_SUPPORTED': ['code'],
+    'OAUTH2_GRANT_TYPES_SUPPORTED': ['authorization_code', 'refresh_token'],
+    'OAUTH2_TOKEN_ENDPOINT_AUTH_METHODS_SUPPORTED': ['none'],
+    'ACCESS_TOKEN_EXPIRE_SECONDS': 3600,
+    'REFRESH_TOKEN_EXPIRE_SECONDS': 2592000,
+    'ROTATE_REFRESH_TOKEN': True,
+    'REFRESH_TOKEN_REUSE_PROTECTION': True,
+    'REFRESH_TOKEN_GRACE_PERIOD_SECONDS': 0,
+    'SCOPES': {'read': 'Read', 'write': 'Write'},
+    'DEFAULT_SCOPES': ['read'],
+    'REQUEST_APPROVAL_PROMPT': 'force',
+    'ALLOWED_REDIRECT_URI_SCHEMES': ['http', 'https'],
+    'ALLOW_LOCALHOST_LOOPBACK': True,
+    'ALLOW_URI_WILDCARDS': False,
+    'OAUTH2_VALIDATOR_CLASS': 'apps.mcp.oauth.MCPOAuth2Validator',
+    'OIDC_ENABLED': False,
+    'OIDC_ISS_ENDPOINT': SITE_URL,
+    'OAUTH2_PROTECTED_RESOURCE_IDENTIFIER': f'{SITE_URL}/mcp/',
+}
 
 SOCIALACCOUNT_PROVIDERS = {
     'microsoft': {

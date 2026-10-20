@@ -273,6 +273,7 @@ class PushNotificationTest(TestCase):
         notification = NotificationFactory(user=user, type='comment', message='Hello')
         with patch('apps.notifications.push.notify') as notify_mock, self.captureOnCommitCallbacks(execute=True):
             push_notification(notification)
+            self.assertEqual(mail.outbox, [])
         notify_mock.assert_called_once_with(user.pk, notification.pk)
         self.assertEqual(len(mail.outbox), 1)
         self.assertEqual(mail.outbox[0].to, [user.email])

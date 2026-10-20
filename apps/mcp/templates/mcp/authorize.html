@@ -1,0 +1,29 @@
+{% extends "accounts/login_base.html" %}
+{% load i18n %}
+{% block title %}{% translate "Allow Access" %} - ArcSpec{% endblock %}
+{% block status_icon %}<div class="login-status-icon{% if error %} is-warning{% endif %}" aria-hidden="true"><i class="bi {% if error %}bi-exclamation-triangle{% else %}bi-plug{% endif %}"></i></div>{% endblock %}
+{% block heading %}{% if error %}{% translate "The request cannot be completed" %}{% else %}{% translate "Allow access to your account" %}{% endif %}{% endblock %}
+{% block subtitle %}{% if not error %}<p class="login-subtitle">{% blocktranslate trimmed with name=client_name host=client_host %}<strong data-client-name>{{ name }}</strong> at <strong data-client-host>{{ host }}</strong> asks to use your ArcSpec account.{% endblocktranslate %}</p>{% endif %}{% endblock %}
+{% block card %}
+{% if error %}
+<p class="login-text mb-0" data-oauth-error="{{ error.error }}">{{ error.description }}</p>
+{% else %}
+<form method="post" action="{% url 'oauth2_provider:authorize' %}" id="consentForm">
+    {% csrf_token %}
+    {% for field in form %}{% if field.is_hidden %}{{ field }}{% endif %}{% endfor %}
+    <p class="login-text">{% translate "Read access covers the projects you are a member of. Write access also lets the app create and change items in them, under your name." %}</p>
+    <div class="mb-3">
+        {% for radio in form.scope %}
+        <div class="form-check">
+            {{ radio.tag }}
+            <label class="form-check-label" for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>
+        </div>
+        {% endfor %}
+    </div>
+    {{ form.scope.errors }}
+    {{ form.non_field_errors }}
+    <button type="submit" name="allow" value="1" class="btn btn-primary w-100" id="allowBtn">{% translate "Allow" %}</button>
+    <button type="submit" class="btn btn-login-secondary w-100 mt-2" id="cancelBtn">{% translate "Cancel" %}</button>
+</form>
+{% endif %}
+{% endblock %}

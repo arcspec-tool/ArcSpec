@@ -148,6 +148,10 @@ html, body {
   align-items: center;
   justify-content: center;
   gap: .625rem;
+}
+
+.btn-microsoft,
+.btn-login-secondary {
   font-weight: 500;
   color: #1e293b;
   background: #fff;
@@ -155,7 +159,9 @@ html, body {
 }
 
 .btn-microsoft:hover,
-.btn-microsoft:focus-visible {
+.btn-microsoft:focus-visible,
+.btn-login-secondary:hover,
+.btn-login-secondary:focus-visible {
   color: #0f172a;
   background: #f8fafc;
   border-color: #94a3b8;

@@ -117,3 +117,20 @@ The tag is removed from every item that has it.
 - **Captcha** adds a verification step to the password sign-in form and the forgot password form. It is shown only while **Password sign-in** is on. Choose **Off**, **Cloudflare Turnstile** or **hCaptcha**. A provider without keys on the server is greyed out and cannot be selected.
 
 At least one sign-in method must stay on.
+
+## Start the MCP server
+
+The MCP server lets users connect AI assistants to ArcSpec.
+Each AI assistant has the project roles of the user that connected it.
+The MCP server is off when you install ArcSpec.
+
+1. Open the **System Settings** tab.
+2. In **MCP server**, set **Connections from AI assistants** to on.
+3. Click **Save** in that section.
+4. Click **Save** in the dialog.
+
+![MCP server section](images/09-mcp-server.png)
+
+While the MCP server is off, ArcSpec stops all requests from AI assistants.
+Users can see their connected apps in **Settings** and disconnect them at all times.
+Refer to [Connect an AI assistant](10-connect-an-ai-assistant.md).

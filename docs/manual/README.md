@@ -18,3 +18,4 @@ How to use ArcSpec.
 7. [Working with others](07-working-with-others.md)
 8. [Templates](08-templates.md)
 9. [Administration](09-administration.md)
+10. [Connect an AI assistant](10-connect-an-ai-assistant.md)

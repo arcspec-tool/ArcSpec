@@ -4,8 +4,7 @@ import uuid
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
 from django.db import models
-from django.db.models import Count, OuterRef, Q, Subquery, Value
-from django.db.models.functions import Coalesce
+from django.db.models import Count, Q
 from django.http import FileResponse, Http404, HttpResponseBadRequest, HttpResponseNotModified, JsonResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.template.loader import render_to_string
@@ -27,6 +26,7 @@ from apps.projects.modals import project_create_context, project_edit_context
 from apps.notifications.models import AuditLog, Notification
 from apps.projects.forms import ProjectForm, ProjectUpdateForm, SectionForm
 from apps.projects.models import Attachment, Item, Project, ProjectAttribute, ProjectMembership, SavedView, Section, Tag
+from apps.projects.queries import SORT_OPTIONS, attribute_rows, project_list_queryset, section_tree_with_counts
 from apps.projects.utils import renumber_sections
 
 
@@ -170,21 +170,9 @@ class DashboardNotificationsView(LoginRequiredMixin, View):
         return JsonResponse(data)
 
 
-SORT_OPTIONS = {
-    'updated': '-updated_at',
-    'name-asc': 'name',
-    'name-desc': '-name',
-    'created': '-created_at',
-}
-
 STATUS_FILTERS = ('active', 'in-review', 'draft', 'archived')
 VIEW_MODES = ('grid', 'table')
 VIEW_COOKIE = 'projects_view'
-
-
-def count_per_project(queryset):
-    counted = queryset.filter(project=OuterRef('pk')).order_by().values('project').annotate(n=Count('pk')).values('n')[:1]
-    return Coalesce(Subquery(counted), 0)
 
 
 class ProjectListView(LoginRequiredMixin, ListView):
@@ -209,29 +197,9 @@ class ProjectListView(LoginRequiredMixin, ListView):
         return view if view in VIEW_MODES else 'grid'
 
     def get_queryset(self):
-        user = self.request.user
-        qs = Project.objects.for_user(user).select_related('template')
-        status = self.get_status()
-        if status != 'all':
-            qs = qs.filter(status=status)
-        q = self.request.GET.get('q', '').strip()
-        if q:
-            qs = qs.filter(Q(name__icontains=q) | Q(description__icontains=q))
-        if user.is_system_admin:
-            role = Value('admin')
-        else:
-            role = Subquery(ProjectMembership.objects.filter(project=OuterRef('pk'), user=user).values('role')[:1])
-        qs = qs.annotate(
-            items_total=count_per_project(Item.objects.all()),
-            members_total=count_per_project(ProjectMembership.objects.all()),
-            user_role=role,
-            is_archived=models.Case(
-                models.When(status='archived', then=models.Value(1)),
-                default=models.Value(0),
-                output_field=models.IntegerField(),
-            ),
+        return project_list_queryset(
+            self.request.user, self.get_status(), self.request.GET.get('q', '').strip(), self.get_sort(),
         )
-        return qs.order_by('is_archived', SORT_OPTIONS[self.get_sort()])
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -402,18 +370,8 @@ class ProjectDetailView(ProjectMemberMixin, DetailView):
         context = super().get_context_data(**kwargs)
         project = self.object
 
-        sections = list(project.sections.select_related('parent').order_by('order'))
+        sections, context['root_sections'], context['children_map'] = section_tree_with_counts(project)
         context['sections'] = sections
-
-        root_sections = []
-        children_map = {}
-        for section in sections:
-            if section.parent_id is None:
-                root_sections.append(section)
-            else:
-                children_map.setdefault(section.parent_id, []).append(section)
-        context['root_sections'] = root_sections
-        context['children_map'] = children_map
 
         items = list(Item.objects.filter(project=project).select_related(
             'section', 'assignee'
@@ -427,15 +385,6 @@ class ProjectDetailView(ProjectMemberMixin, DetailView):
         for item in items:
             items_by_section.setdefault(item.section_id, []).append(item)
         context['items_by_section'] = items_by_section
-
-        def count_items(section):
-            section.total_items = len(items_by_section.get(section.pk, [])) + sum(
-                count_items(child) for child in children_map.get(section.pk, [])
-            )
-            return section.total_items
-
-        for section in root_sections:
-            count_items(section)
 
         status_counts = {}
         for item in items:
@@ -478,17 +427,7 @@ class ProjectDetailView(ProjectMemberMixin, DetailView):
             }
         context['section_data'] = section_data
 
-        template_attributes = [
-            {
-                'id': attr.pk,
-                'name': attr.name,
-                'field_type': attr.field_type,
-                'options': attr.options,
-                'is_builtin': attr.is_builtin,
-            }
-            for attr in project.attributes.order_by('order')
-        ]
-        context['template_attributes'] = template_attributes
+        context['template_attributes'] = attribute_rows(project)
 
         return context
 

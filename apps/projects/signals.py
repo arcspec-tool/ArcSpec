@@ -86,7 +86,7 @@ def _project_collaborator_users(project, exclude_user=None, exclude_users=()):
     return User.objects.filter(id__in=user_ids)
 
 
-def _notify_project_users(project, actor, notification_type, message, link=None, exclude=()):
+def notify_project_users(project, actor, notification_type, message, link=None, exclude=()):
     if link is None:
         link = project.get_absolute_url()
     for user in _project_collaborator_users(project, exclude_user=actor, exclude_users=exclude):
@@ -99,6 +99,26 @@ def _notify_project_users(project, actor, notification_type, message, link=None,
             link=link,
         )
         push_notification(notification)
+
+
+def record_item_created(item, user):
+    AuditLog.objects.create(
+        project=item.project,
+        user=user,
+        action='created',
+        target_type='Item',
+        target_id=item.item_id,
+        details={'text': item.text[:100]},
+    )
+    create_version(
+        item.project, user,
+        _('Created item %(item)s') % {'item': item.item_id}
+    )
+    notify_project_users(
+        item.project, actor=user,
+        notification_type='item_created',
+        message=_('New item %(item)s created in %(project)s') % {'item': item.item_id, 'project': item.project.name},
+    )
 
 
 def _delete_file(field_file):
@@ -133,23 +153,7 @@ def item_post_save(sender, instance, created, **kwargs):
     user = _actor(instance, instance.created_by)
 
     if created:
-        AuditLog.objects.create(
-            project=instance.project,
-            user=user,
-            action='created',
-            target_type='Item',
-            target_id=instance.item_id,
-            details={'text': instance.text[:100]},
-        )
-        create_version(
-            instance.project, user,
-            _('Created item %(item)s') % {'item': instance.item_id}
-        )
-        _notify_project_users(
-            instance.project, actor=user,
-            notification_type='item_created',
-            message=_('New item %(item)s created in %(project)s') % {'item': instance.item_id, 'project': instance.project.name},
-        )
+        record_item_created(instance, user)
         return
 
     old_status = getattr(instance, '_old_status', None)
@@ -162,7 +166,7 @@ def item_post_save(sender, instance, created, **kwargs):
             target_id=instance.item_id,
             details={'old_status': old_status, 'new_status': instance.status},
         )
-        _notify_project_users(
+        notify_project_users(
             instance.project, actor=user,
             notification_type='status_changed',
             message=_('%(item)s status changed to %(status)s in %(project)s') % {
@@ -306,7 +310,7 @@ def membership_post_save(sender, instance, created, **kwargs):
                 link=instance.project.get_absolute_url(),
             )
             push_notification(notification)
-        _notify_project_users(
+        notify_project_users(
             instance.project, actor=user,
             notification_type='collaborator_added',
             message=_('%(user)s was added to %(project)s as %(role)s') % {

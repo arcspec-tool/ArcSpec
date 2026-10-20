@@ -128,25 +128,6 @@ class TraceabilityLinkSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = ['created_by', 'created_at']
 
-    def validate_source_item(self, value):
-        view = self.context.get('view')
-        if view and hasattr(view, 'get_project'):
-            project = view.get_project()
-            if value.project_id != project.pk:
-                raise serializers.ValidationError(
-                    _('Source item must belong to the current project.')
-                )
-        return value
-
-    def validate_target_item(self, value):
-        user = self.context['request'].user
-        if not value.project.get_user_role(user):
-            raise serializers.ValidationError(
-                _("You do not have access to the target item's project.")
-            )
-        return value
-
-
 class CommentSerializer(serializers.ModelSerializer):
     author_name = serializers.SerializerMethodField()
     author_initials = serializers.SerializerMethodField()
@@ -188,6 +169,7 @@ class ItemListSerializer(ItemImageURLMixin, serializers.ModelSerializer):
             'assignee', 'assignee_name', 'assignee_initials', 'assignee_color',
             'order', 'tags', 'attribute_values', 'image', 'image_caption', 'created_at', 'updated_at',
         ]
+        read_only_fields = ['item_id', 'order']
 
     def get_tags(self, obj):
         if hasattr(obj, '_prefetched_objects_cache') and 'item_tags' in obj._prefetched_objects_cache:
@@ -252,14 +234,8 @@ class ItemCreateSerializer(ItemImageURLMixin, serializers.ModelSerializer):
         read_only_fields = ['id', 'public_key']
 
     def validate(self, attrs):
-        before = attrs.get('insert_before')
-        after = attrs.get('insert_after')
-        if before and after:
+        if attrs.get('insert_before') and attrs.get('insert_after'):
             raise serializers.ValidationError(_('Send insert_before or insert_after, not both.'))
-        anchor = before or after
-        if anchor and anchor.section_id != getattr(attrs.get('section'), 'pk', None):
-            field = 'insert_before' if before else 'insert_after'
-            raise serializers.ValidationError({field: _('The item is not in the chosen section.')})
         return attrs
 
     def validate_text(self, value):
@@ -267,14 +243,6 @@ class ItemCreateSerializer(ItemImageURLMixin, serializers.ModelSerializer):
 
     def validate_image(self, value):
         return _validate_image_field(value)
-
-    def validate_section(self, value):
-        view = self.context.get('view')
-        if view and hasattr(view, 'get_project'):
-            project = view.get_project()
-            if value.project_id != project.pk:
-                raise serializers.ValidationError(_('Section does not belong to this project.'))
-        return value
 
 
 class ItemInlineEditSerializer(serializers.Serializer):

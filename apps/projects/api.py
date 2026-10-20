@@ -1,11 +1,13 @@
+from django.core.exceptions import ValidationError as DjangoValidationError
 from django.db import transaction
 from django.db import models
-from django.db.models import Count, F, Q
+from django.db.models import Count, Q
 from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django.utils.translation import gettext as _
 from django.utils.translation import ngettext
 from rest_framework import generics, status
+from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -29,6 +31,17 @@ from apps.projects.models import (
     attribute_user_names,
 )
 from apps.projects.permissions import IsProjectAdmin, IsProjectEditorOrAdmin, IsProjectMember, ProjectNotArchived
+from apps.projects.queries import (
+    attribute_row,
+    attribute_rows,
+    audit_log_queryset,
+    audit_row,
+    global_search,
+    item_detail_queryset,
+    item_list_queryset,
+    page_bounds,
+    version_list_queryset,
+)
 from apps.projects.sanitize import plain_text, sanitize_rich_text
 from apps.projects.serializers import (
     ALLOWED_IMAGE_EXTENSIONS,
@@ -51,6 +64,18 @@ from apps.projects.serializers import (
     item_image_url,
 )
 from apps.projects.signals import create_version
+from apps.projects.writes import (
+    create_comment,
+    create_item,
+    create_link,
+    replace_item_tags,
+    set_attribute_values,
+    update_item,
+)
+
+
+def refused(exc):
+    return ValidationError(exc.message_dict if hasattr(exc, 'error_dict') else exc.messages)
 
 
 class GlobalSearchView(APIView):
@@ -61,11 +86,7 @@ class GlobalSearchView(APIView):
         if len(q) < 2:
             return Response({'projects': [], 'items': []})
 
-        user_projects = Project.objects.for_user(request.user)
-
-        projects = user_projects.filter(
-            Q(name__icontains=q) | Q(description__icontains=q)
-        )[:5]
+        projects, items = global_search(request.user, q)
         project_data = [
             {
                 'id': p.pk,
@@ -76,12 +97,6 @@ class GlobalSearchView(APIView):
             }
             for p in projects
         ]
-
-        items = Item.objects.filter(
-            project__in=user_projects
-        ).filter(
-            Q(item_id__icontains=q) | Q(text__icontains=q)
-        ).select_related('project', 'section')[:10]
         item_data = [
             {
                 'id': i.pk,
@@ -152,24 +167,10 @@ class SectionReorderView(ProjectAPIMixin, APIView):
 
 
 
-def _save_attribute_values(item, attribute_values, project):
-    from apps.projects.models import ProjectAttribute
-    valid_attr_ids = set(
-        ProjectAttribute.objects.filter(project=project).values_list('pk', flat=True)
-    )
-    with transaction.atomic():
-        item.attribute_values.all().delete()
-        for av in attribute_values:
-            attr_id = av.get('attribute')
-            value = av.get('value', '')
-            try:
-                attr_id_int = int(attr_id)
-            except (ValueError, TypeError):
-                continue
-            if attr_id_int in valid_attr_ids:
-                ItemAttributeValue.objects.create(
-                    item=item, attribute_id=attr_id_int, value=str(value)
-                )
+def attribute_values_by_id(entries):
+    if not isinstance(entries, list) or not all(isinstance(entry, dict) for entry in entries):
+        raise DjangoValidationError({'attribute_values': _('Send a list of attribute values.')})
+    return {entry.get('attribute'): entry.get('value', '') for entry in entries}
 
 
 class ItemListCreateView(ProjectAPIMixin, generics.ListCreateAPIView):
@@ -181,67 +182,30 @@ class ItemListCreateView(ProjectAPIMixin, generics.ListCreateAPIView):
         return ItemListSerializer
 
     def get_queryset(self):
-        project = self.get_project()
-        qs = Item.objects.filter(project=project).select_related(
-            'section', 'assignee'
-        ).prefetch_related(
-            'item_tags__tag', 'attribute_values__attribute'
-        ).order_by('section__order', 'order')
-
-        status_filter = self.request.query_params.get('status')
-        if status_filter:
-            qs = qs.filter(status=status_filter)
-        priority_filter = self.request.query_params.get('priority')
-        if priority_filter:
-            qs = qs.filter(priority=priority_filter)
-        tag_filter = self.request.query_params.get('tag')
-        if tag_filter:
-            qs = qs.filter(item_tags__tag__name=tag_filter)
-        section_filter = self.request.query_params.get('section')
-        if section_filter:
-            qs = qs.filter(section_id=section_filter)
-        search = self.request.query_params.get('search')
-        if search and len(search) >= 2:
-            qs = qs.filter(Q(item_id__icontains=search) | Q(text__icontains=search))
-
-        return qs.distinct()
+        params = self.request.query_params
+        return item_list_queryset(
+            self.get_project(),
+            status=params.get('status'),
+            priority=params.get('priority'),
+            tag=params.get('tag'),
+            section=params.get('section'),
+            search=params.get('search'),
+        )
 
     def get_permissions(self):
         if self.request.method == 'POST':
             return [IsAuthenticated(), IsProjectEditorOrAdmin(), ProjectNotArchived()]
         return super().get_permissions()
 
-    @transaction.atomic
     def perform_create(self, serializer):
-        project = self.get_project()
-        locked_project = Project.objects.select_for_update().get(pk=project.pk)
-        item_id = locked_project.generate_item_id()
-        Project.objects.filter(pk=project.pk).update(
-            next_item_number=F('next_item_number') + 1
-        )
-        section = serializer.validated_data.get('section')
-        insert_before = serializer.validated_data.pop('insert_before', None)
-        insert_after = serializer.validated_data.pop('insert_after', None)
-        anchor = insert_before or insert_after
-        if anchor:
-            next_order = anchor.order if insert_before else anchor.order + 1
-            Item.objects.filter(
-                project=project, section=section, order__gte=next_order
-            ).update(order=F('order') + 1)
-        else:
-            max_order = Item.objects.filter(
-                project=project, section=section
-            ).aggregate(m=models.Max('order'))['m']
-            next_order = (max_order or 0) + 1
-        attribute_values = serializer.validated_data.pop('attribute_values', [])
-        serializer.save(
-            project=project,
-            item_id=item_id,
-            created_by=self.request.user,
-            order=next_order,
-        )
-        if attribute_values:
-            _save_attribute_values(serializer.instance, attribute_values, project)
+        data = dict(serializer.validated_data)
+        data['before'] = data.pop('insert_before', None)
+        data['after'] = data.pop('insert_after', None)
+        try:
+            data['attribute_values'] = attribute_values_by_id(data.pop('attribute_values', []))
+            serializer.instance = create_item(self.get_project(), self.request.user, data)
+        except DjangoValidationError as exc:
+            raise refused(exc)
 
 
 class ItemRetrieveUpdateDestroyView(ProjectAPIMixin, generics.RetrieveUpdateDestroyAPIView):
@@ -250,26 +214,22 @@ class ItemRetrieveUpdateDestroyView(ProjectAPIMixin, generics.RetrieveUpdateDest
     permission_classes = [IsAuthenticated, IsProjectMember]
 
     def get_queryset(self):
-        return Item.objects.filter(project=self.get_project()).select_related(
-            'section', 'assignee', 'created_by'
-        ).prefetch_related(
-            'attribute_values__attribute', 'attachments__uploaded_by', 'comments__author',
-            'outgoing_links__target_item__project', 'outgoing_links__source_item__project',
-            'incoming_links__source_item__project', 'incoming_links__target_item__project',
-        )
+        return item_detail_queryset(self.get_project())
 
     def get_permissions(self):
         if self.request.method in ('PUT', 'PATCH', 'DELETE'):
             return [IsAuthenticated(), IsProjectEditorOrAdmin(), ProjectNotArchived()]
         return super().get_permissions()
 
-    @transaction.atomic
     def perform_update(self, serializer):
         attribute_values = self.request.data.get('attribute_values')
-        serializer.instance._actor = self.request.user
-        serializer.save()
-        if attribute_values is not None:
-            _save_attribute_values(serializer.instance, attribute_values, self.get_project())
+        try:
+            with transaction.atomic():
+                update_item(self.get_project(), serializer.instance, self.request.user, serializer.validated_data)
+                if attribute_values is not None:
+                    set_attribute_values(serializer.instance, attribute_values_by_id(attribute_values))
+        except DjangoValidationError as exc:
+            raise refused(exc)
 
     def perform_destroy(self, instance):
         instance._actor = self.request.user
@@ -287,49 +247,12 @@ class ItemInlineEditView(ProjectAPIMixin, APIView):
 
         field = serializer.validated_data['field']
         value = serializer.validated_data['value']
-
-        if field == 'assignee':
-            if value:
-                assignee_id = int(value)
-                from apps.accounts.models import User
-                if not User.objects.filter(pk=assignee_id, is_active=True).exists():
-                    return Response(
-                        {'error': _('Assignee user not found or inactive.')},
-                        status=status.HTTP_400_BAD_REQUEST,
-                    )
-                if not ProjectMembership.objects.filter(
-                    project=project, user_id=assignee_id
-                ).exists() and not User.objects.filter(
-                    pk=assignee_id, system_role='admin'
-                ).exists():
-                    return Response(
-                        {'error': _('Assignee must be a project member.')},
-                        status=status.HTTP_400_BAD_REQUEST,
-                    )
-                item.assignee_id = assignee_id
-            else:
-                item.assignee = None
-        else:
-            if field == 'text':
-                value = sanitize_rich_text(value)
-            elif field == 'status':
-                valid_statuses = dict(Item.STATUS_CHOICES)
-                if value not in valid_statuses:
-                    return Response(
-                        {'error': _('Invalid status. Must be one of: %(choices)s') % {'choices': list(valid_statuses.keys())}},
-                        status=status.HTTP_400_BAD_REQUEST
-                    )
-            elif field == 'priority':
-                valid_priorities = dict(Item.PRIORITY_CHOICES)
-                if value not in valid_priorities:
-                    return Response(
-                        {'error': _('Invalid priority. Must be one of: %(choices)s') % {'choices': list(valid_priorities.keys())}},
-                        status=status.HTTP_400_BAD_REQUEST
-                    )
-            setattr(item, field, value)
-
-        item._actor = request.user
-        item.save()
+        if field == 'text':
+            value = sanitize_rich_text(value)
+        try:
+            update_item(project, item, request.user, {field: value})
+        except DjangoValidationError as exc:
+            return Response({'error': exc.messages[0]}, status=status.HTTP_400_BAD_REQUEST)
         return Response(ItemListSerializer(item, context={'view': self}).data)
 
 
@@ -518,7 +441,11 @@ class CommentListCreateView(ItemScopedMixin, generics.ListCreateAPIView):
         return Comment.objects.filter(item=self.get_item()).select_related('author')
 
     def perform_create(self, serializer):
-        serializer.save(item=self.get_item(), author=self.request.user)
+        data = serializer.validated_data
+        try:
+            serializer.instance = create_comment(self.get_item(), self.request.user, data['text'], data.get('parent'))
+        except DjangoValidationError as exc:
+            raise refused(exc)
 
 
 class CommentDestroyView(ProjectAPIMixin, generics.DestroyAPIView):
@@ -562,37 +489,10 @@ class ItemTagUpdateView(ProjectAPIMixin, APIView):
     def put(self, request, slug, item_key):
         project = self.get_project()
         item = get_object_or_404(Item, public_key=item_key, project=project)
-        tag_ids = request.data.get('tag_ids', [])
-        valid_tag_ids = set(
-            Tag.for_project(project).values_list('pk', flat=True)
-        )
-        for tag_id in tag_ids:
-            if tag_id not in valid_tag_ids:
-                return Response(
-                    {'error': _('Tag %(tag)s is not available for this project.') % {'tag': tag_id}},
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
-        old_tags = set(Tag.objects.filter(item_tags__item=item).values_list('name', flat=True))
-        ItemTag.objects.filter(item=item).delete()
-        for tag_id in tag_ids:
-            tag = get_object_or_404(Tag, pk=tag_id)
-            ItemTag.objects.create(item=item, tag=tag)
-        tags = Tag.objects.filter(item_tags__item=item)
-        new_tags = set(tags.values_list('name', flat=True))
-        added = new_tags - old_tags
-        removed = old_tags - new_tags
-        if added:
-            AuditLog.objects.create(
-                project=project, user=request.user, action='tag_added',
-                target_type='Item', target_id=item.item_id,
-                details={'tags': list(added)},
-            )
-        if removed:
-            AuditLog.objects.create(
-                project=project, user=request.user, action='tag_removed',
-                target_type='Item', target_id=item.item_id,
-                details={'tags': list(removed)},
-            )
+        try:
+            tags = replace_item_tags(project, item, request.data.get('tag_ids', []), request.user)
+        except DjangoValidationError as exc:
+            return Response({'error': exc.messages[0]}, status=status.HTTP_400_BAD_REQUEST)
         return Response(TagSerializer(tags, many=True).data)
 
 
@@ -690,14 +590,13 @@ class LinkListCreateView(ItemScopedMixin, generics.ListCreateAPIView):
         return super().get_permissions()
 
     def perform_create(self, serializer):
-        link = serializer.save(created_by=self.request.user)
-        source = link.source_item
-        target = link.target_item
-        AuditLog.objects.create(
-            project=source.project, user=self.request.user, action='link_added',
-            target_type='Item', target_id=source.item_id,
-            details={'link_type': link.link_type, 'target': target.item_id},
-        )
+        data = serializer.validated_data
+        try:
+            serializer.instance = create_link(
+                self.get_project(), self.request.user, data['source_item'], data['target_item'], data['link_type'],
+            )
+        except DjangoValidationError as exc:
+            raise refused(exc)
 
 
 class LinkDestroyView(ProjectAPIMixin, generics.DestroyAPIView):
@@ -871,9 +770,7 @@ class VersionListView(ProjectAPIMixin, generics.ListAPIView):
     permission_classes = [IsAuthenticated, IsProjectMember]
 
     def get_queryset(self):
-        return ProjectVersion.objects.filter(
-            project=self.get_project()
-        ).select_related('changed_by')
+        return version_list_queryset(self.get_project())
 
 
 class VersionRestoreView(ProjectAPIMixin, APIView):
@@ -993,53 +890,35 @@ class VersionRestoreView(ProjectAPIMixin, APIView):
 
 
 
-AUDIT_ACTION_GROUPS = {
-    'collaboration': ('collaborator_added', 'collaborator_removed', 'collaborator_role_changed'),
-}
-
-
 class AuditLogListView(ProjectAPIMixin, APIView):
     permission_classes = [IsAuthenticated, IsProjectMember]
 
     def get(self, request, slug):
-        project = self.get_project()
-        qs = AuditLog.objects.filter(project=project).select_related('user')
-
-        action_filter = request.query_params.get('action')
-        if action_filter in AUDIT_ACTION_GROUPS:
-            qs = qs.filter(action__in=AUDIT_ACTION_GROUPS[action_filter])
-        elif action_filter and action_filter != 'all':
-            qs = qs.filter(action=action_filter)
-        user_filter = request.query_params.get('user')
-        if user_filter:
-            qs = qs.filter(user_id=user_filter)
-        target_id_filter = request.query_params.get('target_id')
-        if target_id_filter:
-            qs = qs.filter(target_type='Item', target_id=target_id_filter)
-
-        offset = int(request.query_params.get('offset', 0))
-        limit = int(request.query_params.get('limit', 50))
+        params = request.query_params
+        qs = audit_log_queryset(
+            self.get_project(),
+            action=params.get('action'),
+            user=params.get('user'),
+            item_id=params.get('target_id'),
+        )
+        try:
+            offset, limit = page_bounds(params.get('offset'), params.get('limit'), 50, 100)
+        except DjangoValidationError as exc:
+            raise refused(exc)
         entries = list(qs[offset:offset + limit + 1])
         has_more = len(entries) > limit
-        entries = entries[:limit]
 
         data = []
-        for entry in entries:
-            icon_data = AuditLog.ACTION_ICONS.get(entry.action, ('bi-circle', 'text-muted'))
-            data.append({
-                'id': entry.pk,
-                'action': entry.action,
-                'action_display': entry.get_action_display(),
-                'target_type': entry.target_type,
-                'target_id': entry.target_id,
-                'user_name': str(entry.user),
+        for entry in entries[:limit]:
+            icon, icon_color = AuditLog.ACTION_ICONS.get(entry.action, ('bi-circle', 'text-muted'))
+            row = audit_row(entry)
+            row.update({
                 'user_initials': entry.user.get_initials(),
                 'user_color': entry.user.avatar_color,
-                'icon': icon_data[0],
-                'icon_color': icon_data[1],
-                'details': entry.details,
-                'created_at': entry.created_at.isoformat(),
+                'icon': icon,
+                'icon_color': icon_color,
             })
+            data.append(row)
 
         return Response({
             'results': data,
@@ -1052,21 +931,7 @@ class ProjectAttributeListCreateView(ProjectAPIMixin, APIView):
     permission_classes = [IsAuthenticated, IsProjectEditorOrAdmin, ProjectNotArchived]
 
     def get(self, request, slug):
-        project = self.get_project()
-        attrs = project.attributes.order_by('order')
-        data = [
-            {
-                'id': a.pk,
-                'public_key': str(a.public_key),
-                'name': a.name,
-                'field_type': a.field_type,
-                'options': a.options,
-                'is_builtin': a.is_builtin,
-                'order': a.order,
-            }
-            for a in attrs
-        ]
-        return Response(data)
+        return Response(attribute_rows(self.get_project()))
 
     def post(self, request, slug):
         project = self.get_project()
@@ -1097,15 +962,7 @@ class ProjectAttributeListCreateView(ProjectAPIMixin, APIView):
             options=options,
             order=new_order,
         )
-        return Response({
-            'id': attr.pk,
-            'public_key': str(attr.public_key),
-            'name': attr.name,
-            'field_type': attr.field_type,
-            'options': attr.options,
-            'is_builtin': attr.is_builtin,
-            'order': attr.order,
-        }, status=status.HTTP_201_CREATED)
+        return Response(attribute_row(attr), status=status.HTTP_201_CREATED)
 
 
 class ProjectAttributeUpdateDeleteView(ProjectAPIMixin, APIView):
@@ -1141,15 +998,7 @@ class ProjectAttributeUpdateDeleteView(ProjectAPIMixin, APIView):
             attr.options = options
 
         attr.save()
-        return Response({
-            'id': attr.pk,
-            'public_key': str(attr.public_key),
-            'name': attr.name,
-            'field_type': attr.field_type,
-            'options': attr.options,
-            'is_builtin': attr.is_builtin,
-            'order': attr.order,
-        })
+        return Response(attribute_row(attr))
 
     def delete(self, request, slug, public_key):
         project = self.get_project()
