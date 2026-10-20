@@ -27,6 +27,9 @@
     </div>
 </main>
 {% endblock %}
-{% block extra_js %}
+{% block bundle_js %}
 <script src="{% static 'js/auth.js' %}"></script>
+{% endblock %}
+{% block extra_js %}
+{% if form.captcha_provider %}<script id="captchaScript" src="{{ form.captcha_provider.script_url }}" nonce="{{ request.csp_nonce }}" async defer></script>{% endif %}
 {% endblock %}

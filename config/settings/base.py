@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'crispy_forms',
     'crispy_bootstrap5',
+    'compressor',
 
     'apps.core',
     'apps.accounts',
@@ -89,6 +90,17 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
+CAPTCHA_KEYS = {
+    'turnstile': {
+        'site_key': env('TURNSTILE_SITE_KEY', default=''),
+        'secret_key': env('TURNSTILE_SECRET_KEY', default=''),
+    },
+    'hcaptcha': {
+        'site_key': env('HCAPTCHA_SITE_KEY', default=''),
+        'secret_key': env('HCAPTCHA_SECRET_KEY', default=''),
+    },
+}
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.SessionAuthentication',
@@ -118,6 +130,16 @@ LOCALE_PATHS = [BASE_DIR / 'locale']
 
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'compressor.finders.CompressorFinder',
+]
+COMPRESS_OFFLINE = True
+COMPRESS_FILTERS = {
+    'css': ['compressor.filters.css_default.CssAbsoluteFilter'],
+    'js': [],
+}
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
@@ -170,9 +192,9 @@ AUTH_PASSWORD_VALIDATORS = [
 CONTENT_SECURITY_POLICY = {
     "DIRECTIVES": {
         "default-src": ["'self'"],
-        "script-src": ["'self'", "cdn.jsdelivr.net", NONCE],
-        "style-src": ["'self'", "'unsafe-inline'", "cdn.jsdelivr.net", "fonts.googleapis.com"],
-        "font-src": ["'self'", "cdn.jsdelivr.net", "fonts.gstatic.com"],
+        "script-src": ["'self'", NONCE],
+        "style-src": ["'self'", "'unsafe-inline'"],
+        "font-src": ["'self'"],
         "img-src": ["'self'", "data:"],
         "connect-src": ["'self'"],
     }

@@ -40,6 +40,7 @@ You return to the Dashboard.
 ![Sign-in page with email and password](images/02-sign-in-password.png)
 
 Both sign-in methods can be enabled at the same time.
+If the administrator has turned on a captcha, a verification box is shown above **Sign in** and **Send link**. Complete it before you click the button.
 
 ## Reset a forgotten password
 

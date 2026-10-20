@@ -3,6 +3,7 @@ from functools import cache
 from smtplib import SMTPException
 
 from allauth.socialaccount.providers.microsoft.views import oauth2_login
+from csp.decorators import csp_update
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login, logout
@@ -16,6 +17,7 @@ from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.decorators import method_decorator
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy
@@ -23,6 +25,7 @@ from django.views import View
 from django.views.generic import TemplateView, UpdateView
 
 from apps.accounts.auth_methods import current
+from apps.accounts.captcha import csp_sources
 from apps.accounts.emails import link_days, send_password_link_email
 from apps.accounts.forms import EditProfileForm, EmailForm, ExportDefaultsForm, LoginForm, NotificationSettingsForm, microsoft_account_linked
 from apps.accounts.modals import change_password_context, edit_profile_context, password_origin, password_return_url
@@ -61,6 +64,7 @@ def entra_login(request):
     return oauth2_login(request)
 
 
+@method_decorator(csp_update(csp_sources()), name='dispatch')
 class LoginView(TemplateView):
     template_name = 'accounts/login.html'
 
@@ -80,21 +84,26 @@ class LoginView(TemplateView):
             return password_login_off(request)
         form = LoginForm(request.POST)
         email = form.data.get('email', '').strip()
-        if throttled(request, LoginAddressThrottle, LoginEmailThrottle):
-            messages.error(request, _('Too many attempts. Try again in a few minutes.'))
-            return self.render_to_response(self.get_context_data(form=LoginForm(initial={'email': email})))
+        if throttled(request, LoginAddressThrottle):
+            return self.refuse(email, _('Too many attempts. Try again in a few minutes.'))
+        if form.has_error('captcha'):
+            return self.refuse(email, form.errors['captcha'][0])
+        if throttled(request, LoginEmailThrottle):
+            return self.refuse(email, _('Too many attempts. Try again in a few minutes.'))
         password = form.data.get('password', '')
         user = self.authenticate(email if form.is_valid() else '', password)
         if user is None:
             logger.info('Sign-in failed for %s from %s', email, request.META.get('REMOTE_ADDR'))
-            messages.error(request, _('Incorrect email address or password.'))
-            return self.render_to_response(self.get_context_data(form=LoginForm(initial={'email': email})))
+            return self.refuse(email, _('Incorrect email address or password.'))
         if not user.is_active:
             logger.info('Sign-in refused for deactivated %s from %s', email, request.META.get('REMOTE_ADDR'))
-            messages.error(request, _('Your account has been deactivated. Contact a system administrator.'))
-            return self.render_to_response(self.get_context_data(form=LoginForm(initial={'email': email})))
+            return self.refuse(email, _('Your account has been deactivated. Contact a system administrator.'))
         login(request, user, backend='django.contrib.auth.backends.ModelBackend')
         return redirect(self.safe_next(request) or settings.LOGIN_REDIRECT_URL)
+
+    def refuse(self, email, message):
+        messages.error(self.request, message)
+        return self.render_to_response(self.get_context_data(form=LoginForm(initial={'email': email})))
 
     @staticmethod
     def authenticate(email, password):
@@ -125,6 +134,7 @@ class LogoutView(View):
         return redirect('/')
 
 
+@method_decorator(csp_update(csp_sources()), name='dispatch')
 class ForgotPasswordView(TemplateView):
     template_name = 'accounts/forgot_password.html'
 
@@ -140,9 +150,14 @@ class ForgotPasswordView(TemplateView):
 
     def post(self, request, *args, **kwargs):
         form = EmailForm(request.POST)
+        if throttled(request, ForgotAddressThrottle):
+            messages.error(request, _('Too many attempts. Try again in a few minutes.'))
+            return self.render_to_response(self.get_context_data(form=EmailForm(initial={'email': form.data.get('email', '')})))
         if not form.is_valid():
+            for error in form.errors.get('captcha', []):
+                messages.error(request, error)
             return self.render_to_response(self.get_context_data(form=form))
-        if throttled(request, ForgotAddressThrottle, ForgotEmailThrottle):
+        if throttled(request, ForgotEmailThrottle):
             messages.error(request, _('Too many attempts. Try again in a few minutes.'))
             return self.render_to_response(self.get_context_data(form=form))
         email = form.cleaned_data['email']

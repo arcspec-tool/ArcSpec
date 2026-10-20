@@ -84,9 +84,12 @@
 {% endif %}
 {% endblock %}
 
-{% block extra_js %}
+{% block bundle_js %}
 {% load static %}
 <script src="{% static 'js/templates.js' %}"></script>
+{% endblock %}
+
+{% block extra_js %}
 <script nonce="{{ request.csp_nonce }}">
 (function() {
     'use strict';

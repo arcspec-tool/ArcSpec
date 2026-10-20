@@ -114,5 +114,6 @@ The tag is removed from every item that has it.
 
 - **Microsoft sign-in** shows **Sign in with Microsoft** on the sign-in page.
 - **Password sign-in** shows the email and password form, with **Forgot password?**, on the sign-in page.
+- **Captcha** adds a verification step to the password sign-in form and the forgot password form. It is shown only while **Password sign-in** is on. Choose **Off**, **Cloudflare Turnstile** or **hCaptcha**. A provider without keys on the server is greyed out and cannot be selected.
 
 At least one sign-in method must stay on.

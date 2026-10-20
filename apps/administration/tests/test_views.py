@@ -1,3 +1,5 @@
+import re
+
 from django.core import mail
 from django.db import IntegrityError, connection, transaction
 from django.test import TestCase, override_settings
@@ -500,3 +502,28 @@ class AdminAuthenticationSettingsTest(TestCase):
         self.client.force_login(UserFactory())
         self.assertEqual(self.save(password_login_enabled='on').status_code, 403)
         self.assertEqual(self.stored(), (True, False))
+
+    def test_the_captcha_choice_is_hidden_while_password_sign_in_is_off(self):
+        for password in (False, True):
+            set_methods(True, password)
+            with self.subTest(password=password):
+                html = self.client.get('/admin-panel/?tab=system').content.decode()
+                tag = re.search(r'<fieldset[^>]*id="captchaSetting"[^>]*>', html).group(0)
+                self.assertEqual(' hidden' in tag, not password)
+
+    @override_settings(CAPTCHA_KEYS={'turnstile': {'site_key': 'site', 'secret_key': 'secret'}, 'hcaptcha': {'site_key': '', 'secret_key': ''}})
+    def test_a_captcha_provider_without_keys_is_disabled_on_the_card(self):
+        set_methods(True, True)
+        html = self.client.get('/admin-panel/?tab=system').content.decode()
+        for option, disabled in (('id_captcha_provider_0', False), ('id_captcha_provider_1', False), ('id_captcha_provider_2', True)):
+            with self.subTest(option=option):
+                tag = re.search(rf'<input[^>]*id="{option}"[^>]*>', html).group(0)
+                self.assertEqual(' disabled' in tag, disabled)
+
+    @override_settings(CAPTCHA_KEYS={'turnstile': {'site_key': 'site', 'secret_key': 'secret'}, 'hcaptcha': {'site_key': '', 'secret_key': ''}})
+    def test_only_a_configured_captcha_provider_can_be_selected(self):
+        response = self.save(entra_login_enabled='on', captcha_provider='hcaptcha')
+        self.assertEqual(messages_of(response), ['The captcha provider cannot be selected: it is not configured in this environment.'])
+        self.assertEqual(SystemSettings.load().captcha_provider, '')
+        self.save(entra_login_enabled='on', captcha_provider='turnstile')
+        self.assertEqual(SystemSettings.load().captcha_provider, 'turnstile')

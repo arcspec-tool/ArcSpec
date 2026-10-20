@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load static core_tags i18n %}
+{% load static core_tags i18n compress %}
 
 {% block body_class %}page-project{% endblock %}
 {% block title %}{{ project.name }} - ArcSpec{% endblock %}
@@ -50,11 +50,10 @@
 
 {% include "projects/includes/_audit_trail.html" %}
 {% include "projects/includes/_version_history.html" %}
-{% endblock %}
 
-{% block extra_js %}
 <div id="projectData" class="d-none"
      data-slug="{{ project.slug }}"
+     data-editor-css="{% static 'css/inter.css' %}"
      data-id="{{ project.pk }}"
      data-role="{{ user_role }}"
      data-editor="{{ is_editor|yesno:'true,false' }}"
@@ -65,8 +64,24 @@
 {{ template_attributes|json_script:"template-attributes" }}
 <script nonce="{{ request.csp_nonce }}">var SECTION_DATA = JSON.parse(document.getElementById('section-data').textContent);
 var TEMPLATE_ATTRIBUTES = JSON.parse(document.getElementById('template-attributes').textContent);</script>
-<script src="https://cdn.jsdelivr.net/npm/tinymce@7.9.3/tinymce.min.js" integrity="sha384-Ovv1ZPEkpW4ElBKDKaEIPkNfTTadFpifFwNJOBnuStg0PQ0RBln5Lsf9AI8BsCmx" crossorigin="anonymous"></script>
+{% endblock %}
+
+{% block bundle_js %}
 <script src="{% static 'js/project.js' %}"></script>
 <script src="{% static 'js/advanced.js' %}"></script>
 <script src="{% static 'js/collaboration.js' %}"></script>
+{% endblock %}
+
+{% block extra_js %}
+{% compress js file tinymce %}
+<script src="{% static 'vendor/tinymce/tinymce.min.js' %}"></script>
+<script src="{% static 'vendor/tinymce/icons/default/icons.min.js' %}"></script>
+<script src="{% static 'vendor/tinymce/themes/silver/theme.min.js' %}"></script>
+<script src="{% static 'vendor/tinymce/models/dom/model.min.js' %}"></script>
+<script src="{% static 'vendor/tinymce/skins/ui/oxide/skin.js' %}"></script>
+<script src="{% static 'vendor/tinymce/skins/ui/oxide/content.js' %}"></script>
+<script src="{% static 'vendor/tinymce/skins/content/default/content.js' %}"></script>
+<script src="{% static 'vendor/tinymce/plugins/lists/plugin.min.js' %}"></script>
+<script src="{% static 'vendor/tinymce/plugins/table/plugin.min.js' %}"></script>
+{% endcompress %}
 {% endblock %}

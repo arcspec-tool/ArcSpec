@@ -34,6 +34,10 @@ docker compose exec web python manage.py migrate
 | `ENTRA_CLIENT_ID` | Microsoft Entra ID application ID. | No |
 | `ENTRA_CLIENT_SECRET` | Microsoft Entra ID client secret. | No |
 | `AUTH_CALLBACK_PREFIX` | Any URL-safe string. Redirect URI to register in Entra: `<SITE_URL>/auth/callback/<AUTH_CALLBACK_PREFIX>/microsoft/login/callback/` | Yes |
+| `TURNSTILE_SITE_KEY` | Cloudflare Turnstile site key. Empty disables Turnstile in the Captcha setting. | No |
+| `TURNSTILE_SECRET_KEY` | Cloudflare Turnstile secret key. | No |
+| `HCAPTCHA_SITE_KEY` | hCaptcha site key. Empty disables hCaptcha in the Captcha setting. | No |
+| `HCAPTCHA_SECRET_KEY` | hCaptcha secret key. | No |
 | `EMAIL_HOST` | SMTP server host name without scheme, e.g. `smtp.example.com`. | Yes |
 | `EMAIL_PORT` | SMTP port, default 587. | No |
 | `EMAIL_HOST_USER` | SMTP user. | Yes |
@@ -114,3 +118,5 @@ PDF export:
 ## License
 
 [AGPL-3.0](LICENSE)
+
+`apps/core/static/vendor/` holds unmodified third-party files under their own licences: Bootstrap 5.3.3 and Bootstrap Icons 1.11.3 (MIT), TinyMCE 7.9.3 (GPL-2.0-or-later), Inter 4.1 (OFL-1.1).

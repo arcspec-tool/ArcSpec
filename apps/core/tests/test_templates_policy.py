@@ -4,8 +4,6 @@ from django.conf import settings
 from django.test import SimpleTestCase
 
 INLINE_HANDLER = re.compile(r'<[^>]*\son[a-z]+\s*=', re.IGNORECASE)
-CDN_TAG = re.compile(r'<(?:script|link)\b[^>]*?\b(?:src|href)="(https://cdn\.jsdelivr\.net/[^"]+)"[^>]*>', re.IGNORECASE)
-EXACT_VERSION = re.compile(r'^https://cdn\.jsdelivr\.net/npm/[^/@]+@\d+\.\d+\.\d+/')
 BROWSER_DIALOG = re.compile(r'(?<![\w.])(?:window\.)?(?:confirm|alert|prompt)\(')
 
 
@@ -28,20 +26,6 @@ class TemplatePolicyTest(SimpleTestCase):
                 line = text.count('\n', 0, match.start()) + 1
                 hits.append(f'{relative}:{line}')
         self.assertEqual(hits, [])
-
-    def test_every_cdn_asset_is_pinned_and_carries_an_integrity_hash(self):
-        problems = []
-        seen = 0
-        for relative, text in templates():
-            for match in CDN_TAG.finditer(text):
-                seen += 1
-                tag, url = match.group(0), match.group(1)
-                if not EXACT_VERSION.match(url):
-                    problems.append(f'{relative}: {url} is not pinned to an exact version')
-                if 'integrity="sha384-' not in tag or 'crossorigin="anonymous"' not in tag:
-                    problems.append(f'{relative}: {url} has no integrity hash')
-        self.assertEqual(problems, [])
-        self.assertGreater(seen, 0)
 
     def test_no_script_opens_a_browser_dialog(self):
         hits = []

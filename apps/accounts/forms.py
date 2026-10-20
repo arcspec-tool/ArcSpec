@@ -1,10 +1,11 @@
 from allauth.socialaccount.models import SocialAccount
 from django import forms
 
+from apps.accounts.captcha import CaptchaFormMixin
 from apps.accounts.models import User, UserSettings
 
 
-class LoginForm(forms.Form):
+class LoginForm(CaptchaFormMixin, forms.Form):
     email = forms.EmailField(
         widget=forms.EmailInput(attrs={'class': 'form-control', 'autocomplete': 'username', 'autofocus': True})
     )
@@ -19,7 +20,7 @@ class LoginForm(forms.Form):
             del self.fields['email'].widget.attrs['autofocus']
 
 
-class EmailForm(forms.Form):
+class EmailForm(CaptchaFormMixin, forms.Form):
     email = forms.EmailField(
         widget=forms.EmailInput(attrs={'class': 'form-control', 'autocomplete': 'email', 'autofocus': True})
     )

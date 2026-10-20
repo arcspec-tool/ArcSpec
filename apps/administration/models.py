@@ -13,6 +13,12 @@ class SystemSettings(models.Model):
     auto_delete_days = models.PositiveIntegerField(default=365)
     entra_login_enabled = models.BooleanField(default=True)
     password_login_enabled = models.BooleanField(default=False)
+    captcha_provider = models.CharField(
+        max_length=20,
+        blank=True,
+        default='',
+        choices=[('', _('Off')), ('turnstile', _('Cloudflare Turnstile')), ('hcaptcha', _('hCaptcha'))],
+    )
 
     class Meta:
         verbose_name = _('System Settings')
