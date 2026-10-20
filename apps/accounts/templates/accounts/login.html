@@ -32,6 +32,7 @@
         {{ form.email }}
     </div>
     {% include "accounts/includes/_password_field.html" with field=form.password label=_("Password") autocomplete="current-password" autofocus=form.password_first %}
+    {% if form.captcha_provider %}<div class="mb-3">{{ form.captcha }}</div>{% endif %}
     <button type="submit" class="btn btn-primary w-100" data-busy-label="{% translate 'Signing in...' %}">{% translate "Sign in" %}</button>
     <p class="login-aside"><a href="{% url 'forgot_password' %}">{% translate "Forgot password?" %}</a></p>
 </form>

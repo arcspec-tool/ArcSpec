@@ -89,6 +89,17 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
+CAPTCHA_KEYS = {
+    'turnstile': {
+        'site_key': env('TURNSTILE_SITE_KEY', default=''),
+        'secret_key': env('TURNSTILE_SECRET_KEY', default=''),
+    },
+    'hcaptcha': {
+        'site_key': env('HCAPTCHA_SITE_KEY', default=''),
+        'secret_key': env('HCAPTCHA_SECRET_KEY', default=''),
+    },
+}
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.SessionAuthentication',

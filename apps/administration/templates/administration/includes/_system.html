@@ -99,6 +99,17 @@
                 </div>
                 <div class="form-check form-switch">{{ authentication_form.password_login_enabled }}</div>
             </div>
+            <fieldset class="settings-choice" id="captchaSetting" data-shown-by="{{ authentication_form.password_login_enabled.id_for_label }}"{% if not authentication_form.password_login_enabled.value %} hidden{% endif %}>
+                <legend>{% translate "Captcha" %}</legend>
+                <p class="settings-choice-help">{% translate "On the password sign-in and forgot password forms." %}</p>
+                {% if authentication_form.captcha_unconfigured %}<p class="settings-choice-help">{% blocktranslate with providers=authentication_form.captcha_unconfigured.values|join:", " %}Not configured in this environment: {{ providers }}.{% endblocktranslate %}</p>{% endif %}
+                <div class="segmented">
+                    {% for radio in authentication_form.captcha_provider %}
+                    <input type="radio" class="btn-check" name="{{ radio.data.name }}" id="{{ radio.id_for_label }}" value="{{ radio.data.value }}"{% if radio.data.selected %} checked{% endif %}{% if radio.data.value in authentication_form.captcha_unconfigured %} disabled{% endif %}>
+                    <label class="segmented-link" for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>
+                    {% endfor %}
+                </div>
+            </fieldset>
             <div class="settings-actions">
                 <button type="submit" class="btn btn-primary btn-sm" disabled><i class="bi bi-check-lg me-1"></i>{% translate "Save" %}</button>
             </div>

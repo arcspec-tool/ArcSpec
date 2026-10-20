@@ -40,6 +40,14 @@
         apply();
     });
 
+    document.querySelectorAll('[data-shown-by]').forEach(function (element) {
+        var toggle = document.getElementById(element.getAttribute('data-shown-by'));
+        if (!toggle) return;
+        var apply = function () { element.hidden = !toggle.checked; };
+        document.addEventListener('change', apply);
+        apply();
+    });
+
     var search = document.getElementById('adminUserSearch');
     if (search) {
         search.addEventListener('search', function () {

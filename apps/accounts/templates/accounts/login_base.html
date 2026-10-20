@@ -29,4 +29,5 @@
 {% endblock %}
 {% block extra_js %}
 <script src="{% static 'js/auth.js' %}"></script>
+{% if form.captcha_provider %}<script id="captchaScript" src="{{ form.captcha_provider.script_url }}" nonce="{{ request.csp_nonce }}" async defer></script>{% endif %}
 {% endblock %}

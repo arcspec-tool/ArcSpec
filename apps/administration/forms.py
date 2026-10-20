@@ -1,6 +1,7 @@
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
+from apps.accounts import captcha
 from apps.accounts.auth_methods import entra_configured, validate
 from apps.accounts.models import User
 from apps.administration.models import SystemSettings
@@ -91,10 +92,11 @@ class SystemSettingsAuthenticationForm(forms.ModelForm):
 
     class Meta:
         model = SystemSettings
-        fields = ['entra_login_enabled', 'password_login_enabled']
+        fields = ['entra_login_enabled', 'password_login_enabled', 'captcha_provider']
         widgets = {
             'entra_login_enabled': BootstrapSwitchInput(attrs={'class': 'form-check-input', 'role': 'switch'}),
             'password_login_enabled': BootstrapSwitchInput(attrs={'class': 'form-check-input', 'role': 'switch'}),
+            'captcha_provider': forms.RadioSelect,
         }
 
     def __init__(self, *args, **kwargs):
@@ -103,12 +105,18 @@ class SystemSettingsAuthenticationForm(forms.ModelForm):
         if not self.entra_configured:
             self.fields['entra_login_enabled'].widget.attrs['disabled'] = True
             self.initial['entra_login_enabled'] = False
+        self.captcha_unconfigured = {
+            value: label for value, label in self.fields['captcha_provider'].choices if value and not captcha.configured(value)
+        }
 
     def clean(self):
         cleaned = super().clean()
         for error in validate(cleaned.get('entra_login_enabled', False), cleaned.get('password_login_enabled', False)):
             if error != str(self.both_off):
                 self.add_error(None, error)
+        provider = cleaned.get('captcha_provider')
+        if provider and not captcha.configured(provider):
+            self.add_error('captcha_provider', _('The captcha provider cannot be selected: it is not configured in this environment.'))
         return cleaned
 
 
