@@ -50,9 +50,7 @@
 
 {% include "projects/includes/_audit_trail.html" %}
 {% include "projects/includes/_version_history.html" %}
-{% endblock %}
 
-{% block extra_js %}
 <div id="projectData" class="d-none"
      data-slug="{{ project.slug }}"
      data-id="{{ project.pk }}"
@@ -65,8 +63,14 @@
 {{ template_attributes|json_script:"template-attributes" }}
 <script nonce="{{ request.csp_nonce }}">var SECTION_DATA = JSON.parse(document.getElementById('section-data').textContent);
 var TEMPLATE_ATTRIBUTES = JSON.parse(document.getElementById('template-attributes').textContent);</script>
-<script src="https://cdn.jsdelivr.net/npm/tinymce@7.9.3/tinymce.min.js" integrity="sha384-Ovv1ZPEkpW4ElBKDKaEIPkNfTTadFpifFwNJOBnuStg0PQ0RBln5Lsf9AI8BsCmx" crossorigin="anonymous"></script>
+{% endblock %}
+
+{% block bundle_js %}
 <script src="{% static 'js/project.js' %}"></script>
 <script src="{% static 'js/advanced.js' %}"></script>
 <script src="{% static 'js/collaboration.js' %}"></script>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/tinymce@7.9.3/tinymce.min.js" integrity="sha384-Ovv1ZPEkpW4ElBKDKaEIPkNfTTadFpifFwNJOBnuStg0PQ0RBln5Lsf9AI8BsCmx" crossorigin="anonymous"></script>
 {% endblock %}

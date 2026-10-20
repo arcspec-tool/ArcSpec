@@ -164,8 +164,11 @@
 </div>
 {% endblock %}
 
-{% block extra_js %}{% translate "Could not save the change. Try again." as save_failed_text %}
+{% block bundle_js %}
 <script src="{% static 'js/auth.js' %}"></script>
+{% endblock %}
+
+{% block extra_js %}{% translate "Could not save the change. Try again." as save_failed_text %}
 <script nonce="{{ request.csp_nonce }}">
 (function() {
     'use strict';

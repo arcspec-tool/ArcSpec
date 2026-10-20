@@ -153,8 +153,11 @@
 </div>
 {% endblock %}
 
-{% block extra_js %}
+{% block bundle_js %}
 <script src="{% static 'js/projects.js' %}"></script>
+{% endblock %}
+
+{% block extra_js %}
 {% translate "Could not mark the notification as read." as mark_read_error %}{% translate "Could not mark the notifications as read." as mark_all_read_error %}{% translate "No more notifications" as no_more_notifications %}<script nonce="{{ request.csp_nonce }}">
 (function() {
     'use strict';

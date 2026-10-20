@@ -14,3 +14,4 @@ factory-boy==3.3.1
 coverage==7.6.10
 uvicorn[standard]==0.54.0
 whitenoise==6.8.2
+django-compressor==4.6.0

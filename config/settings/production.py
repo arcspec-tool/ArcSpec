@@ -49,3 +49,4 @@ STORAGES = {
         'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage',
     },
 }
+WHITENOISE_IMMUTABLE_FILE_TEST = r'^/static/.+\.[0-9a-f]{12}\.\w+$'

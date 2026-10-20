@@ -1,10 +1,10 @@
-from .base import *  # noqa: F401,F403
-from .base import env
+from .base import *
+from .base import MIDDLEWARE, env
 
 DEBUG = True
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['localhost'])
 
-MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')  # noqa: F405
+MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
