@@ -1,0 +1,23 @@
+{% load i18n %}<section class="card dash-panel" id="connected-apps" aria-labelledby="connectedAppsHeading">
+    <div class="card-header">
+        <div>
+            <h2 class="dash-panel-title" id="connectedAppsHeading">{% translate "Connected apps" %}</h2>
+            <p class="settings-panel-sub">{% translate "AI assistants you signed in to ArcSpec. Each one works with your roles in your projects." %}</p>
+        </div>
+    </div>
+    {% if not mcp_enabled %}<p class="settings-panel-sub px-3 pt-3 mb-0" data-mcp-off>{% translate "An administrator has turned off access for AI assistants. Connected apps cannot use ArcSpec until it is turned on again; you can still disconnect them." %}</p>{% endif %}
+    {% for connection in connections %}
+    <div class="settings-row" data-connection="{{ connection.public_key }}">
+        <div class="settings-row-text">
+            <span class="d-block small fw-medium text-body">{{ connection.name }}</span>
+            <p>{{ connection.host }} &middot; {% if connection.write %}{% translate "Read and write" %}{% else %}{% translate "Read only" %}{% endif %} &middot; {% blocktranslate trimmed with date=connection.connected_at|date:"j M Y" %}Connected {{ date }}{% endblocktranslate %} &middot; {% if connection.last_used_at %}{% blocktranslate trimmed with date=connection.last_used_at|date:"j M Y" %}Last used {{ date }}{% endblocktranslate %}{% else %}{% translate "Not used yet" %}{% endif %}</p>
+        </div>
+        <form method="post" action="{% url 'mcp_disconnect' public_key=connection.public_key %}" data-confirm="{% blocktranslate trimmed with name=connection.name %}Disconnect {{ name }}? It is signed out of ArcSpec and must sign in again to connect.{% endblocktranslate %}" data-confirm-title="{% translate 'Disconnect App' %}" data-confirm-button="{% translate 'Disconnect' %}" data-confirm-class="btn-danger">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-sm btn-outline-danger">{% translate "Disconnect" %}</button>
+        </form>
+    </div>
+    {% empty %}
+    <p class="settings-panel-sub px-3 py-3 mb-0">{% translate "No apps are connected." %}</p>
+    {% endfor %}
+</section>

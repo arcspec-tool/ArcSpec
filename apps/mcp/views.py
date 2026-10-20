@@ -1,10 +1,13 @@
 from urllib.parse import urlencode, urlsplit
 
+from django.contrib import messages
 from django.contrib.auth.views import redirect_to_login
 from django.http import Http404
-from django.shortcuts import resolve_url
+from django.shortcuts import get_object_or_404, redirect, resolve_url
+from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.utils.translation import gettext as _
+from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from oauth2_provider.exceptions import OAuthToolkitError
 from oauth2_provider.settings import oauth2_settings
@@ -13,8 +16,10 @@ from oauth2_provider.views import (
 )
 from oauthlib.oauth2.rfc6749.errors import CustomOAuth2Error
 
-from apps.mcp import auth
+from apps.core.mixins import LoginRequiredMixin
+from apps.mcp import auth, connections
 from apps.mcp.forms import ConsentForm
+from apps.mcp.models import Connection
 
 
 class SwitchMixin:
@@ -91,3 +96,14 @@ class ConsentView(SwitchMixin, AuthorizationView):
             context['client_name'] = application.name or _('Unnamed app')
             context['client_host'] = urlsplit(application.client_id).hostname
         return context
+
+
+class DisconnectView(LoginRequiredMixin, View):
+    http_method_names = ['post']
+
+    def post(self, request, public_key):
+        connection = get_object_or_404(Connection.objects.select_related('application'), public_key=public_key, user=request.user)
+        name = connection.application.name or _('Unnamed app')
+        connections.disconnect(connection)
+        messages.success(request, _('%(name)s is disconnected.') % {'name': name})
+        return redirect(reverse('settings') + '#connected-apps')

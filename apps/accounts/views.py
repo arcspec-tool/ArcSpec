@@ -38,6 +38,7 @@ from apps.accounts.throttles import (
     throttled,
 )
 from apps.accounts.tokens import make_link, user_from_link
+from apps.core import settings_sections
 from apps.core.mixins import LoginRequiredMixin
 from apps.projects.views import activity_feed_response, first_page
 from apps.core.modals import is_ajax, render_modal
@@ -324,6 +325,7 @@ class SettingsView(LoginRequiredMixin, TemplateView):
             'password': user.has_usable_password(),
             'password_enabled': methods.password,
         }
+        context['extra_sections'] = settings_sections.rendered(self.request)
         return context
 
     def post(self, request, *args, **kwargs):

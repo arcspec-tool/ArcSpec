@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-21 01:10+0300\n"
+"POT-Creation-Date: 2026-10-21 01:34+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,11 +19,11 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: apps/accounts/adapters.py:22 apps/accounts/adapters.py:56
-#: apps/accounts/views.py:100
+#: apps/accounts/views.py:101
 msgid "Your account has been deactivated. Contact a system administrator."
 msgstr ""
 
-#: apps/accounts/adapters.py:34 apps/accounts/views.py:62
+#: apps/accounts/adapters.py:34 apps/accounts/views.py:63
 msgid "Microsoft sign-in is turned off."
 msgstr ""
 
@@ -773,49 +773,49 @@ msgstr ""
 msgid "Sign out, then use Forgot password on the sign-in page to set one."
 msgstr ""
 
-#: apps/accounts/templates/accounts/settings.html:171
+#: apps/accounts/templates/accounts/settings.html:172
 msgid "Could not save the change. Try again."
 msgstr ""
 
-#: apps/accounts/views.py:56
+#: apps/accounts/views.py:57
 msgid "Password sign-in is turned off."
 msgstr ""
 
-#: apps/accounts/views.py:88 apps/accounts/views.py:92
-#: apps/accounts/views.py:154 apps/accounts/views.py:161
+#: apps/accounts/views.py:89 apps/accounts/views.py:93
+#: apps/accounts/views.py:155 apps/accounts/views.py:162
 msgid "Too many attempts. Try again in a few minutes."
 msgstr ""
 
-#: apps/accounts/views.py:97
+#: apps/accounts/views.py:98
 msgid "Incorrect email address or password."
 msgstr ""
 
-#: apps/accounts/views.py:171
+#: apps/accounts/views.py:172
 msgid "The email could not be sent. Try again later."
 msgstr ""
 
-#: apps/accounts/views.py:196
+#: apps/accounts/views.py:197
 msgid "Password set. You can sign in now."
 msgstr ""
 
-#: apps/accounts/views.py:220
+#: apps/accounts/views.py:221
 msgid "Password changed."
 msgstr ""
 
-#: apps/accounts/views.py:255
+#: apps/accounts/views.py:256
 msgid "Profile updated successfully."
 msgstr ""
 
-#: apps/accounts/views.py:261 apps/doctemplates/views.py:64
+#: apps/accounts/views.py:262 apps/doctemplates/views.py:64
 #: apps/projects/views.py:264 apps/projects/views.py:282
 msgid "Please correct the errors below."
 msgstr ""
 
-#: apps/accounts/views.py:304
+#: apps/accounts/views.py:305
 msgid "Email notification settings saved."
 msgstr ""
 
-#: apps/accounts/views.py:305
+#: apps/accounts/views.py:306
 msgid "Export defaults saved."
 msgstr ""
 
@@ -2125,11 +2125,11 @@ msgstr ""
 msgid "A conflicting change was saved at the same time. Nothing was saved."
 msgstr ""
 
-#: apps/mcp/forms.py:8
+#: apps/mcp/forms.py:8 apps/mcp/templates/mcp/settings/_connected_apps.html:13
 msgid "Read only"
 msgstr ""
 
-#: apps/mcp/forms.py:8
+#: apps/mcp/forms.py:8 apps/mcp/templates/mcp/settings/_connected_apps.html:13
 msgid "Read and write"
 msgstr ""
 
@@ -2219,6 +2219,10 @@ msgstr ""
 msgid "This link already exists."
 msgstr ""
 
+#: apps/mcp/settings_sections.py:15 apps/mcp/views.py:96 apps/mcp/views.py:106
+msgid "Unnamed app"
+msgstr ""
+
 #: apps/mcp/templates/mcp/authorize.html:3
 msgid "Allow Access"
 msgstr ""
@@ -2248,16 +2252,68 @@ msgstr ""
 msgid "Allow"
 msgstr ""
 
+#: apps/mcp/templates/mcp/settings/_connected_apps.html:4
+msgid "Connected apps"
+msgstr ""
+
+#: apps/mcp/templates/mcp/settings/_connected_apps.html:5
+msgid ""
+"AI assistants you signed in to ArcSpec. Each one works with your roles in "
+"your projects."
+msgstr ""
+
+#: apps/mcp/templates/mcp/settings/_connected_apps.html:8
+msgid ""
+"An administrator has turned off access for AI assistants. Connected apps "
+"cannot use ArcSpec until it is turned on again; you can still disconnect "
+"them."
+msgstr ""
+
+#: apps/mcp/templates/mcp/settings/_connected_apps.html:13
+#, python-format
+msgid "Connected %(date)s"
+msgstr ""
+
+#: apps/mcp/templates/mcp/settings/_connected_apps.html:13
+#, python-format
+msgid "Last used %(date)s"
+msgstr ""
+
+#: apps/mcp/templates/mcp/settings/_connected_apps.html:13
+msgid "Not used yet"
+msgstr ""
+
+#: apps/mcp/templates/mcp/settings/_connected_apps.html:15
+#, python-format
+msgid ""
+"Disconnect %(name)s? It is signed out of ArcSpec and must sign in again to "
+"connect."
+msgstr ""
+
+#: apps/mcp/templates/mcp/settings/_connected_apps.html:15
+msgid "Disconnect App"
+msgstr ""
+
+#: apps/mcp/templates/mcp/settings/_connected_apps.html:15
+#: apps/mcp/templates/mcp/settings/_connected_apps.html:17
+msgid "Disconnect"
+msgstr ""
+
+#: apps/mcp/templates/mcp/settings/_connected_apps.html:21
+msgid "No apps are connected."
+msgstr ""
+
 #: apps/mcp/text.py:17
 msgid "The text is empty after conversion."
 msgstr ""
 
-#: apps/mcp/views.py:70
+#: apps/mcp/views.py:75
 msgid "The resource must be the MCP server of this site."
 msgstr ""
 
-#: apps/mcp/views.py:91
-msgid "Unnamed app"
+#: apps/mcp/views.py:108
+#, python-format
+msgid "%(name)s is disconnected."
 msgstr ""
 
 #: apps/notifications/jobs.py:41
