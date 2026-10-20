@@ -9,6 +9,7 @@
   var isAdmin = projectDataEl ? projectDataEl.getAttribute('data-admin') === 'true' : false;
   var isArchived = projectDataEl ? projectDataEl.getAttribute('data-archived') === 'true' : false;
   var currentUserId = projectDataEl ? parseInt(projectDataEl.getAttribute('data-user-id')) : 0;
+  var editorFontCss = projectDataEl ? projectDataEl.getAttribute('data-editor-css') : '';
 
   var collapseBtn = document.getElementById('sidebarCollapseBtn');
   if (collapseBtn) {
@@ -100,7 +101,7 @@
     promotion: false,
     branding: false,
     license_key: 'gpl',
-    content_css: ['default', 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap'],
+    content_css: ['default', editorFontCss],
     content_style: 'body { font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; font-size: 1rem; }',
     formats: {
       underline: { inline: 'u' },

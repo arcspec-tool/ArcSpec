@@ -192,9 +192,9 @@ AUTH_PASSWORD_VALIDATORS = [
 CONTENT_SECURITY_POLICY = {
     "DIRECTIVES": {
         "default-src": ["'self'"],
-        "script-src": ["'self'", "cdn.jsdelivr.net", NONCE],
-        "style-src": ["'self'", "'unsafe-inline'", "cdn.jsdelivr.net", "fonts.googleapis.com"],
-        "font-src": ["'self'", "cdn.jsdelivr.net", "fonts.gstatic.com"],
+        "script-src": ["'self'", NONCE],
+        "style-src": ["'self'", "'unsafe-inline'"],
+        "font-src": ["'self'"],
         "img-src": ["'self'", "data:"],
         "connect-src": ["'self'"],
     }

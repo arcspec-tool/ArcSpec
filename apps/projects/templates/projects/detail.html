@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load static core_tags i18n %}
+{% load static core_tags i18n compress %}
 
 {% block body_class %}page-project{% endblock %}
 {% block title %}{{ project.name }} - ArcSpec{% endblock %}
@@ -53,6 +53,7 @@
 
 <div id="projectData" class="d-none"
      data-slug="{{ project.slug }}"
+     data-editor-css="{% static 'css/inter.css' %}"
      data-id="{{ project.pk }}"
      data-role="{{ user_role }}"
      data-editor="{{ is_editor|yesno:'true,false' }}"
@@ -72,5 +73,15 @@ var TEMPLATE_ATTRIBUTES = JSON.parse(document.getElementById('template-attribute
 {% endblock %}
 
 {% block extra_js %}
-<script src="https://cdn.jsdelivr.net/npm/tinymce@7.9.3/tinymce.min.js" integrity="sha384-Ovv1ZPEkpW4ElBKDKaEIPkNfTTadFpifFwNJOBnuStg0PQ0RBln5Lsf9AI8BsCmx" crossorigin="anonymous"></script>
+{% compress js file tinymce %}
+<script src="{% static 'vendor/tinymce/tinymce.min.js' %}"></script>
+<script src="{% static 'vendor/tinymce/icons/default/icons.min.js' %}"></script>
+<script src="{% static 'vendor/tinymce/themes/silver/theme.min.js' %}"></script>
+<script src="{% static 'vendor/tinymce/models/dom/model.min.js' %}"></script>
+<script src="{% static 'vendor/tinymce/skins/ui/oxide/skin.js' %}"></script>
+<script src="{% static 'vendor/tinymce/skins/ui/oxide/content.js' %}"></script>
+<script src="{% static 'vendor/tinymce/skins/content/default/content.js' %}"></script>
+<script src="{% static 'vendor/tinymce/plugins/lists/plugin.min.js' %}"></script>
+<script src="{% static 'vendor/tinymce/plugins/table/plugin.min.js' %}"></script>
+{% endcompress %}
 {% endblock %}

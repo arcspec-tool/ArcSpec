@@ -118,3 +118,5 @@ PDF export:
 ## License
 
 [AGPL-3.0](LICENSE)
+
+`apps/core/static/vendor/` holds unmodified third-party files under their own licences: Bootstrap 5.3.3 and Bootstrap Icons 1.11.3 (MIT), TinyMCE 7.9.3 (GPL-2.0-or-later), Inter 4.1 (OFL-1.1).
