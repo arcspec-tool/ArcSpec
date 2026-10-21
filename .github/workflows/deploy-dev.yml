@@ -19,7 +19,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
       - run: cp .env.example .env
       - run: docker compose -f docker-compose.dev.yml up -d --wait db
       - run: docker compose -f docker-compose.dev.yml run --rm --no-deps web python manage.py test --noinput
@@ -28,7 +28,7 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
 
       - name: Configure SSH
         run: |
@@ -39,6 +39,7 @@ jobs:
 
       - name: Copy the repository to the server
         run: |
+          : "${TARGET:?DEPLOY_PATH is empty}"
           rsync -rlptDz --delete --itemize-changes \
             --exclude '/.env' --exclude '/.git/' --exclude '/.github/' \
             --exclude '/docker-compose.dev.yml' --exclude '/media/' --exclude '/staticfiles/' \
