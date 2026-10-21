@@ -82,6 +82,7 @@ OAUTH2_PROVIDER_APPLICATION_MODEL = 'oauth2_provider.Application'
 OAUTH2_PROVIDER = {
     'CIMD_ENABLED': True,
     'CIMD_REGISTRATION_PERMISSION_CLASSES': ('apps.mcp.oauth.AuthorizeEndpointCIMDPermission',),
+    'CIMD_METADATA_FETCHER': 'apps.mcp.oauth.SupportedGrantsFetcher',
     'DCR_ENABLED': False,
     'PKCE_REQUIRED': True,
     'COMPLIANT_BCP_RFC9700_PKCE_METHOD': True,

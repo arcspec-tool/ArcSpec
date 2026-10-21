@@ -89,7 +89,7 @@ The built-in templates are included:
 
 ## MCP server
 
-Endpoint: `<SITE_URL>/mcp/`, Streamable HTTP. Off by default; an administrator turns it on in Admin Panel, System Settings.
+Endpoint: `<SITE_URL>/mcp`, with or without a final slash, Streamable HTTP. Off by default; an administrator turns it on in Admin Panel, System Settings.
 
 Clients sign in with OAuth 2.1; ArcSpec is the authorization server. Clients identify themselves with a Client ID Metadata Document. Clients that support only Dynamic Client Registration cannot connect.
 

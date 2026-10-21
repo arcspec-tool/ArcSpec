@@ -1,6 +1,7 @@
 import hashlib
 import re
 from datetime import timedelta
+from unittest.mock import patch
 from urllib.parse import parse_qs, urlencode, urlsplit
 
 from django.conf import settings
@@ -8,6 +9,7 @@ from django.core.cache import cache
 from django.test import TestCase, override_settings
 from django.urls import reverse
 from django.utils import timezone
+from oauth2_provider.cimd import SafeMetadataFetcher
 from oauth2_provider.models import AccessToken, Application, Grant, RefreshToken
 
 from apps.accounts.factories import UserFactory
@@ -151,6 +153,22 @@ class TokenEndpointTests(TestCase):
         self.user.save()
         response = refresh(self.client, token['refresh_token'])
         self.assertEqual((response.status_code, response.json()['error']), (400, 'invalid_grant'))
+
+
+class ClientDocumentTests(TestCase):
+
+    def setUp(self):
+        cache.clear()
+        switch(True)
+        self.client.force_login(UserFactory())
+
+    def test_a_document_that_also_declares_a_grant_type_arcspec_does_not_support_is_accepted(self):
+        grant_types = ['authorization_code', 'refresh_token', 'urn:ietf:params:oauth:grant-type:jwt-bearer']
+        document = {**FixedFetcher.document, 'client_id': CLIENT_ID, 'grant_types': grant_types}
+        with patch.object(SafeMetadataFetcher, 'fetch', return_value=(document, 3600)):
+            response = self.client.get(reverse('oauth2_provider:authorize'), authorize_params())
+        self.assertEqual((response.status_code, hook(response.content.decode(), 'data-client-name')), (200, CLIENT_NAME))
+        self.assertEqual(Application.objects.get(client_id=CLIENT_ID).authorization_grant_type, Application.GRANT_AUTHORIZATION_CODE)
 
 
 class SwitchOffTests(TestCase):

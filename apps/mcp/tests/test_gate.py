@@ -110,10 +110,32 @@ class GateTests(TransactionTestCase):
             await send({'type': 'http.response.body', 'body': b''})
 
         with patch('config.asgi.django_application', django_stub):
-            for path in ('/mcp', '/health/'):
+            for path in ('/mcp/other', '/health/'):
                 with self.subTest(path=path):
                     status, headers, body = await call(application, method='GET', path=path)
                     self.assertEqual((status, reached[-1]), (204, path))
+
+    async def test_the_endpoint_with_and_without_the_final_slash_reaches_the_gate(self):
+        reached = []
+
+        async def django_stub(scope, receive, send):
+            reached.append(scope['path'])
+            await send({'type': 'http.response.start', 'status': 204, 'headers': []})
+            await send({'type': 'http.response.body', 'body': b''})
+
+        with patch('config.asgi.django_application', django_stub):
+            for path in ('/mcp', '/mcp/'):
+                with self.subTest(path=path):
+                    status, headers, body = await call(application, path=path, body=CALL_WHOAMI)
+                    self.assertEqual((status, headers['www-authenticate'], reached), (401, CHALLENGE, []))
+
+    async def test_a_tool_answers_at_the_endpoint_without_the_final_slash(self):
+        await sync_to_async(switch)(True)
+        raw = await sync_to_async(mint)(self.user)
+        gateway = McpGateway()
+        async with gateway.running():
+            status, headers, body = await call(gateway, path='/mcp', headers={'authorization': f'Bearer {raw}'}, body=CALL_WHOAMI)
+        self.assertEqual((status, sse_result(body)['result']['structuredContent']['email']), (200, self.user.email))
 
     async def test_while_the_switch_is_off_every_request_gets_the_discovery_challenge(self):
         raw = await sync_to_async(mint)(self.user)
