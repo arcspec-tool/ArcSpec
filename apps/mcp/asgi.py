@@ -8,7 +8,7 @@ from django.utils.translation import gettext as _
 
 from apps.core.site import site_host
 from apps.mcp import auth
-from apps.mcp.server import build_application, build_server
+from apps.mcp.server import MCP_PATH, build_application, build_server
 
 
 def header(scope, name):
@@ -152,7 +152,7 @@ class McpGateway:
             raise RuntimeError('The MCP application has not started.')
         reset = auth.current_token.set(token)
         try:
-            await self.application(scope, receive, no_store(send))
+            await self.application({**scope, 'path': MCP_PATH, 'raw_path': MCP_PATH.encode()}, receive, no_store(send))
         finally:
             auth.current_token.reset(reset)
 

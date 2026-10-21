@@ -3,6 +3,7 @@ from urllib.parse import urlsplit
 
 from django.urls import reverse
 from django.utils import timezone
+from oauth2_provider.cimd import SafeMetadataFetcher
 from oauth2_provider.oauth2_validators import OAuth2Validator
 from oauth2_provider.settings import oauth2_settings
 
@@ -15,6 +16,17 @@ class AuthorizeEndpointCIMDPermission:
 
     def has_permission(self, request, client_id):
         return urlsplit(request.uri).path == reverse('oauth2_provider:authorize')
+
+
+class SupportedGrantsFetcher(SafeMetadataFetcher):
+
+    def fetch(self, client_id):
+        metadata, max_age = super().fetch(client_id)
+        grant_types = metadata.get('grant_types')
+        if isinstance(grant_types, list):
+            supported = oauth2_settings.OAUTH2_GRANT_TYPES_SUPPORTED
+            metadata = {**metadata, 'grant_types': [grant for grant in grant_types if grant in supported]}
+        return metadata, max_age
 
 
 def authorization_expired(token_family, now):

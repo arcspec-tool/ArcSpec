@@ -10,10 +10,8 @@ An administrator must start the MCP server.
 Refer to [Start the MCP server](09-administration.md#start-the-mcp-server).
 While the MCP server is off, ArcSpec stops all requests from apps.
 
-The address of the MCP server is the ArcSpec address with `/mcp/` at the end.
-For example: `https://arcspec.example.com/mcp/`.
-Make sure that there is a slash (/) at the end of the address.
-If the last slash is not there, the app cannot connect.
+The address of the MCP server is the ArcSpec address with `/mcp` at the end.
+For example: `https://arcspec.example.com/mcp`.
 
 ## Connect Claude Code
 
@@ -24,7 +22,7 @@ If the last slash is not there, the app cannot connect.
      "mcpServers": {
        "arcspec": {
          "type": "http",
-         "url": "https://arcspec.example.com/mcp/"
+         "url": "https://arcspec.example.com/mcp"
        }
      }
    }

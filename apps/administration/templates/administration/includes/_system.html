@@ -1,26 +1,51 @@
 {% load i18n %}<div class="admin-settings-grid">
-    <section class="card dash-panel" aria-labelledby="generalHeading">
-        <div class="card-header">
-            <div>
-                <h2 class="dash-panel-title" id="generalHeading">{% translate "General" %}</h2>
-                <p class="settings-panel-sub">{% translate "The organisation name printed in export footers, and the upload limit." %}</p>
+    <div class="d-flex flex-column gap-3">
+        <section class="card dash-panel" aria-labelledby="generalHeading">
+            <div class="card-header">
+                <div>
+                    <h2 class="dash-panel-title" id="generalHeading">{% translate "General" %}</h2>
+                    <p class="settings-panel-sub">{% translate "The organisation name printed in export footers, and the upload limit." %}</p>
+                </div>
             </div>
-        </div>
-        <form method="post" action="{% url 'admin_system_settings' %}" data-dirty-form>
-            {% csrf_token %}
-            <input type="hidden" name="form_type" value="general">
-            {% for field in general_form %}
-            <div class="settings-field">
-                <label class="settings-field-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
-                {{ field }}
-                {% for error in field.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
+            <form method="post" action="{% url 'admin_system_settings' %}" data-dirty-form>
+                {% csrf_token %}
+                <input type="hidden" name="form_type" value="general">
+                {% for field in general_form %}
+                <div class="settings-field">
+                    <label class="settings-field-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% for error in field.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
+                </div>
+                {% endfor %}
+                <div class="settings-actions">
+                    <button type="submit" class="btn btn-primary btn-sm" disabled><i class="bi bi-check-lg me-1"></i>{% translate "Save" %}</button>
+                </div>
+            </form>
+        </section>
+
+        <section class="card dash-panel" aria-labelledby="mcpHeading">
+            <div class="card-header">
+                <div>
+                    <h2 class="dash-panel-title" id="mcpHeading">{% translate "MCP server" %}</h2>
+                    <p class="settings-panel-sub">{% translate "Access for AI assistants through the Model Context Protocol." %}</p>
+                </div>
             </div>
-            {% endfor %}
-            <div class="settings-actions">
-                <button type="submit" class="btn btn-primary btn-sm" disabled><i class="bi bi-check-lg me-1"></i>{% translate "Save" %}</button>
-            </div>
-        </form>
-    </section>
+            <form method="post" action="{% url 'admin_system_settings' %}" id="mcpForm" data-dirty-form data-confirm="{% translate 'While the server is on, every active user may connect an AI assistant and use it with their own roles. While it is off, every connection is refused.' %}" data-confirm-title="{% translate 'Save MCP Server Setting' %}" data-confirm-button="{% translate 'Save' %}" data-confirm-class="btn-primary">
+                {% csrf_token %}
+                <input type="hidden" name="form_type" value="mcp">
+                <div class="settings-row">
+                    <div class="settings-row-text">
+                        <label for="{{ mcp_form.mcp_enabled.id_for_label }}">{% translate "Connections from AI assistants" %}</label>
+                        <p>{% translate "On: every active user may connect an AI assistant, which works with the user's own project roles. Off: every request to the server is refused." %}</p>
+                    </div>
+                    <div class="form-check form-switch">{{ mcp_form.mcp_enabled }}</div>
+                </div>
+                <div class="settings-actions">
+                    <button type="submit" class="btn btn-primary btn-sm" disabled><i class="bi bi-check-lg me-1"></i>{% translate "Save" %}</button>
+                </div>
+            </form>
+        </section>
+    </div>
 
     <section class="card dash-panel" aria-labelledby="archivingHeading">
         <div class="card-header">
@@ -110,29 +135,6 @@
                     {% endfor %}
                 </div>
             </fieldset>
-            <div class="settings-actions">
-                <button type="submit" class="btn btn-primary btn-sm" disabled><i class="bi bi-check-lg me-1"></i>{% translate "Save" %}</button>
-            </div>
-        </form>
-    </section>
-
-    <section class="card dash-panel" aria-labelledby="mcpHeading">
-        <div class="card-header">
-            <div>
-                <h2 class="dash-panel-title" id="mcpHeading">{% translate "MCP server" %}</h2>
-                <p class="settings-panel-sub">{% translate "Access for AI assistants through the Model Context Protocol." %}</p>
-            </div>
-        </div>
-        <form method="post" action="{% url 'admin_system_settings' %}" id="mcpForm" data-dirty-form data-confirm="{% translate 'While the server is on, every active user may connect an AI assistant and use it with their own roles. While it is off, every connection is refused.' %}" data-confirm-title="{% translate 'Save MCP Server Setting' %}" data-confirm-button="{% translate 'Save' %}" data-confirm-class="btn-primary">
-            {% csrf_token %}
-            <input type="hidden" name="form_type" value="mcp">
-            <div class="settings-row">
-                <div class="settings-row-text">
-                    <label for="{{ mcp_form.mcp_enabled.id_for_label }}">{% translate "Connections from AI assistants" %}</label>
-                    <p>{% translate "On: every active user may connect an AI assistant, which works with the user's own project roles. Off: every request to the server is refused." %}</p>
-                </div>
-                <div class="form-check form-switch">{{ mcp_form.mcp_enabled }}</div>
-            </div>
             <div class="settings-actions">
                 <button type="submit" class="btn btn-primary btn-sm" disabled><i class="bi bi-check-lg me-1"></i>{% translate "Save" %}</button>
             </div>

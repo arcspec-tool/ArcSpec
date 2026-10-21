@@ -14,6 +14,7 @@ from apps.mcp.auth import ContextTokenVerifier, resource_url
 from apps.mcp.errors import ToolRefusal, validation_text
 
 MCP_PATH = '/mcp/'
+MCP_PATHS = ('/mcp', MCP_PATH)
 TOOLS = {}
 
 
