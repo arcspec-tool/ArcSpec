@@ -115,4 +115,27 @@
             </div>
         </form>
     </section>
+
+    <section class="card dash-panel" aria-labelledby="mcpHeading">
+        <div class="card-header">
+            <div>
+                <h2 class="dash-panel-title" id="mcpHeading">{% translate "MCP server" %}</h2>
+                <p class="settings-panel-sub">{% translate "Access for AI assistants through the Model Context Protocol." %}</p>
+            </div>
+        </div>
+        <form method="post" action="{% url 'admin_system_settings' %}" id="mcpForm" data-dirty-form data-confirm="{% translate 'While the server is on, every active user may connect an AI assistant and use it with their own roles. While it is off, every connection is refused.' %}" data-confirm-title="{% translate 'Save MCP Server Setting' %}" data-confirm-button="{% translate 'Save' %}" data-confirm-class="btn-primary">
+            {% csrf_token %}
+            <input type="hidden" name="form_type" value="mcp">
+            <div class="settings-row">
+                <div class="settings-row-text">
+                    <label for="{{ mcp_form.mcp_enabled.id_for_label }}">{% translate "Connections from AI assistants" %}</label>
+                    <p>{% translate "On: every active user may connect an AI assistant, which works with the user's own project roles. Off: every request to the server is refused." %}</p>
+                </div>
+                <div class="form-check form-switch">{{ mcp_form.mcp_enabled }}</div>
+            </div>
+            <div class="settings-actions">
+                <button type="submit" class="btn btn-primary btn-sm" disabled><i class="bi bi-check-lg me-1"></i>{% translate "Save" %}</button>
+            </div>
+        </form>
+    </section>
 </div>

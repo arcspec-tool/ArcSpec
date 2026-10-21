@@ -39,3 +39,10 @@ Changes are saved immediately.
 The Export dialog is pre-filled with these values, and you can change them for each export.
 
 ![Export defaults section](images/04-export-defaults.png)
+
+## See your connected apps
+
+**Connected apps** in **Settings** shows the AI assistants that you connected to ArcSpec.
+For each app, it shows the name, the domain and the access of the app.
+It also shows the date when you connected the app and the date when the app last used ArcSpec.
+To disconnect an app, refer to [Disconnect an app](10-connect-an-ai-assistant.md#disconnect-an-app).

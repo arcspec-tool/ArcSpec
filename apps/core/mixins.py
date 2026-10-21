@@ -20,6 +20,7 @@ def require_not_viewer(user):
 
 def project_with_role(user, slug, roles=MEMBER_ROLES, writable=False):
     from apps.projects.models import Project
+    from apps.projects.permissions import ProjectNotArchived
     project = get_object_or_404(Project, slug=slug)
     role = project.get_user_role(user)
     if role is None:
@@ -27,7 +28,7 @@ def project_with_role(user, slug, roles=MEMBER_ROLES, writable=False):
     if role not in roles:
         raise PermissionDenied
     if writable and project.status == 'archived':
-        raise PermissionDenied
+        raise PermissionDenied(ProjectNotArchived.message)
     return project, role
 
 

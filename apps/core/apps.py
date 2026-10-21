@@ -7,5 +7,6 @@ class CoreConfig(AppConfig):
     label = 'core'
 
     def ready(self):
-        from apps.core import modals
+        from apps.core import modals, settings_sections
         modals.discover()
+        settings_sections.discover()

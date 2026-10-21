@@ -17,6 +17,7 @@ urlpatterns = [
     path('jsi18n/', last_modified(lambda request, **kwargs: catalog_modified)(JavaScriptCatalog.as_view()), name='javascript-catalog'),
     path('modals/<slug:name>/', ModalView.as_view(), name='modal'),
     path('', include('apps.accounts.urls')),
+    path('', include('apps.mcp.urls')),
     path('dashboard/', include(('apps.projects.urls_dashboard', 'dashboard'))),
     path('projects/', include('apps.projects.urls')),
     path('templates/', include('apps.doctemplates.urls')),

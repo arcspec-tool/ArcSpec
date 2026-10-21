@@ -34,6 +34,7 @@ KEYED_ROUTES = {
     'api_version_restore',
     'attachment_download',
     'item_image',
+    'mcp_disconnect',
     'notification_mark_read',
     'section_delete',
     'section_update',
