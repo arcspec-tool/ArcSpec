@@ -129,7 +129,7 @@ def item_detail(item, tags, roles, emails):
         ],
         'image_caption': item.image_caption,
         'has_image': bool(item.image),
-        'attachments': [{'filename': a.filename, 'size': a.file_size} for a in item.attachments.all()],
+        'attachments': [attachment_row(a) for a in item.attachments.all()],
         'comments': [
             {
                 'public_key': keys[comment.pk],
@@ -183,6 +183,10 @@ def audit_entry(entry):
         'details': row['details'],
         'created_at': row['created_at'],
     }
+
+
+def attachment_row(attachment):
+    return {'public_key': str(attachment.public_key), 'filename': attachment.filename, 'size': attachment.file_size}
 
 
 def template_row(template, can_edit):

@@ -162,6 +162,7 @@ class TypedAttributeValue(TypedDict):
 
 
 class AttachmentRow(TypedDict):
+    public_key: str
     filename: str
     size: int
 

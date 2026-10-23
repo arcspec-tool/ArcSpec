@@ -12,8 +12,8 @@ from apps.mcp import connections
 
 SCOPES = ('read', 'write')
 WRITE_TOOLS = (
-    'create_item', 'create_items', 'update_item', 'set_item_tags', 'add_comment', 'add_link', 'create_template',
-    'update_template',
+    'create_item', 'create_items', 'update_item', 'set_item_tags', 'add_comment', 'add_link', 'set_item_image',
+    'remove_item_image', 'add_attachment', 'remove_attachment', 'create_template', 'update_template',
 )
 
 current_token = ContextVar('mcp_current_token', default=None)

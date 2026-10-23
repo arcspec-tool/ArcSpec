@@ -1,11 +1,21 @@
+import io
+
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from django.urls import reverse
+from PIL import Image
 
 from apps.accounts.factories import UserFactory
 from apps.projects.factories import ItemFactory, ProjectFactory, ProjectMembershipFactory, SectionFactory
 
-PNG = b'\x89PNG\r\n\x1a\n' + b'\x00' * 40
+
+def png_bytes():
+    buffer = io.BytesIO()
+    Image.new('RGB', (2, 2), color='red').save(buffer, format='PNG')
+    return buffer.getvalue()
+
+
+PNG = png_bytes()
 
 
 class ItemImageRouteTests(TestCase):

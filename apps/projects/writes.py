@@ -8,6 +8,7 @@ from django.utils.translation import gettext as _
 from apps.accounts.models import User
 from apps.notifications.models import AuditLog
 from apps.projects.models import (
+    Attachment,
     Comment,
     Item,
     ItemAttributeValue,
@@ -222,3 +223,73 @@ def create_link(project, user, source, target, link_type):
             details={'link_type': link_type, 'target': target.item_id},
         )
     return link
+
+
+def set_item_image(item, user, uploaded, caption=''):
+    had_image = bool(item.image)
+    old_filename = item.image.name if item.image else None
+    if item.image:
+        item.image.delete(save=False)
+
+    item.image = uploaded
+    if caption:
+        item.image_caption = caption
+    item._actor = user
+    item.save()
+
+    audit_details = {
+        'field': 'image',
+        'action': 'changed' if had_image else 'added',
+        'filename': uploaded.name,
+    }
+    if had_image:
+        audit_details['previous_filename'] = old_filename.split('/')[-1] if old_filename else None
+    AuditLog.objects.create(
+        project=item.project, user=user, action='edited',
+        target_type='Item', target_id=item.item_id,
+        details=audit_details,
+    )
+    return item
+
+
+def remove_item_image(item, user):
+    if item.image:
+        item.image.delete(save=False)
+    item.image = None
+    item.image_caption = ''
+    item._actor = user
+    item.save()
+
+    AuditLog.objects.create(
+        project=item.project, user=user, action='edited',
+        target_type='Item', target_id=item.item_id,
+        details={'field': 'image', 'action': 'removed'},
+    )
+    return item
+
+
+def add_attachment(item, user, uploaded):
+    attachment = Attachment.objects.create(
+        item=item,
+        file=uploaded,
+        uploaded_by=user,
+        filename=uploaded.name,
+        file_size=uploaded.size,
+    )
+    AuditLog.objects.create(
+        project=item.project, user=user, action='attachment_added',
+        target_type='Item', target_id=item.item_id,
+        details={'filename': uploaded.name},
+    )
+    return attachment
+
+
+def remove_attachment(attachment, user):
+    item = attachment.item
+    filename = attachment.filename
+    attachment.delete()
+    AuditLog.objects.create(
+        project=item.project, user=user, action='attachment_removed',
+        target_type='Item', target_id=item.item_id,
+        details={'filename': filename},
+    )

@@ -9,7 +9,17 @@ from apps.mcp import services
 from apps.mcp.errors import ToolRefusal
 from apps.mcp.server import tool
 from apps.doctemplates.models import TemplateAttribute
-from apps.mcp.tools_read import DocType, ItemDetail, ItemPriority, ItemStatus, ProjectSlug, TagReference, TemplateDetail
+from apps.mcp.tools_read import (
+    AttachmentRow,
+    DocType,
+    ItemArguments,
+    ItemDetail,
+    ItemPriority,
+    ItemStatus,
+    ProjectSlug,
+    TagReference,
+    TemplateDetail,
+)
 from apps.projects.models import TraceabilityLink
 
 LinkType = Literal[tuple(key for key, label in TraceabilityLink.LINK_TYPE_CHOICES)]
@@ -109,6 +119,38 @@ class AddedLink(TypedDict):
     public_key: str
 
 
+FileName = Annotated[str, Field(min_length=1, max_length=255, description='The file name with its extension, such as diagram.png.')]
+FileData = Annotated[str, Field(
+    min_length=1, json_schema_extra={'contentEncoding': 'base64'},
+    description='The file content in base64. A request holds at most 2.5 MB, so the file can have about 1.9 MB.',
+)]
+
+
+class SetItemImageArguments(TypedDict):
+    project: ProjectSlug
+    item: ItemReference
+    filename: FileName
+    data: FileData
+    caption: NotRequired[Annotated[str, Field(max_length=255, description='The image caption; the stored caption stays when not given.')]]
+
+
+class AddAttachmentArguments(TypedDict):
+    project: ProjectSlug
+    item: ItemReference
+    filename: FileName
+    data: FileData
+
+
+class RemoveAttachmentArguments(TypedDict):
+    project: ProjectSlug
+    item: ItemReference
+    attachment: Annotated[str, Field(description='The attachment key, as get_item returns it.')]
+
+
+class Attachments(TypedDict):
+    attachments: list[AttachmentRow]
+
+
 class TemplateSectionEntry(TypedDict):
     title: Annotated[str, Field(min_length=1, max_length=200)]
     description: NotRequired[Annotated[str, Field(description='What the section holds; projects show it to writers.')]]
@@ -201,6 +243,27 @@ TOOLS = (
         'add_link',
         'Link an item to another item of this project or of another project the account can open.',
         AddLinkArguments, AddedLink, services.add_link, destructive=False,
+    ),
+    write_tool(
+        'set_item_image',
+        'Add an image to an item, or replace its image. PNG, JPG, GIF or WebP, at most 5 MB; the file content must '
+        'be an image of the type its extension names.',
+        SetItemImageArguments, ItemDetail, services.set_item_image, destructive=True, idempotent=True,
+    ),
+    write_tool(
+        'remove_item_image', 'Remove the image and its caption from an item.',
+        ItemArguments, ItemDetail, services.remove_item_image, destructive=True, idempotent=True,
+    ),
+    write_tool(
+        'add_attachment',
+        'Add a file to an item as an attachment. The extension must be one the project page accepts and the file '
+        'content must match it; the size limit is set in the Admin Panel. To replace an attachment, add the new file '
+        'and remove the old one.',
+        AddAttachmentArguments, AttachmentRow, services.add_attachment, destructive=False,
+    ),
+    write_tool(
+        'remove_attachment', 'Remove an attachment from an item and delete its file.',
+        RemoveAttachmentArguments, Attachments, services.remove_attachment, destructive=True, idempotent=True,
     ),
     write_tool(
         'create_template',

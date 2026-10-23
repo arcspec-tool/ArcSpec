@@ -1,6 +1,9 @@
+import base64
+import binascii
 from contextlib import contextmanager
 
 from django.core.exceptions import PermissionDenied, ValidationError
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.db import transaction
 from django.db.models import F
 from django.http import Http404
@@ -38,6 +41,7 @@ from apps.projects.queries import (
     version_list_queryset,
 )
 from apps.projects.signals import create_version, notify_project_users
+from apps.projects.uploads import check_attachment, check_image
 
 
 def load_user(user_key):
@@ -547,3 +551,58 @@ def update_template(user_key, template, **changes):
     if changes:
         save_template(row, section_rows, attribute_rows)
     return template_detail(user, row)
+
+
+def checked_upload(filename, data, check):
+    try:
+        content = base64.b64decode(data, validate=True)
+    except (binascii.Error, ValueError):
+        raise ValidationError({'data': _('The data is not valid base64.')}) from None
+    return check(SimpleUploadedFile(filename, content))
+
+
+def set_item_image(user_key, project, item, filename, data, caption=''):
+    user = load_user(user_key)
+    row, role = editor_project(user, project)
+    found = project_item(row, item)
+    with refusing():
+        uploaded = checked_upload(filename, data, check_image)
+    with refusing():
+        with transaction.atomic():
+            writes.set_item_image(found, user, uploaded, caption.strip())
+    return written_item(user, row, found)
+
+
+def remove_item_image(user_key, project, item):
+    user = load_user(user_key)
+    row, role = editor_project(user, project)
+    found = project_item(row, item)
+    if not found.image:
+        raise ToolRefusal(_('Item %(item)s has no image.') % {'item': found.item_id})
+    with refusing():
+        with transaction.atomic():
+            writes.remove_item_image(found, user)
+    return written_item(user, row, found)
+
+
+def add_attachment(user_key, project, item, filename, data):
+    user = load_user(user_key)
+    row, role = editor_project(user, project)
+    found = project_item(row, item)
+    with refusing():
+        uploaded = checked_upload(filename, data, check_attachment)
+    with refusing():
+        with transaction.atomic():
+            attachment = writes.add_attachment(found, user, uploaded)
+    return output.attachment_row(attachment)
+
+
+def remove_attachment(user_key, project, item, attachment):
+    user = load_user(user_key)
+    row, role = editor_project(user, project)
+    found = project_item(row, item)
+    target = identifiers.attachment(found, attachment)
+    with refusing():
+        with transaction.atomic():
+            writes.remove_attachment(target, user)
+    return {'attachments': [output.attachment_row(entry) for entry in found.attachments.all()]}

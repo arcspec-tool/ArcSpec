@@ -4,7 +4,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libpango-1.0-0 libpangocairo-1.0-0 libcairo2 libharfbuzz-subset0 \
-    libgdk-pixbuf-2.0-0 libffi-dev shared-mime-info \
+    libgdk-pixbuf-2.0-0 libffi-dev shared-mime-info libmagic1 \
     curl gettext \
     && rm -rf /var/lib/apt/lists/*
 

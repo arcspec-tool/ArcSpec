@@ -97,6 +97,8 @@ With **Read and write** access, an app can also:
 - Add tags to an item and remove tags from an item.
 - Add comments and replies.
 - Add links between items. The other item can be in a different project that you are a member of.
+- Add an image to an item, replace the image or remove it.
+- Attach files to an item and remove attachments.
 - Add templates with their sections and attributes.
 - Change the **Template Name**, the **Document Type**, the **Description**, the sections and the attributes of a template.
 
@@ -104,8 +106,12 @@ When the app changes the sections of a template, it replaces all the sections of
 When the app changes the attributes of a template, it replaces all the attributes that are not built-in.
 A change to a template does not change the projects that you made from that template.
 
+The app sends the image or the file in the request.
+The maximum size of a file from an app is ~1.9 MB.
+ArcSpec checks the MIME type of each file.
+
 An app cannot delete items, comments, links, projects or templates.
-An app cannot change projects, the sections of a project, members, attachments or images.
+An app cannot change the settings, sections or members of a project.
 An app cannot use the Admin Panel.
 
 The app writes the text of an item in Markdown.

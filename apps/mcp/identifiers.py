@@ -68,6 +68,14 @@ def member(project, email):
     return found
 
 
+def attachment(item, value):
+    key = as_key(value)
+    found = item.attachments.filter(public_key=key).first() if key else None
+    if found is None:
+        raise ToolRefusal(_('Not found: attachment %(attachment)s.') % {'attachment': value})
+    return found
+
+
 def comment(item, value):
     key = as_key(value)
     found = item.comments.filter(public_key=key).first() if key else None
