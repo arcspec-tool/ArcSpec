@@ -93,7 +93,7 @@ Endpoint: `<SITE_URL>/mcp`, with or without a final slash, Streamable HTTP. Off 
 
 Clients sign in with OAuth 2.1; ArcSpec is the authorization server. Clients identify themselves with a Client ID Metadata Document. Clients that support only Dynamic Client Registration cannot connect.
 
-13 read tools and 6 item write tools. Each tool applies the user's project roles. No tool deletes data.
+13 read tools, 6 item write tools and 2 template write tools. Each tool applies the user's system role, project roles and template ownership. There is no delete tool.
 
 An access token is valid for 1 hour. A sign-in is valid for 30 days. Users disconnect clients in Settings, Connected apps.
 

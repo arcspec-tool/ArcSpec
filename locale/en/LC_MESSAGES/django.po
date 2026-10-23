@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-21 01:34+0300\n"
+"POT-Creation-Date: 2026-10-23 20:07+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -806,7 +806,7 @@ msgstr ""
 msgid "Profile updated successfully."
 msgstr ""
 
-#: apps/accounts/views.py:262 apps/doctemplates/views.py:64
+#: apps/accounts/views.py:262 apps/doctemplates/views.py:65
 #: apps/projects/views.py:264 apps/projects/views.py:282
 msgid "Please correct the errors below."
 msgstr ""
@@ -884,138 +884,138 @@ msgstr ""
 msgid "System Settings"
 msgstr ""
 
-#: apps/administration/templates/administration/includes/_system.html:5
+#: apps/administration/templates/administration/includes/_system.html:6
 msgid "General"
 msgstr ""
 
-#: apps/administration/templates/administration/includes/_system.html:6
+#: apps/administration/templates/administration/includes/_system.html:7
 msgid "The organisation name printed in export footers, and the upload limit."
 msgstr ""
 
-#: apps/administration/templates/administration/includes/_system.html:20
-#: apps/administration/templates/administration/includes/_system.html:67
-#: apps/administration/templates/administration/includes/_system.html:114
-#: apps/administration/templates/administration/includes/_system.html:126
-#: apps/administration/templates/administration/includes/_system.html:137
+#: apps/administration/templates/administration/includes/_system.html:21
+#: apps/administration/templates/administration/includes/_system.html:33
+#: apps/administration/templates/administration/includes/_system.html:44
+#: apps/administration/templates/administration/includes/_system.html:92
+#: apps/administration/templates/administration/includes/_system.html:139
 #: apps/administration/templates/administration/modals/_edit_role.html:12
 #: apps/projects/templates/projects/modals/_save_view.html:11
 msgid "Save"
 msgstr ""
 
-#: apps/administration/templates/administration/includes/_system.html:28
-msgid "Project archiving"
-msgstr ""
-
 #: apps/administration/templates/administration/includes/_system.html:29
-msgid "Archive inactive projects and delete archived ones after a period."
-msgstr ""
-
-#: apps/administration/templates/administration/includes/_system.html:37
-msgid "Auto-archive inactive projects"
-msgstr ""
-
-#: apps/administration/templates/administration/includes/_system.html:38
-msgid ""
-"Active projects with no change for the number of days below are archived."
-msgstr ""
-
-#: apps/administration/templates/administration/includes/_system.html:43
-msgid "Days without a change"
-msgstr ""
-
-#: apps/administration/templates/administration/includes/_system.html:49
-msgid "Users can restore archived projects"
-msgstr ""
-
-#: apps/administration/templates/administration/includes/_system.html:50
-msgid "When off, only administrators can restore an archived project."
-msgstr ""
-
-#: apps/administration/templates/administration/includes/_system.html:56
-msgid "Auto-delete archived projects"
-msgstr ""
-
-#: apps/administration/templates/administration/includes/_system.html:57
-msgid ""
-"Projects archived for longer than the number of days below are deleted "
-"permanently."
-msgstr ""
-
-#: apps/administration/templates/administration/includes/_system.html:62
-msgid "Days after archiving"
-msgstr ""
-
-#: apps/administration/templates/administration/includes/_system.html:75
-msgid "Authentication"
-msgstr ""
-
-#: apps/administration/templates/administration/includes/_system.html:76
-msgid "At least one method stays on. Accounts are created by invitation only."
-msgstr ""
-
-#: apps/administration/templates/administration/includes/_system.html:84
-msgid "Microsoft sign-in"
-msgstr ""
-
-#: apps/administration/templates/administration/includes/_system.html:87
-msgid ""
-"The \"Sign in with Microsoft\" button and the Microsoft callback accept sign-"
-"ins."
-msgstr ""
-
-#: apps/administration/templates/administration/includes/_system.html:89
-msgid "Microsoft sign-in is not configured in this environment."
-msgstr ""
-
-#: apps/administration/templates/administration/includes/_system.html:97
-msgid "Password sign-in"
-msgstr ""
-
-#: apps/administration/templates/administration/includes/_system.html:98
-msgid ""
-"An email and password form on the sign-in page, with password reset through "
-"an emailed link."
-msgstr ""
-
-#: apps/administration/templates/administration/includes/_system.html:103
-msgid "Captcha"
-msgstr ""
-
-#: apps/administration/templates/administration/includes/_system.html:104
-msgid "On the password sign-in and forgot password forms."
-msgstr ""
-
-#: apps/administration/templates/administration/includes/_system.html:105
-#, python-format
-msgid "Not configured in this environment: %(providers)s."
-msgstr ""
-
-#: apps/administration/templates/administration/includes/_system.html:122
 msgid "MCP server"
 msgstr ""
 
-#: apps/administration/templates/administration/includes/_system.html:123
+#: apps/administration/templates/administration/includes/_system.html:30
 msgid "Access for AI assistants through the Model Context Protocol."
 msgstr ""
 
-#: apps/administration/templates/administration/includes/_system.html:126
+#: apps/administration/templates/administration/includes/_system.html:33
 msgid ""
 "While the server is on, every active user may connect an AI assistant and "
 "use it with their own roles. While it is off, every connection is refused."
 msgstr ""
 
-#: apps/administration/templates/administration/includes/_system.html:126
+#: apps/administration/templates/administration/includes/_system.html:33
 msgid "Save MCP Server Setting"
 msgstr ""
 
-#: apps/administration/templates/administration/includes/_system.html:131
+#: apps/administration/templates/administration/includes/_system.html:38
 msgid "Connections from AI assistants"
 msgstr ""
 
-#: apps/administration/templates/administration/includes/_system.html:132
+#: apps/administration/templates/administration/includes/_system.html:39
 msgid ""
 "On: every active user may connect an AI assistant, which works with the "
 "user's own project roles. Off: every request to the server is refused."
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_system.html:53
+msgid "Project archiving"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_system.html:54
+msgid "Archive inactive projects and delete archived ones after a period."
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_system.html:62
+msgid "Auto-archive inactive projects"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_system.html:63
+msgid ""
+"Active projects with no change for the number of days below are archived."
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_system.html:68
+msgid "Days without a change"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_system.html:74
+msgid "Users can restore archived projects"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_system.html:75
+msgid "When off, only administrators can restore an archived project."
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_system.html:81
+msgid "Auto-delete archived projects"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_system.html:82
+msgid ""
+"Projects archived for longer than the number of days below are deleted "
+"permanently."
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_system.html:87
+msgid "Days after archiving"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_system.html:100
+msgid "Authentication"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_system.html:101
+msgid "At least one method stays on. Accounts are created by invitation only."
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_system.html:109
+msgid "Microsoft sign-in"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_system.html:112
+msgid ""
+"The \"Sign in with Microsoft\" button and the Microsoft callback accept sign-"
+"ins."
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_system.html:114
+msgid "Microsoft sign-in is not configured in this environment."
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_system.html:122
+msgid "Password sign-in"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_system.html:123
+msgid ""
+"An email and password form on the sign-in page, with password reset through "
+"an emailed link."
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_system.html:128
+msgid "Captcha"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_system.html:129
+msgid "On the password sign-in and forgot password forms."
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_system.html:130
+#, python-format
+msgid "Not configured in this environment: %(providers)s."
 msgstr ""
 
 #: apps/administration/templates/administration/includes/_tags.html:2
@@ -1392,7 +1392,7 @@ msgstr ""
 msgid "Tag Presets"
 msgstr ""
 
-#: apps/administration/views.py:94 apps/doctemplates/views.py:46
+#: apps/administration/views.py:94 apps/doctemplates/views.py:47
 #: apps/projects/views.py:222
 msgid "All"
 msgstr ""
@@ -1475,6 +1475,14 @@ msgstr ""
 
 #: apps/administration/views.py:267
 msgid "System settings saved."
+msgstr ""
+
+#: apps/core/mixins.py:44
+msgid "A built-in template cannot be changed."
+msgstr ""
+
+#: apps/core/mixins.py:46
+msgid "Only the owner of the template or an administrator can change it."
 msgstr ""
 
 #: apps/core/modals.py:105 apps/core/modals.py:107
@@ -1699,25 +1707,25 @@ msgstr ""
 msgid "%(time)s ago"
 msgstr ""
 
-#: apps/doctemplates/forms.py:16
+#: apps/doctemplates/forms.py:17
 msgid "e.g. Risk Analysis Template"
 msgstr ""
 
-#: apps/doctemplates/forms.py:21
+#: apps/doctemplates/forms.py:22
 msgid "Describe what this template is for..."
 msgstr ""
 
-#: apps/doctemplates/forms.py:31
+#: apps/doctemplates/forms.py:32
 #: apps/doctemplates/templates/doctemplates/modals/_template_editor.html:30
 msgid "Visible to all users"
 msgstr ""
 
-#: apps/doctemplates/forms.py:41
+#: apps/doctemplates/forms.py:40 apps/mcp/services.py:303
 #, python-format
 msgid "Attribute names must be unique: %(names)s."
 msgstr ""
 
-#: apps/doctemplates/forms.py:54
+#: apps/doctemplates/forms.py:53
 #: apps/doctemplates/templates/doctemplates/modals/_editor_section.html:20
 #: apps/projects/templates/projects/modals/_structure_section.html:19
 msgid "Describe this section..."
@@ -2048,34 +2056,34 @@ msgstr ""
 msgid "Duplicate as Custom"
 msgstr ""
 
-#: apps/doctemplates/views.py:80
+#: apps/doctemplates/views.py:81
 #, python-format
 msgid "Template \"%(name)s\" created."
 msgstr ""
 
-#: apps/doctemplates/views.py:100
+#: apps/doctemplates/views.py:101
 #, python-format
 msgid "Template \"%(name)s\" updated."
 msgstr ""
 
-#: apps/doctemplates/views.py:201
+#: apps/doctemplates/views.py:172
 #, python-format
 msgid "Cannot delete \"%(name)s\": it is used by %(count)d project."
 msgid_plural "Cannot delete \"%(name)s\": it is used by %(count)d projects."
 msgstr[0] ""
 msgstr[1] ""
 
-#: apps/doctemplates/views.py:209
+#: apps/doctemplates/views.py:180
 #, python-format
 msgid "Template \"%(name)s\" deleted."
 msgstr ""
 
-#: apps/doctemplates/views.py:220 apps/projects/views.py:321
+#: apps/doctemplates/views.py:191 apps/projects/views.py:321
 #, python-format
 msgid "%(name)s (Copy)"
 msgstr ""
 
-#: apps/doctemplates/views.py:252
+#: apps/doctemplates/views.py:223
 #, python-format
 msgid "Template duplicated as \"%(name)s\"."
 msgstr ""
@@ -2108,7 +2116,7 @@ msgstr ""
 msgid "The request body is not valid JSON."
 msgstr ""
 
-#: apps/mcp/asgi.py:148 apps/mcp/tools_write.py:114
+#: apps/mcp/asgi.py:148 apps/mcp/tools_write.py:166
 msgid "This connection is read only."
 msgstr ""
 
@@ -2169,54 +2177,95 @@ msgstr ""
 msgid "Not found: comment %(comment)s."
 msgstr ""
 
-#: apps/mcp/server.py:62
+#: apps/mcp/server.py:63
 #, python-format
 msgid "Not found: tool %(name)s."
 msgstr ""
 
-#: apps/mcp/services.py:38
+#: apps/mcp/services.py:47
 msgid "Not found: your account."
 msgstr ""
 
-#: apps/mcp/services.py:42 apps/mcp/services.py:47
+#: apps/mcp/services.py:51 apps/mcp/services.py:56
 #, python-format
 msgid "project %(slug)s"
 msgstr ""
 
-#: apps/mcp/services.py:114
+#: apps/mcp/services.py:123
 #, python-format
 msgid "Give only one of: %(names)s."
 msgstr ""
 
-#: apps/mcp/services.py:125 apps/projects/writes.py:58
+#: apps/mcp/services.py:134 apps/projects/writes.py:58
 msgid "The item is not in the chosen section."
 msgstr ""
 
-#: apps/mcp/services.py:206
+#: apps/mcp/services.py:215
 #, python-format
 msgid "Created %(count)d item"
 msgid_plural "Created %(count)d items"
 msgstr[0] ""
 msgstr[1] ""
 
-#: apps/mcp/services.py:210
+#: apps/mcp/services.py:219
 #, python-format
 msgid "%(count)d new item created in %(project)s"
 msgid_plural "%(count)d new items created in %(project)s"
 msgstr[0] ""
 msgstr[1] ""
 
-#: apps/mcp/services.py:327
+#: apps/mcp/services.py:248
 #, python-format
 msgid "Not found: template %(template)s."
 msgstr ""
 
-#: apps/mcp/services.py:409
+#: apps/mcp/services.py:266
+#, python-format
+msgid ""
+"The section tree is too deep: section number %(number)s is longer than "
+"%(count)d characters."
+msgstr ""
+
+#: apps/mcp/services.py:270
+#, python-format
+msgid "Section %(number)s has no title."
+msgstr ""
+
+#: apps/mcp/services.py:279
+#, python-format
+msgid "A template holds at most %(count)d sections."
+msgstr ""
+
+#: apps/mcp/services.py:288
+msgid "An attribute has no name."
+msgstr ""
+
+#: apps/mcp/services.py:292
+#, python-format
+msgid ""
+"Attribute %(name)s is not a dropdown or multi-select and takes no options."
+msgstr ""
+
+#: apps/mcp/services.py:295
+#, python-format
+msgid "Attribute %(name)s needs at least one option."
+msgstr ""
+
+#: apps/mcp/services.py:298
+#, python-format
+msgid "An option of attribute %(name)s is empty or holds a comma."
+msgstr ""
+
+#: apps/mcp/services.py:482
 msgid "Enter the comment text."
 msgstr ""
 
-#: apps/mcp/services.py:424
+#: apps/mcp/services.py:497
 msgid "This link already exists."
+msgstr ""
+
+#: apps/mcp/services.py:522
+msgid "Your system role does not allow this."
 msgstr ""
 
 #: apps/mcp/settings_sections.py:15 apps/mcp/views.py:96 apps/mcp/views.py:106

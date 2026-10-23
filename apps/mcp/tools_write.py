@@ -8,10 +8,12 @@ from pydantic import Field
 from apps.mcp import services
 from apps.mcp.errors import ToolRefusal
 from apps.mcp.server import tool
-from apps.mcp.tools_read import ItemDetail, ItemPriority, ItemStatus, ProjectSlug, TagReference
+from apps.doctemplates.models import TemplateAttribute
+from apps.mcp.tools_read import DocType, ItemDetail, ItemPriority, ItemStatus, ProjectSlug, TagReference, TemplateDetail
 from apps.projects.models import TraceabilityLink
 
 LinkType = Literal[tuple(key for key, label in TraceabilityLink.LINK_TYPE_CHOICES)]
+AttributeType = Literal[tuple(key for key, label in TemplateAttribute.FIELD_TYPE_CHOICES)]
 ItemReference = Annotated[str, Field(description='An item id such as REQ-001, or an item key.')]
 SectionReference = Annotated[str, Field(description='A section key or number such as 2.1.')]
 TagValue = Annotated[str, Field(description='A tag key or name, as list_tags returns it.')]
@@ -107,6 +109,56 @@ class AddedLink(TypedDict):
     public_key: str
 
 
+class TemplateSectionEntry(TypedDict):
+    title: Annotated[str, Field(min_length=1, max_length=200)]
+    description: NotRequired[Annotated[str, Field(description='What the section holds; projects show it to writers.')]]
+    children: NotRequired[list['TemplateSectionEntry']]
+
+
+class TemplateAttributeEntry(TypedDict):
+    name: Annotated[str, Field(min_length=1, max_length=100)]
+    type: AttributeType
+    options: NotRequired[Annotated[list[str], Field(
+        description='The choices of a dropdown or multi-select attribute, at least one, none holding a comma; '
+                    'no other type takes options.',
+    )]]
+
+
+TemplateName = Annotated[str, Field(min_length=1, max_length=150)]
+TemplateDescription = Annotated[str, Field(description='What the template is for.')]
+VisibleToAll = Annotated[bool, Field(description='Show the template to every user; otherwise only its owner and administrators see it.')]
+TemplateSections = Annotated[list[TemplateSectionEntry], Field(
+    description='The section tree in document order. Numbers follow the position in the tree: 1, 1.1, 1.2, 2.',
+)]
+TemplateAttributes = Annotated[list[TemplateAttributeEntry], Field(
+    description='The custom attributes in order. Built-in attributes are kept and are not given here.',
+)]
+
+
+class CreateTemplateArguments(TypedDict):
+    name: TemplateName
+    doc_type: DocType
+    description: NotRequired[TemplateDescription]
+    visible_to_all: NotRequired[VisibleToAll]
+    sections: NotRequired[TemplateSections]
+    attributes: NotRequired[TemplateAttributes]
+
+
+class UpdateTemplateArguments(TypedDict):
+    template: Annotated[str, Field(description='The template key, as list_templates returns it.')]
+    name: NotRequired[TemplateName]
+    doc_type: NotRequired[DocType]
+    description: NotRequired[TemplateDescription]
+    visible_to_all: NotRequired[VisibleToAll]
+    sections: NotRequired[Annotated[TemplateSections, Field(
+        description='Replaces the whole section tree, in document order. Numbers follow the position in the tree: '
+                    '1, 1.1, 1.2, 2.',
+    )]]
+    attributes: NotRequired[Annotated[TemplateAttributes, Field(
+        description='Replaces the custom attributes, in order. Built-in attributes are kept and are not given here.',
+    )]]
+
+
 def write_tool(name, description, arguments, result, function, destructive, idempotent=None):
     async def run(validated):
         token = get_access_token()
@@ -149,5 +201,19 @@ TOOLS = (
         'add_link',
         'Link an item to another item of this project or of another project the account can open.',
         AddLinkArguments, AddedLink, services.add_link, destructive=False,
+    ),
+    write_tool(
+        'create_template',
+        'Create a document template with its section tree and custom attributes. The connected account owns it. '
+        'Needs a system role other than Viewer.',
+        CreateTemplateArguments, TemplateDetail, services.create_template, destructive=False,
+    ),
+    write_tool(
+        'update_template',
+        'Change a template the connected account owns; an administrator can change any template that is not '
+        'built-in. A built-in template cannot be changed. Only the fields given change: sections replaces the whole '
+        'section tree and attributes replaces the custom attributes. Projects already made from the template keep '
+        'their sections and attributes.',
+        UpdateTemplateArguments, TemplateDetail, services.update_template, destructive=True, idempotent=True,
     ),
 )

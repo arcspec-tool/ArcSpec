@@ -9,7 +9,9 @@ from mcp.server.auth.middleware.bearer_auth import AuthenticatedUser
 from mcp.server.auth.provider import AccessToken as GrantedToken
 from mcp_types import CallToolRequestParams
 
-from apps.accounts.factories import UserFactory
+from apps.accounts.factories import AdminUserFactory, UserFactory, ViewerUserFactory
+from apps.doctemplates.factories import TemplateAttributeFactory, TemplateFactory, TemplateSectionFactory
+from apps.doctemplates.models import Template
 from apps.mcp import services
 from apps.mcp.errors import ToolRefusal
 from apps.mcp.server import build_server, on_call_tool
@@ -211,6 +213,7 @@ class WriteToolTests(TestCase):
 
     def test_each_write_tool_refuses_a_read_only_token_and_saves_nothing(self):
         build_server()
+        owned = TemplateFactory(created_by=self.user, name='Owned')
         arguments = {
             'create_item': {'project': 'booking', 'section': '1', 'text': 'New'},
             'create_items': {'project': 'booking', 'items': [{'section': '1', 'text': 'New'}]},
@@ -218,7 +221,10 @@ class WriteToolTests(TestCase):
             'set_item_tags': {'project': 'booking', 'item': 'REQ-001', 'remove': []},
             'add_comment': {'project': 'booking', 'item': 'REQ-001', 'text': 'Note'},
             'add_link': {'project': 'booking', 'item': 'REQ-001', 'target_item': 'REQ-001', 'type': 'related-to'},
+            'create_template': {'name': 'New', 'doc_type': 'custom'},
+            'update_template': {'template': str(owned.public_key), 'name': 'Renamed'},
         }
+        templates = list(Template.objects.values_list('pk', 'name'))
         last = self.last_row()
         token = GrantedToken(token='', client_id='', scopes=['read'], subject=key(self.user))
         reset = auth_context_var.set(AuthenticatedUser(token))
@@ -229,7 +235,7 @@ class WriteToolTests(TestCase):
                     self.assertEqual((result.is_error, result.content[0].text), (True, 'This connection is read only.'))
         finally:
             auth_context_var.reset(reset)
-        self.assertEqual(self.last_row(), last)
+        self.assertEqual((self.last_row(), list(Template.objects.values_list('pk', 'name'))), (last, templates))
 
     def comment_four_times(self):
         with self.captureOnCommitCallbacks(execute=True):
@@ -248,6 +254,142 @@ class WriteToolTests(TestCase):
         with self.captureOnCommitCallbacks(execute=True):
             response = self.client.post(url, {'text': 'From the page'}, content_type='application/json')
         self.assertEqual((response.status_code, [message.to for message in mail.outbox]), (201, [[self.owner.email]] * 4))
+
+
+class TemplateToolTests(TestCase):
+
+    def setUp(self):
+        self.owner = UserFactory()
+
+    def sections(self, template):
+        return list(template.sections.order_by('order').values_list('number', 'title', 'description', 'parent__number'))
+
+    def attributes(self, template):
+        return list(template.attributes.order_by('order').values_list('name', 'field_type', 'options', 'is_builtin', 'order'))
+
+    def names(self):
+        return list(Template.objects.order_by('pk').values_list('name', flat=True))
+
+    def test_create_template_stores_the_section_tree_numbered_by_position_and_the_attributes_in_order(self):
+        build_server()
+        token = GrantedToken(token='', client_id='', scopes=['read', 'write'], subject=key(self.owner))
+        reset = auth_context_var.set(AuthenticatedUser(token))
+        try:
+            result = call_tool('create_template', {
+                'name': 'Security Review', 'doc_type': 'risk',
+                'sections': [
+                    {'title': 'Scope', 'description': 'What is reviewed', 'children': [{'title': 'Systems'}, {'title': 'People'}]},
+                    {'title': 'Findings', 'number': '9'},
+                ],
+                'attributes': [
+                    {'name': 'Severity', 'type': 'dropdown', 'options': ['Low', 'High']},
+                    {'name': 'Due', 'type': 'date'},
+                ],
+            })
+        finally:
+            auth_context_var.reset(reset)
+        created = Template.objects.get(public_key=result.structured_content['public_key'])
+        self.assertEqual(self.sections(created), [
+            ('1', 'Scope', 'What is reviewed', None), ('1.1', 'Systems', '', '1'), ('1.2', 'People', '', '1'),
+            ('2', 'Findings', '', None),
+        ])
+        self.assertEqual(self.attributes(created), [('Severity', 'dropdown', ['Low', 'High'], False, 0), ('Due', 'date', [], False, 1)])
+
+    def test_create_template_makes_the_account_the_owner_of_a_template_that_is_not_built_in(self):
+        result = services.create_template(key(self.owner), 'Security Review', 'risk')
+        created = Template.objects.get(public_key=result['public_key'])
+        self.assertEqual((created.created_by, created.is_builtin), (self.owner, False))
+
+    def test_a_system_viewer_cannot_create_a_template(self):
+        names = self.names()
+        with self.assertRaises(ToolRefusal) as caught:
+            services.create_template(key(ViewerUserFactory()), 'Viewer Template', 'custom')
+        self.assertEqual((str(caught.exception), self.names()), ('Your system role does not allow this.', names))
+
+    def test_template_arguments_that_break_a_rule_are_refused_and_nothing_is_saved(self):
+        deep = {'title': 'Deep'}
+        for level in range(10):
+            deep = {'title': 'Deep', 'children': [deep]}
+        names = self.names()
+        for case, arguments, text in (
+            ('blank name', {'name': ' '}, 'name: This field cannot be blank.'),
+            ('blank section title', {'sections': [{'title': ' '}]}, 'sections: Section 1 has no title.'),
+            ('tree too deep', {'sections': [deep]},
+             'sections: The section tree is too deep: section number 1.1.1.1.1.1.1.1.1.1.1 is longer than 20 characters.'),
+            ('blank attribute name', {'attributes': [{'name': ' ', 'type': 'text'}]}, 'attributes: An attribute has no name.'),
+            ('duplicate attribute names', {'attributes': [{'name': 'Risk', 'type': 'text'}, {'name': 'Risk', 'type': 'number'}]},
+             'attributes: Attribute names must be unique: Risk.'),
+            ('options on a text attribute', {'attributes': [{'name': 'Owner', 'type': 'text', 'options': ['A']}]},
+             'attributes: Attribute Owner is not a dropdown or multi-select and takes no options.'),
+            ('dropdown without options', {'attributes': [{'name': 'Level', 'type': 'dropdown'}]},
+             'attributes: Attribute Level needs at least one option.'),
+            ('option with a comma', {'attributes': [{'name': 'Level', 'type': 'multiselect', 'options': ['Low, High']}]},
+             'attributes: An option of attribute Level is empty or holds a comma.'),
+        ):
+            with self.subTest(case=case):
+                with self.assertRaises(ToolRefusal) as caught:
+                    services.create_template(key(self.owner), **{'name': 'Refused', 'doc_type': 'custom', **arguments})
+                self.assertEqual(str(caught.exception), text)
+        self.assertEqual(self.names(), names)
+
+    def test_update_template_changes_only_the_fields_given(self):
+        template = TemplateFactory(created_by=self.owner, name='Change Request', doc_type='custom')
+        TemplateSectionFactory(template=template, number='1', title='Summary', order=0)
+        TemplateAttributeFactory(template=template, name='Impact', order=0)
+        rows = (list(template.sections.values_list('pk', flat=True)), list(template.attributes.values_list('pk', flat=True)))
+        services.update_template(key(self.owner), str(template.public_key), description='Changes to a release', visible_to_all=True)
+        template.refresh_from_db()
+        self.assertEqual(
+            (template.name, template.description, template.doc_type, template.is_global),
+            ('Change Request', 'Changes to a release', 'custom', True),
+        )
+        self.assertEqual(
+            (list(template.sections.values_list('pk', flat=True)), list(template.attributes.values_list('pk', flat=True))), rows,
+        )
+
+    def test_update_template_with_sections_replaces_the_whole_section_tree(self):
+        template = TemplateFactory(created_by=self.owner)
+        TemplateSectionFactory(template=template, number='1', title='Old', order=0)
+        TemplateSectionFactory(template=template, number='2', title='Older', order=1)
+        services.update_template(
+            key(self.owner), str(template.public_key), sections=[{'title': 'Summary', 'children': [{'title': 'Reason'}]}],
+        )
+        self.assertEqual(self.sections(template), [('1', 'Summary', '', None), ('1.1', 'Reason', '', '1')])
+
+    def test_update_template_with_attributes_replaces_the_custom_attributes_and_keeps_the_built_in_ones(self):
+        template = TemplateFactory(created_by=self.owner)
+        TemplateAttributeFactory(template=template, name='Status', is_builtin=True, order=0)
+        TemplateAttributeFactory(template=template, name='Old', order=1)
+        services.update_template(
+            key(self.owner), str(template.public_key),
+            attributes=[{'name': 'Impact', 'type': 'multiselect', 'options': ['Cost', 'Time']}],
+        )
+        self.assertEqual(self.attributes(template), [('Status', 'text', [], True, 0), ('Impact', 'multiselect', ['Cost', 'Time'], False, 1)])
+
+    def test_an_administrator_changes_another_users_private_template(self):
+        template = TemplateFactory(created_by=self.owner, is_global=False, name='Private')
+        services.update_template(key(AdminUserFactory()), str(template.public_key), name='Renamed')
+        template.refresh_from_db()
+        self.assertEqual(template.name, 'Renamed')
+
+    def test_update_template_is_refused_for_a_template_the_account_cannot_change_and_nothing_changes(self):
+        builtin = TemplateFactory(is_builtin=True, created_by=None, name='Built In')
+        shared = TemplateFactory(created_by=self.owner, is_global=True, name='Shared')
+        private = TemplateFactory(created_by=self.owner, is_global=False, name='Private')
+        other = UserFactory()
+        names = self.names()
+        for case, user, value, text in (
+            ('built-in, as an administrator', AdminUserFactory(), str(builtin.public_key), 'A built-in template cannot be changed.'),
+            ("another user's shared template", other, str(shared.public_key),
+             'Only the owner of the template or an administrator can change it.'),
+            ("another user's private template", other, str(private.public_key), f'Not found: template {private.public_key}.'),
+            ('unknown key', other, 'no-such-template', 'Not found: template no-such-template.'),
+        ):
+            with self.subTest(case=case):
+                with self.assertRaises(ToolRefusal) as caught:
+                    services.update_template(key(user), value, name='Changed')
+                self.assertEqual(str(caught.exception), text)
+        self.assertEqual(self.names(), names)
 
 
 class ConflictTests(TransactionTestCase):

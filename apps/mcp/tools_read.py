@@ -280,6 +280,7 @@ class TemplateRow(TypedDict):
     doc_type: str
     description: str
     builtin: bool
+    can_edit: bool
     section_count: int
     attribute_count: int
 
@@ -303,6 +304,7 @@ class TemplateAttributeRow(TypedDict):
     name: str
     type: str
     options: list[str]
+    builtin: bool
 
 
 class TemplateDetail(TypedDict):
@@ -311,6 +313,8 @@ class TemplateDetail(TypedDict):
     doc_type: str
     description: str
     builtin: bool
+    visible_to_all: bool
+    can_edit: bool
     sections: list[TemplateSectionNode]
     attributes: list[TemplateAttributeRow]
 
@@ -409,11 +413,14 @@ TOOLS = (
     ),
     read_tool(
         'list_templates',
-        'The document templates the connected account can use. Filter by a text in the name or by document type.',
+        'The document templates the connected account can use. Filter by a text in the name or by document type. '
+        'can_edit says whether the account can change the template with update_template.',
         ListTemplatesArguments, TemplateList, services.list_templates,
     ),
     read_tool(
-        'get_template', 'One template by its key: its section tree and its attributes.',
+        'get_template',
+        'One template by its key: its section tree, its attributes, whether every user sees it and whether the '
+        'connected account can change it.',
         TemplateArguments, TemplateDetail, services.get_template,
     ),
     read_tool(

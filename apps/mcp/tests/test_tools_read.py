@@ -4,7 +4,8 @@ from django.http import Http404
 from django.test import TestCase
 from django.test.utils import CaptureQueriesContext
 
-from apps.accounts.factories import UserFactory
+from apps.accounts.factories import AdminUserFactory, UserFactory
+from apps.doctemplates.factories import TemplateFactory
 from apps.mcp import identifiers, services
 from apps.mcp.errors import ToolRefusal, refusing
 from apps.notifications.models import AuditLog
@@ -270,3 +271,19 @@ class PaginationTests(TestCase):
                 make(maximum + 1)
                 result = call(limit=maximum + 1)
                 self.assertEqual((len(result[field]), result['has_more']), (maximum, True))
+
+
+class TemplateToolsTests(TestCase):
+
+    def test_get_template_says_whether_the_account_can_change_it(self):
+        owner = UserFactory()
+        own = TemplateFactory(created_by=owner, is_global=True)
+        builtin = TemplateFactory(is_builtin=True, created_by=None)
+        for case, user, template, expected in (
+            ('owner', owner, own, True),
+            ('administrator', AdminUserFactory(), own, True),
+            ('another user', UserFactory(), own, False),
+            ('built-in, as an administrator', AdminUserFactory(), builtin, False),
+        ):
+            with self.subTest(case=case):
+                self.assertEqual(services.get_template(key(user), str(template.public_key))['can_edit'], expected)

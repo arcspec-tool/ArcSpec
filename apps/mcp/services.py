@@ -8,8 +8,17 @@ from django.utils.translation import gettext as _
 from django.utils.translation import ngettext
 
 from apps.accounts.models import User
-from apps.core.mixins import EDITOR_ROLES, project_with_role, visible_template
-from apps.doctemplates.modals import sections_from_template
+from apps.core.mixins import (
+    EDITOR_ROLES,
+    can_edit_template,
+    editable_template,
+    project_with_role,
+    require_not_viewer,
+    visible_template,
+)
+from apps.doctemplates import writes as template_writes
+from apps.doctemplates.modals import MAX_POSTED_SECTIONS, OPTION_TYPES, sections_from_template
+from apps.doctemplates.models import Template, TemplateSection
 from apps.doctemplates.queries import template_list_queryset
 from apps.mcp import identifiers, limits, output
 from apps.mcp import text as markdown
@@ -232,6 +241,71 @@ def revision(row, item, changes):
     return fields, position, attribute_values(row, changes.get('attributes'))
 
 
+def visible(user, template):
+    try:
+        return visible_template(user, identifiers.as_key(template))
+    except (Http404, PermissionDenied):
+        raise ToolRefusal(_('Not found: template %(template)s.') % {'template': template}) from None
+
+
+def template_detail(user, row):
+    return output.template_detail(
+        row, sections_from_template(row), row.attributes.order_by('order'), can_edit_template(user, row),
+    )
+
+
+def template_sections(entries):
+    longest = TemplateSection._meta.get_field('number').max_length
+    rows = []
+
+    def add(level, parent):
+        for position, entry in enumerate(level, start=1):
+            number = f'{parent}.{position}' if parent else str(position)
+            if len(number) > longest:
+                raise ValidationError({'sections': _(
+                    'The section tree is too deep: section number %(number)s is longer than %(count)d characters.'
+                ) % {'number': number, 'count': longest}})
+            title = entry['title'].strip()
+            if not title:
+                raise ValidationError({'sections': _('Section %(number)s has no title.') % {'number': number}})
+            rows.append({
+                'title': title, 'description': entry.get('description', '').strip(), 'number': number,
+                'order': len(rows), 'ref': number, 'parent_ref': parent or None,
+            })
+            add(entry.get('children', ()), number)
+
+    add(entries, '')
+    if len(rows) > MAX_POSTED_SECTIONS:
+        raise ValidationError({'sections': _('A template holds at most %(count)d sections.') % {'count': MAX_POSTED_SECTIONS}})
+    return rows
+
+
+def template_attributes(row, entries):
+    rows = []
+    for entry in entries:
+        name = entry['name'].strip()
+        if not name:
+            raise ValidationError({'attributes': _('An attribute has no name.')})
+        options = [option.strip() for option in entry.get('options', ())]
+        if entry['type'] not in OPTION_TYPES and options:
+            raise ValidationError({'attributes': _(
+                'Attribute %(name)s is not a dropdown or multi-select and takes no options.'
+            ) % {'name': name}})
+        if entry['type'] in OPTION_TYPES and not options:
+            raise ValidationError({'attributes': _('Attribute %(name)s needs at least one option.') % {'name': name}})
+        if any(not option or ',' in option for option in options):
+            raise ValidationError({'attributes': _(
+                'An option of attribute %(name)s is empty or holds a comma.'
+            ) % {'name': name}})
+        rows.append((name, entry['type'], options))
+    duplicates = template_writes.duplicate_attribute_names(row, [name for name, field_type, options in rows])
+    if duplicates:
+        raise ValidationError({'attributes': _('Attribute names must be unique: %(names)s.') % {
+            'names': ', '.join(duplicates),
+        }})
+    return rows
+
+
 def whoami(user_key):
     user = load_user(user_key)
     return {'name': str(user), 'email': user.email, 'system_role': user.system_role}
@@ -316,16 +390,15 @@ def list_audit_log(user_key, project, action=None, user=None, item=None, offset=
 
 def list_templates(user_key, q='', doc_type=''):
     user = load_user(user_key)
-    return {'templates': [output.template_row(template) for template in template_list_queryset(user, q, doc_type)]}
+    return {'templates': [
+        output.template_row(template, can_edit_template(user, template))
+        for template in template_list_queryset(user, q, doc_type)
+    ]}
 
 
 def get_template(user_key, template):
     user = load_user(user_key)
-    try:
-        row = visible_template(user, identifiers.as_key(template))
-    except (Http404, PermissionDenied):
-        raise ToolRefusal(_('Not found: template %(template)s.') % {'template': template}) from None
-    return output.template_detail(row, sections_from_template(row), row.attributes.order_by('order'))
+    return template_detail(user, visible(user, template))
 
 
 def search(user_key, q):
@@ -426,3 +499,51 @@ def add_link(user_key, project, item, target_item, type, target_project=None):
         with transaction.atomic():
             link = writes.create_link(row, user, source, target, type)
     return {'public_key': str(link.public_key)}
+
+
+TEMPLATE_FIELDS = (('name', 'name'), ('description', 'description'), ('doc_type', 'doc_type'), ('visible_to_all', 'is_global'))
+
+
+def save_template(row, sections, attributes):
+    with refusing():
+        with transaction.atomic():
+            row.save()
+            if sections is not None:
+                template_writes.replace_sections(row, sections)
+            if attributes is not None:
+                template_writes.replace_attributes(row, attributes)
+
+
+def create_template(user_key, name, doc_type, description='', visible_to_all=False, sections=(), attributes=()):
+    user = load_user(user_key)
+    try:
+        require_not_viewer(user)
+    except PermissionDenied:
+        raise ToolRefusal(_('Your system role does not allow this.')) from None
+    row = Template(
+        name=name.strip(), description=description.strip(), doc_type=doc_type, is_global=visible_to_all,
+        is_builtin=False, created_by=user,
+    )
+    with refusing():
+        row.full_clean()
+        section_rows = template_sections(sections)
+        attribute_rows = template_attributes(row, attributes)
+    save_template(row, section_rows, attribute_rows)
+    return template_detail(user, row)
+
+
+def update_template(user_key, template, **changes):
+    user = load_user(user_key)
+    row = visible(user, template)
+    with refusing():
+        row = editable_template(user, row.public_key)
+        for name, model_field in TEMPLATE_FIELDS:
+            if name in changes:
+                value = changes[name]
+                setattr(row, model_field, value.strip() if isinstance(value, str) else value)
+        row.full_clean()
+        section_rows = template_sections(changes['sections']) if 'sections' in changes else None
+        attribute_rows = template_attributes(row, changes['attributes']) if 'attributes' in changes else None
+    if changes:
+        save_template(row, section_rows, attribute_rows)
+    return template_detail(user, row)

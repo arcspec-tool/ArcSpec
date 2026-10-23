@@ -185,13 +185,14 @@ def audit_entry(entry):
     }
 
 
-def template_row(template):
+def template_row(template, can_edit):
     return {
         'public_key': str(template.public_key),
         'name': template.name,
         'doc_type': template.doc_type,
         'description': template.description,
         'builtin': template.is_builtin,
+        'can_edit': can_edit,
         'section_count': template.section_total,
         'attribute_count': template.attribute_total,
     }
@@ -209,15 +210,19 @@ def template_sections(nodes):
     ]
 
 
-def template_detail(template, sections, attributes):
+def template_detail(template, sections, attributes, can_edit):
     return {
         'public_key': str(template.public_key),
         'name': template.name,
         'doc_type': template.doc_type,
         'description': template.description,
         'builtin': template.is_builtin,
+        'visible_to_all': template.is_global,
+        'can_edit': can_edit,
         'sections': template_sections(sections),
-        'attributes': [{'name': a.name, 'type': a.field_type, 'options': a.options} for a in attributes],
+        'attributes': [
+            {'name': a.name, 'type': a.field_type, 'options': a.options, 'builtin': a.is_builtin} for a in attributes
+        ],
     }
 
 

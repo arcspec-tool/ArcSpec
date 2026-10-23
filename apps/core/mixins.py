@@ -2,6 +2,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin as DjangoLoginRequired
 from django.core.exceptions import PermissionDenied
 from django.http import Http404
 from django.shortcuts import get_object_or_404
+from django.utils.translation import gettext as _
 
 MEMBER_ROLES = ('admin', 'editor', 'viewer')
 EDITOR_ROLES = ('admin', 'editor')
@@ -32,13 +33,17 @@ def project_with_role(user, slug, roles=MEMBER_ROLES, writable=False):
     return project, role
 
 
+def can_edit_template(user, template):
+    return not template.is_builtin and (user.is_system_admin or template.created_by_id == user.pk)
+
+
 def editable_template(user, public_key):
     from apps.doctemplates.models import Template
     template = get_object_or_404(Template, public_key=public_key)
     if template.is_builtin:
-        raise PermissionDenied
-    if not user.is_system_admin and template.created_by != user:
-        raise PermissionDenied
+        raise PermissionDenied(_('A built-in template cannot be changed.'))
+    if not can_edit_template(user, template):
+        raise PermissionDenied(_('Only the owner of the template or an administrator can change it.'))
     return template
 
 
