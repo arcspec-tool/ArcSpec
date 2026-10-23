@@ -29,15 +29,16 @@ SectionReference = Annotated[str, Field(description='A section key or number suc
 TagValue = Annotated[str, Field(description='A tag key or name, as list_tags returns it.')]
 AttributeValue = str | bool | int | float | list[str] | None
 Attributes = Annotated[dict[str, AttributeValue], Field(
-    description='Attribute name or key to value: true or false for a boolean, a list for a multi-select, '
-                'the email address of a project member for a user attribute.',
+    description='Attribute name or key to value, as list_attributes lists them: true or false for a boolean, a list '
+                'for a multi-select, one of the options for a dropdown, the email address of a project member for a '
+                'user attribute. A built-in attribute cannot be set.',
 )]
 Markdown = Annotated[str, Field(
     min_length=1,
     description='Markdown: paragraphs, bold, italic, strikethrough, lists and tables. Headings, code, block quotes, '
                 'rules, links and images stay as typed characters.',
 )]
-Email = Annotated[str, Field(description='The email address of a project member or a system administrator.')]
+Email = Annotated[str, Field(description='The email address of a project member or a system administrator; get_project lists the members.')]
 
 
 class ItemEntry(TypedDict):
@@ -81,7 +82,12 @@ class UpdateItemArguments(TypedDict):
     status: NotRequired[ItemStatus]
     priority: NotRequired[ItemPriority]
     assignee: NotRequired[Annotated[str | None, Field(description='An email address, or null to clear.')]]
-    attributes: NotRequired[Annotated[Attributes, Field(description='Merged into the stored values; null clears one.')]]
+    attributes: NotRequired[Annotated[Attributes, Field(
+        description='Attribute name or key to value, as list_attributes lists them, merged into the stored values; '
+                    'null clears one. true or false for a boolean, a list for a multi-select, one of the options for '
+                    'a dropdown, the email address of a project member for a user attribute. A built-in attribute '
+                    'cannot be set.',
+    )]]
 
 
 class SetItemTagsArguments(TypedDict):
@@ -112,7 +118,12 @@ class AddLinkArguments(TypedDict):
     item: ItemReference
     target_project: NotRequired[Annotated[str, Field(description='The slug of the target project; the same project by default.')]]
     target_item: ItemReference
-    type: LinkType
+    type: Annotated[LinkType, Field(
+        description='How the item relates to target_item, read as "item type target_item": traces-to, the item '
+                    'fulfils or refines the target, such as a requirement tracing to a need; derived-from, the item '
+                    'was derived from the target; verified-by, the target verifies the item, such as a test case for '
+                    'a requirement; conflicts-with, the two contradict each other; related-to, any other relation.',
+    )]
 
 
 class AddedLink(TypedDict):
@@ -153,7 +164,10 @@ class Attachments(TypedDict):
 
 class TemplateSectionEntry(TypedDict):
     title: Annotated[str, Field(min_length=1, max_length=200)]
-    description: NotRequired[Annotated[str, Field(description='What the section holds; projects show it to writers.')]]
+    description: NotRequired[Annotated[str, Field(
+        description='What the section holds. Writers and assistants place items in a project by this text, so give '
+                    'every section one.',
+    )]]
     children: NotRequired[list['TemplateSectionEntry']]
 
 
@@ -214,24 +228,28 @@ TOOLS = (
     write_tool(
         'create_item',
         'Create one item in a section of a project, at the end of the section or before or after an item of it. '
+        'Choose the section whose description or title in list_sections fits the item. '
         'Needs the Editor or Admin role and a project that is not archived.',
         CreateItemArguments, ItemDetail, services.create_item, destructive=False,
     ),
     write_tool(
         'create_items',
-        'Create 1 to 100 items in one project in one call. Nothing is saved when one entry is refused; the error '
-        'names the entry as items[<index>]. Members get one notification for the whole call.',
+        'Create 1 to 100 items in one project in one call. Choose each item\'s section by its description or title '
+        'in list_sections. Nothing is saved when one entry is refused; the error names the entry as items[<index>]. '
+        'Members get one notification for the whole call.',
         CreateItemsArguments, CreatedItems, services.create_items, destructive=False,
     ),
     write_tool(
         'update_item',
         'Change an item: its text, section, place in the section, status, priority, assignee or attribute values. '
-        'Only the fields given change.',
+        'Only the fields given change. To move the item to another section, choose one whose description or title '
+        'in list_sections fits the item.',
         UpdateItemArguments, ItemDetail, services.update_item, destructive=True, idempotent=True,
     ),
     write_tool(
         'set_item_tags',
-        'Add tags to an item and remove tags from it in one call.',
+        'Add tags to an item and remove tags from it in one call. Only existing tags can be used; list_tags lists '
+        'them.',
         SetItemTagsArguments, ItemTags, services.set_item_tags, destructive=True, idempotent=True,
     ),
     write_tool(
@@ -241,7 +259,8 @@ TOOLS = (
     ),
     write_tool(
         'add_link',
-        'Link an item to another item of this project or of another project the account can open.',
+        'Link an item to another item of this project or of another project the account can open. The link '
+        'reads from item to target_item; type says how they relate.',
         AddLinkArguments, AddedLink, services.add_link, destructive=False,
     ),
     write_tool(

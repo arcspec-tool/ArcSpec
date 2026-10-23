@@ -249,7 +249,10 @@ class VersionList(TypedDict):
 
 class ListAuditLogArguments(TypedDict):
     project: ProjectSlug
-    action: NotRequired[Annotated[AuditAction, Field(description='One action, or the collaboration group.')]]
+    action: NotRequired[Annotated[AuditAction, Field(
+        description='One action, or collaboration for collaborator_added, collaborator_removed and '
+                    'collaborator_role_changed together.',
+    )]]
     user: NotRequired[Annotated[str, Field(description='The email address of the user who acted.')]]
     item: NotRequired[Annotated[str, Field(description='An item id such as REQ-001.')]]
     offset: NotRequired[Offset]
@@ -374,7 +377,8 @@ TOOLS = (
     ),
     read_tool(
         'list_sections',
-        'The section tree of a project. item_count counts the section\'s own items; total_items includes its subsections.',
+        'The section tree of a project. Each section\'s description says what belongs in it; place items by it. '
+        'item_count counts the section\'s own items; total_items includes its subsections.',
         ProjectArguments, SectionList, services.list_sections,
     ),
     read_tool(
@@ -388,7 +392,7 @@ TOOLS = (
         'get_item',
         'One item of a project: its text as stored HTML, tags, attribute values, attachments, comments and the links '
         'to and from other items. A linked item in a project the account cannot open carries only the project name '
-        'and the item id.',
+        'and the item id. To change the text, send Markdown to update_item.',
         ItemArguments, ItemDetail, services.get_item,
     ),
     read_tool(
