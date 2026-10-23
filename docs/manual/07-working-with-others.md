@@ -85,6 +85,8 @@ You need the Editor or Admin role in the project.
 2. In the Details panel, click the paper clip next to **Attachments**.
 3. Choose the file.
 
+ArcSpec checks the MIME type of the file.
+
 Click a file name to download the file.
 Click the x at the end of its line to delete it.
 

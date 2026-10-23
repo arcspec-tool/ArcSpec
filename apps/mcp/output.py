@@ -129,7 +129,7 @@ def item_detail(item, tags, roles, emails):
         ],
         'image_caption': item.image_caption,
         'has_image': bool(item.image),
-        'attachments': [{'filename': a.filename, 'size': a.file_size} for a in item.attachments.all()],
+        'attachments': [attachment_row(a) for a in item.attachments.all()],
         'comments': [
             {
                 'public_key': keys[comment.pk],
@@ -185,13 +185,18 @@ def audit_entry(entry):
     }
 
 
-def template_row(template):
+def attachment_row(attachment):
+    return {'public_key': str(attachment.public_key), 'filename': attachment.filename, 'size': attachment.file_size}
+
+
+def template_row(template, can_edit):
     return {
         'public_key': str(template.public_key),
         'name': template.name,
         'doc_type': template.doc_type,
         'description': template.description,
         'builtin': template.is_builtin,
+        'can_edit': can_edit,
         'section_count': template.section_total,
         'attribute_count': template.attribute_total,
     }
@@ -209,15 +214,19 @@ def template_sections(nodes):
     ]
 
 
-def template_detail(template, sections, attributes):
+def template_detail(template, sections, attributes, can_edit):
     return {
         'public_key': str(template.public_key),
         'name': template.name,
         'doc_type': template.doc_type,
         'description': template.description,
         'builtin': template.is_builtin,
+        'visible_to_all': template.is_global,
+        'can_edit': can_edit,
         'sections': template_sections(sections),
-        'attributes': [{'name': a.name, 'type': a.field_type, 'options': a.options} for a in attributes],
+        'attributes': [
+            {'name': a.name, 'type': a.field_type, 'options': a.options, 'builtin': a.is_builtin} for a in attributes
+        ],
     }
 
 

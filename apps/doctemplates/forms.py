@@ -4,6 +4,7 @@ from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy
 
 from apps.doctemplates.models import Template, TemplateSection
+from apps.doctemplates.writes import duplicate_attribute_names
 
 
 class TemplateForm(forms.ModelForm):
@@ -34,9 +35,7 @@ class TemplateForm(forms.ModelForm):
     def clean(self):
         cleaned_data = super().clean()
         names = [name.strip() for name in self.data.getlist('attr_name[]') if name.strip()]
-        if self.instance.pk:
-            names += self.instance.attributes.filter(is_builtin=True).values_list('name', flat=True)
-        duplicates = sorted({name for name in names if names.count(name) > 1})
+        duplicates = duplicate_attribute_names(self.instance, names)
         if duplicates:
             raise forms.ValidationError(_('Attribute names must be unique: %(names)s.') % {'names': ', '.join(duplicates)})
         return cleaned_data

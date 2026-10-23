@@ -82,6 +82,14 @@ def build_server():
     TOOLS.update({spec.name: spec for spec in tools_read.TOOLS + tools_write.TOOLS})
     return Server(
         'ArcSpec',
+        instructions=(
+            'ArcSpec holds specifications as projects. A project has numbered sections, and each item is in one '
+            'section. Before you create items in a project or move an item to another section, call get_project and '
+            'list_sections for that project; call list_attributes and list_tags before you set attributes or tags. '
+            'Put each item in the section whose description fits it, or whose title fits it when the section has no '
+            'description, and write the item as that description asks. When no section fits, tell the user and do '
+            'not choose one.'
+        ),
         on_list_tools=on_list_tools,
         on_call_tool=on_call_tool,
         get_tool_input_schema=get_tool_input_schema,

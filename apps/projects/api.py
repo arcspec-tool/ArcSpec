@@ -44,8 +44,6 @@ from apps.projects.queries import (
 )
 from apps.projects.sanitize import plain_text, sanitize_rich_text
 from apps.projects.serializers import (
-    ALLOWED_IMAGE_EXTENSIONS,
-    MAX_IMAGE_SIZE,
     AttachmentSerializer,
     BulkOperationSerializer,
     CollaboratorSerializer,
@@ -64,12 +62,17 @@ from apps.projects.serializers import (
     item_image_url,
 )
 from apps.projects.signals import create_version
+from apps.projects.uploads import check_attachment, check_image
 from apps.projects.writes import (
+    add_attachment,
     create_comment,
     create_item,
     create_link,
+    remove_attachment,
+    remove_item_image,
     replace_item_tags,
     set_attribute_values,
+    set_item_image,
     update_item,
 )
 
@@ -357,44 +360,12 @@ class ItemImageUploadView(ProjectAPIMixin, APIView):
         uploaded_file = request.FILES.get('image')
         if not uploaded_file:
             return Response({'error': _('No image file provided.')}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            check_image(uploaded_file)
+        except DjangoValidationError as exc:
+            return Response({'error': exc.messages[0]}, status=status.HTTP_400_BAD_REQUEST)
 
-        import os
-        ext = os.path.splitext(uploaded_file.name)[1].lower()
-        if ext not in ALLOWED_IMAGE_EXTENSIONS:
-            return Response(
-                {'error': _('Image type "%(ext)s" is not allowed. Use PNG, JPG, GIF, or WebP.') % {'ext': ext}},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-        if uploaded_file.size > MAX_IMAGE_SIZE:
-            return Response(
-                {'error': _('Image size exceeds 5 MB limit.')},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        had_image = bool(item.image)
-        old_filename = item.image.name if item.image else None
-        if item.image:
-            item.image.delete(save=False)
-
-        item.image = uploaded_file
-        caption = request.data.get('image_caption', '').strip()
-        if caption:
-            item.image_caption = caption
-        item._actor = request.user
-        item.save()
-
-        audit_details = {
-            'field': 'image',
-            'action': 'changed' if had_image else 'added',
-            'filename': uploaded_file.name,
-        }
-        if had_image:
-            audit_details['previous_filename'] = old_filename.split('/')[-1] if old_filename else None
-        AuditLog.objects.create(
-            project=project, user=request.user, action='edited',
-            target_type='Item', target_id=item.item_id,
-            details=audit_details,
-        )
+        set_item_image(item, request.user, uploaded_file, request.data.get('image_caption', '').strip())
 
         return Response({
             'image': item_image_url(item, project.slug),
@@ -404,19 +375,7 @@ class ItemImageUploadView(ProjectAPIMixin, APIView):
     def delete(self, request, slug, public_key):
         project = self.get_project()
         item = get_object_or_404(Item, public_key=public_key, project=project)
-        if item.image:
-            item.image.delete(save=False)
-        item.image = None
-        item.image_caption = ''
-        item._actor = request.user
-        item.save()
-
-        AuditLog.objects.create(
-            project=project, user=request.user, action='edited',
-            target_type='Item', target_id=item.item_id,
-            details={'field': 'image', 'action': 'removed'},
-        )
-
+        remove_item_image(item, request.user)
         return Response({'status': 'ok'})
 
 
@@ -509,47 +468,16 @@ class AttachmentListCreateView(ItemScopedMixin, generics.ListCreateAPIView):
             return [IsAuthenticated(), IsProjectEditorOrAdmin(), ProjectNotArchived()]
         return super().get_permissions()
 
-    ALLOWED_EXTENSIONS = {
-        '.pdf', '.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx',
-        '.txt', '.csv', '.rtf', '.odt', '.ods', '.odp',
-        '.png', '.jpg', '.jpeg', '.gif', '.bmp', '.webp',
-        '.zip', '.rar', '.7z', '.tar', '.gz',
-        '.json', '.xml', '.yaml', '.yml', '.md',
-    }
-
     def perform_create(self, serializer):
         item = self.get_item()
         uploaded_file = self.request.FILES.get('file')
         if not uploaded_file:
-            from rest_framework.exceptions import ValidationError
             raise ValidationError({'file': _('No file was uploaded.')})
-
-        import os
-        ext = os.path.splitext(uploaded_file.name)[1].lower()
-        if ext not in self.ALLOWED_EXTENSIONS:
-            from rest_framework.exceptions import ValidationError
-            raise ValidationError({'file': _('File type "%(ext)s" is not allowed.') % {'ext': ext}})
-
-        from apps.administration.models import SystemSettings
-        settings = SystemSettings.load()
-        max_bytes = settings.max_attachment_size_mb * 1024 * 1024
-        if uploaded_file.size > max_bytes:
-            from rest_framework.exceptions import ValidationError
-            raise ValidationError({
-                'file': _('File size exceeds the %(size)s MB limit.') % {'size': settings.max_attachment_size_mb}
-            })
-
-        serializer.save(
-            item=item,
-            uploaded_by=self.request.user,
-            filename=uploaded_file.name,
-            file_size=uploaded_file.size,
-        )
-        AuditLog.objects.create(
-            project=item.project, user=self.request.user, action='attachment_added',
-            target_type='Item', target_id=item.item_id,
-            details={'filename': uploaded_file.name},
-        )
+        try:
+            check_attachment(uploaded_file)
+        except DjangoValidationError as exc:
+            raise ValidationError({'file': exc.messages})
+        serializer.instance = add_attachment(item, self.request.user, uploaded_file)
 
 
 class AttachmentDestroyView(ProjectAPIMixin, generics.DestroyAPIView):
@@ -560,14 +488,7 @@ class AttachmentDestroyView(ProjectAPIMixin, generics.DestroyAPIView):
         return Attachment.objects.filter(item__project=self.get_project())
 
     def perform_destroy(self, instance):
-        item = instance.item
-        filename = instance.filename
-        super().perform_destroy(instance)
-        AuditLog.objects.create(
-            project=item.project, user=self.request.user, action='attachment_removed',
-            target_type='Item', target_id=item.item_id,
-            details={'filename': filename},
-        )
+        remove_attachment(instance, self.request.user)
 
 
 

@@ -182,6 +182,8 @@ The assignee is changed in the Edit Item dialog, see [Edit an item](#edit-an-ite
 3. Add a **Caption** if you want one.
 4. Click **Save Changes**.
 
+ArcSpec checks the MIME type of the image.
+
 The image is shown above the item text in the table and in the Details panel.
 In the Details panel, click the image to view it full size, **Change** to replace it or **Remove** to delete it.
 

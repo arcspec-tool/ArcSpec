@@ -9,12 +9,13 @@ from django.utils.translation import ngettext
 from django.views import View
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
-from apps.core.mixins import LoginRequiredMixin, NotViewerMixin, TemplateOwnerOrAdminMixin
+from apps.core.mixins import LoginRequiredMixin, NotViewerMixin, TemplateOwnerOrAdminMixin, can_edit_template
 from apps.core.modals import is_ajax, render_modal
 from apps.doctemplates.forms import TemplateForm
 from apps.doctemplates.modals import attributes_from_post, editor_context, sections_from_post
 from apps.doctemplates.models import Template, TemplateAttribute, TemplateSection
 from apps.doctemplates.queries import template_list_queryset
+from apps.doctemplates.writes import replace_attributes, replace_sections
 
 
 class TemplateListView(LoginRequiredMixin, ListView):
@@ -34,7 +35,7 @@ class TemplateListView(LoginRequiredMixin, ListView):
         user = self.request.user
         templates = list(context['templates'])
         for tmpl in templates:
-            tmpl.can_edit = not tmpl.is_builtin and (user.is_system_admin or tmpl.created_by_id == user.pk)
+            tmpl.can_edit = can_edit_template(user, tmpl)
             tmpl.can_delete = tmpl.can_edit and tmpl.usage_count == 0
             tmpl.can_duplicate = not user.is_viewer
         context['builtin_templates'] = [t for t in templates if t.is_builtin]
@@ -129,40 +130,17 @@ def _save_sections_from_post(post_data, template):
             'parent_ref': parent_ref if parent_ref else None,
         })
 
-    template.sections.all().delete()
-
-    ref_to_section = {}
-    created = []
-    for s in sections:
-        section = TemplateSection.objects.create(
-            template=template,
-            title=s['title'],
-            description=s['description'],
-            number=s['number'],
-            order=s['order'],
-        )
-        if s['ref']:
-            ref_to_section[s['ref']] = section
-        created.append((section, s['parent_ref']))
-
-    for section, parent_ref in created:
-        if parent_ref and parent_ref in ref_to_section:
-            section.parent = ref_to_section[parent_ref]
-            section.save(update_fields=['parent'])
+    replace_sections(template, sections)
 
 
 def _save_attributes_from_post(post_data, template):
     names = post_data.getlist('attr_name[]')
     types = post_data.getlist('attr_type[]')
     options_list = post_data.getlist('attr_options[]')
-    if not names:
-        template.attributes.filter(is_builtin=False).delete()
-        return
 
     valid_types = {'text', 'number', 'date', 'boolean', 'user', 'dropdown', 'multiselect'}
 
-    template.attributes.filter(is_builtin=False).delete()
-    order = template.attributes.filter(is_builtin=True).count()
+    attributes = []
     for i, name in enumerate(names):
         name = name.strip()
         if not name:
@@ -173,15 +151,8 @@ def _save_attributes_from_post(post_data, template):
         options = []
         if field_type in ('dropdown', 'multiselect') and i < len(options_list):
             options = [o.strip() for o in options_list[i].split(',') if o.strip()]
-        TemplateAttribute.objects.create(
-            template=template,
-            name=name,
-            field_type=field_type,
-            options=options,
-            is_builtin=False,
-            order=order,
-        )
-        order += 1
+        attributes.append((name, field_type, options))
+    replace_attributes(template, attributes)
 
 
 class TemplateDeleteView(TemplateOwnerOrAdminMixin, DeleteView):

@@ -1,6 +1,6 @@
 # 10. Connect an AI assistant
 
-An AI assistant can read your projects and change items for you.
+An AI assistant can read your projects and change items and templates for you.
 The assistant connects to the Model Context Protocol (MCP) server of ArcSpec.
 In this chapter, an AI assistant that connects to ArcSpec is an app.
 
@@ -53,16 +53,24 @@ Then, do steps 4 thru 7.
 On the **Allow Access** page, you select the access of the app:
 
 - **Read only**: The app can read the projects that you are a member of. The app cannot change data.
-- **Read and write**: The app can also add and change items.
+- **Read and write**: The app can also add and change items and templates.
 
 The app has the same permissions as you.
 To change data in a project, your role in that project must be Editor or Admin.
 The app cannot change data in an archived project.
 
+To add a template, your system role must be User or Administrator.
+The app can change only the templates that you added.
+If your system role is Administrator, the app can change all templates that are not built-in.
+The app cannot change a built-in template.
+
 When the app changes data, ArcSpec records your name in the **Audit Log** and in the **Version History**.
 The other members of the project get the usual notifications.
 For changes from an app, ArcSpec sends each person a maximum of 3 emails in 15 minutes for one project.
 All notifications show on the Dashboard.
+
+Changes to templates do not show in the **Audit Log** or in the **Version History**.
+Changes to templates do not cause notifications.
 
 If the app has **Read only** access and tries to change data, Claude Code shows a message.
 The message tells you that the app must have the "write" permission.
@@ -89,9 +97,21 @@ With **Read and write** access, an app can also:
 - Add tags to an item and remove tags from an item.
 - Add comments and replies.
 - Add links between items. The other item can be in a different project that you are a member of.
+- Add an image to an item, replace the image or remove it.
+- Attach files to an item and remove attachments.
+- Add templates with their sections and attributes.
+- Change the **Template Name**, the **Document Type**, the **Description**, the sections and the attributes of a template.
 
-An app cannot delete data.
-An app cannot change projects, sections, members, templates, attachments or images.
+When the app changes the sections of a template, it replaces all the sections of that template.
+When the app changes the attributes of a template, it replaces all the attributes that are not built-in.
+A change to a template does not change the projects that you made from that template.
+
+The app sends the image or the file in the request.
+The maximum size of a file from an app is ~1.9 MB.
+ArcSpec checks the MIME type of each file.
+
+An app cannot delete items, comments, links, projects or templates.
+An app cannot change the settings, sections or members of a project.
 An app cannot use the Admin Panel.
 
 The app writes the text of an item in Markdown.

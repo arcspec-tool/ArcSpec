@@ -1,27 +1,20 @@
-import os
-
+from django.core.exceptions import ValidationError as DjangoValidationError
 from django.urls import reverse
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy
 from rest_framework import serializers
 
 from apps.projects.sanitize import sanitize_rich_text
-
-ALLOWED_IMAGE_EXTENSIONS = {'.png', '.jpg', '.jpeg', '.gif', '.webp'}
-MAX_IMAGE_SIZE = 5 * 1024 * 1024
+from apps.projects.uploads import check_image
 
 
 def _validate_image_field(value):
     if value is None:
         return value
-    ext = os.path.splitext(value.name)[1].lower()
-    if ext not in ALLOWED_IMAGE_EXTENSIONS:
-        raise serializers.ValidationError(
-            _('Image type "%(ext)s" is not allowed. Use PNG, JPG, GIF, or WebP.') % {'ext': ext}
-        )
-    if value.size > MAX_IMAGE_SIZE:
-        raise serializers.ValidationError(_('Image size exceeds 5 MB limit.'))
-    return value
+    try:
+        return check_image(value)
+    except DjangoValidationError as exc:
+        raise serializers.ValidationError(exc.messages)
 
 
 def item_image_url(item, slug=None):

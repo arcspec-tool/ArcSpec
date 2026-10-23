@@ -8,24 +8,37 @@ from pydantic import Field
 from apps.mcp import services
 from apps.mcp.errors import ToolRefusal
 from apps.mcp.server import tool
-from apps.mcp.tools_read import ItemDetail, ItemPriority, ItemStatus, ProjectSlug, TagReference
+from apps.doctemplates.models import TemplateAttribute
+from apps.mcp.tools_read import (
+    AttachmentRow,
+    DocType,
+    ItemArguments,
+    ItemDetail,
+    ItemPriority,
+    ItemStatus,
+    ProjectSlug,
+    TagReference,
+    TemplateDetail,
+)
 from apps.projects.models import TraceabilityLink
 
 LinkType = Literal[tuple(key for key, label in TraceabilityLink.LINK_TYPE_CHOICES)]
+AttributeType = Literal[tuple(key for key, label in TemplateAttribute.FIELD_TYPE_CHOICES)]
 ItemReference = Annotated[str, Field(description='An item id such as REQ-001, or an item key.')]
 SectionReference = Annotated[str, Field(description='A section key or number such as 2.1.')]
 TagValue = Annotated[str, Field(description='A tag key or name, as list_tags returns it.')]
 AttributeValue = str | bool | int | float | list[str] | None
 Attributes = Annotated[dict[str, AttributeValue], Field(
-    description='Attribute name or key to value: true or false for a boolean, a list for a multi-select, '
-                'the email address of a project member for a user attribute.',
+    description='Attribute name or key to value, as list_attributes lists them: true or false for a boolean, a list '
+                'for a multi-select, one of the options for a dropdown, the email address of a project member for a '
+                'user attribute. A built-in attribute cannot be set.',
 )]
 Markdown = Annotated[str, Field(
     min_length=1,
     description='Markdown: paragraphs, bold, italic, strikethrough, lists and tables. Headings, code, block quotes, '
                 'rules, links and images stay as typed characters.',
 )]
-Email = Annotated[str, Field(description='The email address of a project member or a system administrator.')]
+Email = Annotated[str, Field(description='The email address of a project member or a system administrator; get_project lists the members.')]
 
 
 class ItemEntry(TypedDict):
@@ -69,7 +82,12 @@ class UpdateItemArguments(TypedDict):
     status: NotRequired[ItemStatus]
     priority: NotRequired[ItemPriority]
     assignee: NotRequired[Annotated[str | None, Field(description='An email address, or null to clear.')]]
-    attributes: NotRequired[Annotated[Attributes, Field(description='Merged into the stored values; null clears one.')]]
+    attributes: NotRequired[Annotated[Attributes, Field(
+        description='Attribute name or key to value, as list_attributes lists them, merged into the stored values; '
+                    'null clears one. true or false for a boolean, a list for a multi-select, one of the options for '
+                    'a dropdown, the email address of a project member for a user attribute. A built-in attribute '
+                    'cannot be set.',
+    )]]
 
 
 class SetItemTagsArguments(TypedDict):
@@ -100,11 +118,101 @@ class AddLinkArguments(TypedDict):
     item: ItemReference
     target_project: NotRequired[Annotated[str, Field(description='The slug of the target project; the same project by default.')]]
     target_item: ItemReference
-    type: LinkType
+    type: Annotated[LinkType, Field(
+        description='How the item relates to target_item, read as "item type target_item": traces-to, the item '
+                    'fulfils or refines the target, such as a requirement tracing to a need; derived-from, the item '
+                    'was derived from the target; verified-by, the target verifies the item, such as a test case for '
+                    'a requirement; conflicts-with, the two contradict each other; related-to, any other relation.',
+    )]
 
 
 class AddedLink(TypedDict):
     public_key: str
+
+
+FileName = Annotated[str, Field(min_length=1, max_length=255, description='The file name with its extension, such as diagram.png.')]
+FileData = Annotated[str, Field(
+    min_length=1, json_schema_extra={'contentEncoding': 'base64'},
+    description='The file content in base64. A request holds at most 2.5 MB, so the file can have about 1.9 MB.',
+)]
+
+
+class SetItemImageArguments(TypedDict):
+    project: ProjectSlug
+    item: ItemReference
+    filename: FileName
+    data: FileData
+    caption: NotRequired[Annotated[str, Field(max_length=255, description='The image caption; the stored caption stays when not given.')]]
+
+
+class AddAttachmentArguments(TypedDict):
+    project: ProjectSlug
+    item: ItemReference
+    filename: FileName
+    data: FileData
+
+
+class RemoveAttachmentArguments(TypedDict):
+    project: ProjectSlug
+    item: ItemReference
+    attachment: Annotated[str, Field(description='The attachment key, as get_item returns it.')]
+
+
+class Attachments(TypedDict):
+    attachments: list[AttachmentRow]
+
+
+class TemplateSectionEntry(TypedDict):
+    title: Annotated[str, Field(min_length=1, max_length=200)]
+    description: NotRequired[Annotated[str, Field(
+        description='What the section holds. Writers and assistants place items in a project by this text, so give '
+                    'every section one.',
+    )]]
+    children: NotRequired[list['TemplateSectionEntry']]
+
+
+class TemplateAttributeEntry(TypedDict):
+    name: Annotated[str, Field(min_length=1, max_length=100)]
+    type: AttributeType
+    options: NotRequired[Annotated[list[str], Field(
+        description='The choices of a dropdown or multi-select attribute, at least one, none holding a comma; '
+                    'no other type takes options.',
+    )]]
+
+
+TemplateName = Annotated[str, Field(min_length=1, max_length=150)]
+TemplateDescription = Annotated[str, Field(description='What the template is for.')]
+VisibleToAll = Annotated[bool, Field(description='Show the template to every user; otherwise only its owner and administrators see it.')]
+TemplateSections = Annotated[list[TemplateSectionEntry], Field(
+    description='The section tree in document order. Numbers follow the position in the tree: 1, 1.1, 1.2, 2.',
+)]
+TemplateAttributes = Annotated[list[TemplateAttributeEntry], Field(
+    description='The custom attributes in order. Built-in attributes are kept and are not given here.',
+)]
+
+
+class CreateTemplateArguments(TypedDict):
+    name: TemplateName
+    doc_type: DocType
+    description: NotRequired[TemplateDescription]
+    visible_to_all: NotRequired[VisibleToAll]
+    sections: NotRequired[TemplateSections]
+    attributes: NotRequired[TemplateAttributes]
+
+
+class UpdateTemplateArguments(TypedDict):
+    template: Annotated[str, Field(description='The template key, as list_templates returns it.')]
+    name: NotRequired[TemplateName]
+    doc_type: NotRequired[DocType]
+    description: NotRequired[TemplateDescription]
+    visible_to_all: NotRequired[VisibleToAll]
+    sections: NotRequired[Annotated[TemplateSections, Field(
+        description='Replaces the whole section tree, in document order. Numbers follow the position in the tree: '
+                    '1, 1.1, 1.2, 2.',
+    )]]
+    attributes: NotRequired[Annotated[TemplateAttributes, Field(
+        description='Replaces the custom attributes, in order. Built-in attributes are kept and are not given here.',
+    )]]
 
 
 def write_tool(name, description, arguments, result, function, destructive, idempotent=None):
@@ -120,24 +228,28 @@ TOOLS = (
     write_tool(
         'create_item',
         'Create one item in a section of a project, at the end of the section or before or after an item of it. '
+        'Choose the section whose description or title in list_sections fits the item. '
         'Needs the Editor or Admin role and a project that is not archived.',
         CreateItemArguments, ItemDetail, services.create_item, destructive=False,
     ),
     write_tool(
         'create_items',
-        'Create 1 to 100 items in one project in one call. Nothing is saved when one entry is refused; the error '
-        'names the entry as items[<index>]. Members get one notification for the whole call.',
+        'Create 1 to 100 items in one project in one call. Choose each item\'s section by its description or title '
+        'in list_sections. Nothing is saved when one entry is refused; the error names the entry as items[<index>]. '
+        'Members get one notification for the whole call.',
         CreateItemsArguments, CreatedItems, services.create_items, destructive=False,
     ),
     write_tool(
         'update_item',
         'Change an item: its text, section, place in the section, status, priority, assignee or attribute values. '
-        'Only the fields given change.',
+        'Only the fields given change. To move the item to another section, choose one whose description or title '
+        'in list_sections fits the item.',
         UpdateItemArguments, ItemDetail, services.update_item, destructive=True, idempotent=True,
     ),
     write_tool(
         'set_item_tags',
-        'Add tags to an item and remove tags from it in one call.',
+        'Add tags to an item and remove tags from it in one call. Only existing tags can be used; list_tags lists '
+        'them.',
         SetItemTagsArguments, ItemTags, services.set_item_tags, destructive=True, idempotent=True,
     ),
     write_tool(
@@ -147,7 +259,43 @@ TOOLS = (
     ),
     write_tool(
         'add_link',
-        'Link an item to another item of this project or of another project the account can open.',
+        'Link an item to another item of this project or of another project the account can open. The link '
+        'reads from item to target_item; type says how they relate.',
         AddLinkArguments, AddedLink, services.add_link, destructive=False,
+    ),
+    write_tool(
+        'set_item_image',
+        'Add an image to an item, or replace its image. PNG, JPG, GIF or WebP, at most 5 MB; the file content must '
+        'be an image of the type its extension names.',
+        SetItemImageArguments, ItemDetail, services.set_item_image, destructive=True, idempotent=True,
+    ),
+    write_tool(
+        'remove_item_image', 'Remove the image and its caption from an item.',
+        ItemArguments, ItemDetail, services.remove_item_image, destructive=True, idempotent=True,
+    ),
+    write_tool(
+        'add_attachment',
+        'Add a file to an item as an attachment. The extension must be one the project page accepts and the file '
+        'content must match it; the size limit is set in the Admin Panel. To replace an attachment, add the new file '
+        'and remove the old one.',
+        AddAttachmentArguments, AttachmentRow, services.add_attachment, destructive=False,
+    ),
+    write_tool(
+        'remove_attachment', 'Remove an attachment from an item and delete its file.',
+        RemoveAttachmentArguments, Attachments, services.remove_attachment, destructive=True, idempotent=True,
+    ),
+    write_tool(
+        'create_template',
+        'Create a document template with its section tree and custom attributes. The connected account owns it. '
+        'Needs a system role other than Viewer.',
+        CreateTemplateArguments, TemplateDetail, services.create_template, destructive=False,
+    ),
+    write_tool(
+        'update_template',
+        'Change a template the connected account owns; an administrator can change any template that is not '
+        'built-in. A built-in template cannot be changed. Only the fields given change: sections replaces the whole '
+        'section tree and attributes replaces the custom attributes. Projects already made from the template keep '
+        'their sections and attributes.',
+        UpdateTemplateArguments, TemplateDetail, services.update_template, destructive=True, idempotent=True,
     ),
 )

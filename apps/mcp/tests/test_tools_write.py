@@ -1,21 +1,29 @@
+import base64
+import io
 from unittest.mock import patch
 
 from asgiref.sync import async_to_sync
 from django.core import mail
+from django.core.files.storage import default_storage
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase, TransactionTestCase
 from django.urls import reverse
 from mcp.server.auth.middleware.auth_context import auth_context_var
 from mcp.server.auth.middleware.bearer_auth import AuthenticatedUser
 from mcp.server.auth.provider import AccessToken as GrantedToken
 from mcp_types import CallToolRequestParams
+from PIL import Image
 
-from apps.accounts.factories import UserFactory
+from apps.accounts.factories import AdminUserFactory, UserFactory, ViewerUserFactory
+from apps.doctemplates.factories import TemplateAttributeFactory, TemplateFactory, TemplateSectionFactory
+from apps.doctemplates.models import Template
 from apps.mcp import services
 from apps.mcp.errors import ToolRefusal
 from apps.mcp.server import build_server, on_call_tool
 from apps.notifications.models import AuditLog, Notification
 from apps.projects import writes
 from apps.projects.factories import (
+    AttachmentFactory,
     ItemAttributeValueFactory,
     ItemFactory,
     ItemTagFactory,
@@ -25,11 +33,27 @@ from apps.projects.factories import (
     SectionFactory,
     TagFactory,
 )
-from apps.projects.models import Comment, Item, ItemTag, Project, ProjectVersion, TraceabilityLink
+from apps.projects.models import Attachment, Comment, Item, ItemTag, Project, ProjectVersion, TraceabilityLink
 
 
 def key(user):
     return str(user.public_key)
+
+
+def png_bytes():
+    buffer = io.BytesIO()
+    Image.new('RGB', (2, 2), color='red').save(buffer, format='PNG')
+    return buffer.getvalue()
+
+
+def jpeg_bytes():
+    buffer = io.BytesIO()
+    Image.new('RGB', (2, 2), color='red').save(buffer, format='JPEG')
+    return buffer.getvalue()
+
+
+def encoded(content):
+    return base64.b64encode(content).decode()
 
 
 def call_tool(name, arguments):
@@ -69,6 +93,10 @@ class WriteToolTests(TestCase):
             'set_item_tags': lambda user: services.set_item_tags(key(user), 'booking', 'REQ-001', remove=[]),
             'add_comment': lambda user: services.add_comment(key(user), 'booking', 'REQ-001', 'Note'),
             'add_link': lambda user: services.add_link(key(user), 'booking', 'REQ-001', 'REQ-001', 'related-to'),
+            'set_item_image': lambda user: services.set_item_image(key(user), 'booking', 'REQ-001', 'chart.png', encoded(png_bytes())),
+            'remove_item_image': lambda user: services.remove_item_image(key(user), 'booking', 'REQ-001'),
+            'add_attachment': lambda user: services.add_attachment(key(user), 'booking', 'REQ-001', 'chart.png', encoded(png_bytes())),
+            'remove_attachment': lambda user: services.remove_attachment(key(user), 'booking', 'REQ-001', 'no-such-attachment'),
         }
 
     def test_create_item_stores_the_converted_text_with_html_headings_code_and_links_as_typed_text(self):
@@ -211,6 +239,7 @@ class WriteToolTests(TestCase):
 
     def test_each_write_tool_refuses_a_read_only_token_and_saves_nothing(self):
         build_server()
+        owned = TemplateFactory(created_by=self.user, name='Owned')
         arguments = {
             'create_item': {'project': 'booking', 'section': '1', 'text': 'New'},
             'create_items': {'project': 'booking', 'items': [{'section': '1', 'text': 'New'}]},
@@ -218,7 +247,15 @@ class WriteToolTests(TestCase):
             'set_item_tags': {'project': 'booking', 'item': 'REQ-001', 'remove': []},
             'add_comment': {'project': 'booking', 'item': 'REQ-001', 'text': 'Note'},
             'add_link': {'project': 'booking', 'item': 'REQ-001', 'target_item': 'REQ-001', 'type': 'related-to'},
+            'set_item_image': {'project': 'booking', 'item': 'REQ-001', 'filename': 'chart.png', 'data': encoded(png_bytes())},
+            'remove_item_image': {'project': 'booking', 'item': 'REQ-001'},
+            'add_attachment': {'project': 'booking', 'item': 'REQ-001', 'filename': 'chart.png', 'data': encoded(png_bytes())},
+            'remove_attachment': {'project': 'booking', 'item': 'REQ-001', 'attachment': 'no-such-attachment'},
+            'create_template': {'name': 'New', 'doc_type': 'custom'},
+            'update_template': {'template': str(owned.public_key), 'name': 'Renamed'},
         }
+        templates = list(Template.objects.values_list('pk', 'name'))
+        attachments = Attachment.objects.count()
         last = self.last_row()
         token = GrantedToken(token='', client_id='', scopes=['read'], subject=key(self.user))
         reset = auth_context_var.set(AuthenticatedUser(token))
@@ -229,7 +266,10 @@ class WriteToolTests(TestCase):
                     self.assertEqual((result.is_error, result.content[0].text), (True, 'This connection is read only.'))
         finally:
             auth_context_var.reset(reset)
-        self.assertEqual(self.last_row(), last)
+        self.assertEqual(
+            (self.last_row(), list(Template.objects.values_list('pk', 'name')), Attachment.objects.count()),
+            (last, templates, attachments),
+        )
 
     def comment_four_times(self):
         with self.captureOnCommitCallbacks(execute=True):
@@ -248,6 +288,233 @@ class WriteToolTests(TestCase):
         with self.captureOnCommitCallbacks(execute=True):
             response = self.client.post(url, {'text': 'From the page'}, content_type='application/json')
         self.assertEqual((response.status_code, [message.to for message in mail.outbox]), (201, [[self.owner.email]] * 4))
+
+
+class ItemFileToolTests(TestCase):
+
+    def setUp(self):
+        self.user = UserFactory()
+        self.project = ProjectFactory(slug='booking')
+        ProjectMembershipFactory(project=self.project, user=self.user, role='editor')
+        self.item = ItemFactory(project=self.project, section=SectionFactory(project=self.project), item_id='REQ-001')
+
+    def stored(self, name):
+        with default_storage.open(name) as stored_file:
+            return stored_file.read()
+
+    def test_set_item_image_stores_the_decoded_file_in_media_as_the_item_image(self):
+        content = png_bytes()
+        services.set_item_image(key(self.user), 'booking', 'REQ-001', 'chart.png', encoded(content))
+        self.item.refresh_from_db()
+        self.assertEqual(
+            (self.item.image.name.startswith('items/images/'), self.item.image.name.endswith('.png'), self.stored(self.item.image.name)),
+            (True, True, content),
+        )
+
+    def test_set_item_image_replaces_the_image_and_deletes_the_old_file(self):
+        services.set_item_image(key(self.user), 'booking', 'REQ-001', 'first.png', encoded(png_bytes()))
+        self.item.refresh_from_db()
+        old_name = self.item.image.name
+        services.set_item_image(key(self.user), 'booking', 'REQ-001', 'second.png', encoded(png_bytes()))
+        self.item.refresh_from_db()
+        self.assertEqual((default_storage.exists(old_name), default_storage.exists(self.item.image.name)), (False, True))
+
+    def test_remove_item_image_deletes_the_image_file(self):
+        self.item.image = SimpleUploadedFile('chart.png', png_bytes())
+        self.item.save()
+        name = self.item.image.name
+        services.remove_item_image(key(self.user), 'booking', 'REQ-001')
+        self.assertEqual(default_storage.exists(name), False)
+
+    def test_remove_item_image_without_an_image_is_refused(self):
+        last = AuditLog.objects.count()
+        with self.assertRaises(ToolRefusal) as caught:
+            services.remove_item_image(key(self.user), 'booking', 'REQ-001')
+        self.assertEqual((str(caught.exception), AuditLog.objects.count()), ('Item REQ-001 has no image.', last))
+
+    def test_add_attachment_stores_the_decoded_file_in_media_with_its_name_and_size(self):
+        content = b'%PDF-1.4\n%%EOF\n'
+        result = services.add_attachment(key(self.user), 'booking', 'REQ-001', 'report.pdf', encoded(content))
+        attachment = Attachment.objects.get(public_key=result['public_key'])
+        self.assertEqual(
+            (attachment.item, attachment.filename, attachment.file_size, attachment.file.name.startswith('attachments/'),
+             self.stored(attachment.file.name)),
+            (self.item, 'report.pdf', len(content), True, content),
+        )
+
+    def test_remove_attachment_removes_it_and_returns_the_remaining_ones(self):
+        kept = AttachmentFactory(item=self.item, uploaded_by=self.user, filename='kept.pdf')
+        removed = AttachmentFactory(item=self.item, uploaded_by=self.user, filename='removed.pdf')
+        result = services.remove_attachment(key(self.user), 'booking', 'REQ-001', str(removed.public_key))
+        self.assertEqual(
+            (result['attachments'], list(Attachment.objects.values_list('pk', flat=True))),
+            ([{'public_key': str(kept.public_key), 'filename': 'kept.pdf', 'size': kept.file_size}], [kept.pk]),
+        )
+
+    def test_remove_attachment_of_another_item_answers_not_found_and_keeps_it(self):
+        other = AttachmentFactory(item=ItemFactory(project=self.project, section=self.item.section, item_id='REQ-002'))
+        with self.assertRaises(ToolRefusal) as caught:
+            services.remove_attachment(key(self.user), 'booking', 'REQ-001', str(other.public_key))
+        self.assertEqual(
+            (str(caught.exception), Attachment.objects.filter(pk=other.pk).count()),
+            (f'Not found: attachment {other.public_key}.', 1),
+        )
+
+    def test_file_data_that_is_not_base64_or_does_not_match_its_extension_is_refused_and_nothing_is_saved(self):
+        for case, call, text in (
+            ('a character outside base64', lambda: services.add_attachment(
+                key(self.user), 'booking', 'REQ-001', 'report.pdf', encoded(b'%PDF-1.4\n%%EOF\n') + '!',
+            ),
+             'data: The data is not valid base64.'),
+            ('image content of another type',
+             lambda: services.set_item_image(key(self.user), 'booking', 'REQ-001', 'chart.png', encoded(jpeg_bytes())),
+             'The content of the file is image/jpeg, which does not match .png.'),
+            ('attachment content of another type',
+             lambda: services.add_attachment(key(self.user), 'booking', 'REQ-001', 'report.pdf', encoded(b'<html>report</html>')),
+             'The content of the file is text/html, which does not match .pdf.'),
+        ):
+            with self.subTest(case=case):
+                with self.assertRaises(ToolRefusal) as caught:
+                    call()
+                self.assertEqual(str(caught.exception), text)
+        self.item.refresh_from_db()
+        self.assertEqual((bool(self.item.image), Attachment.objects.count()), (False, 0))
+
+
+class TemplateToolTests(TestCase):
+
+    def setUp(self):
+        self.owner = UserFactory()
+
+    def sections(self, template):
+        return list(template.sections.order_by('order').values_list('number', 'title', 'description', 'parent__number'))
+
+    def attributes(self, template):
+        return list(template.attributes.order_by('order').values_list('name', 'field_type', 'options', 'is_builtin', 'order'))
+
+    def names(self):
+        return list(Template.objects.order_by('pk').values_list('name', flat=True))
+
+    def test_create_template_stores_the_section_tree_numbered_by_position_and_the_attributes_in_order(self):
+        build_server()
+        token = GrantedToken(token='', client_id='', scopes=['read', 'write'], subject=key(self.owner))
+        reset = auth_context_var.set(AuthenticatedUser(token))
+        try:
+            result = call_tool('create_template', {
+                'name': 'Security Review', 'doc_type': 'risk',
+                'sections': [
+                    {'title': 'Scope', 'description': 'What is reviewed', 'children': [{'title': 'Systems'}, {'title': 'People'}]},
+                    {'title': 'Findings', 'number': '9'},
+                ],
+                'attributes': [
+                    {'name': 'Severity', 'type': 'dropdown', 'options': ['Low', 'High']},
+                    {'name': 'Due', 'type': 'date'},
+                ],
+            })
+        finally:
+            auth_context_var.reset(reset)
+        created = Template.objects.get(public_key=result.structured_content['public_key'])
+        self.assertEqual(self.sections(created), [
+            ('1', 'Scope', 'What is reviewed', None), ('1.1', 'Systems', '', '1'), ('1.2', 'People', '', '1'),
+            ('2', 'Findings', '', None),
+        ])
+        self.assertEqual(self.attributes(created), [('Severity', 'dropdown', ['Low', 'High'], False, 0), ('Due', 'date', [], False, 1)])
+
+    def test_create_template_makes_the_account_the_owner_of_a_template_that_is_not_built_in(self):
+        result = services.create_template(key(self.owner), 'Security Review', 'risk')
+        created = Template.objects.get(public_key=result['public_key'])
+        self.assertEqual((created.created_by, created.is_builtin), (self.owner, False))
+
+    def test_a_system_viewer_cannot_create_a_template(self):
+        names = self.names()
+        with self.assertRaises(ToolRefusal) as caught:
+            services.create_template(key(ViewerUserFactory()), 'Viewer Template', 'custom')
+        self.assertEqual((str(caught.exception), self.names()), ('Your system role does not allow this.', names))
+
+    def test_template_arguments_that_break_a_rule_are_refused_and_nothing_is_saved(self):
+        deep = {'title': 'Deep'}
+        for level in range(10):
+            deep = {'title': 'Deep', 'children': [deep]}
+        names = self.names()
+        for case, arguments, text in (
+            ('blank name', {'name': ' '}, 'name: This field cannot be blank.'),
+            ('blank section title', {'sections': [{'title': ' '}]}, 'sections: Section 1 has no title.'),
+            ('tree too deep', {'sections': [deep]},
+             'sections: The section tree is too deep: section number 1.1.1.1.1.1.1.1.1.1.1 is longer than 20 characters.'),
+            ('blank attribute name', {'attributes': [{'name': ' ', 'type': 'text'}]}, 'attributes: An attribute has no name.'),
+            ('duplicate attribute names', {'attributes': [{'name': 'Risk', 'type': 'text'}, {'name': 'Risk', 'type': 'number'}]},
+             'attributes: Attribute names must be unique: Risk.'),
+            ('options on a text attribute', {'attributes': [{'name': 'Owner', 'type': 'text', 'options': ['A']}]},
+             'attributes: Attribute Owner is not a dropdown or multi-select and takes no options.'),
+            ('dropdown without options', {'attributes': [{'name': 'Level', 'type': 'dropdown'}]},
+             'attributes: Attribute Level needs at least one option.'),
+            ('option with a comma', {'attributes': [{'name': 'Level', 'type': 'multiselect', 'options': ['Low, High']}]},
+             'attributes: An option of attribute Level is empty or holds a comma.'),
+        ):
+            with self.subTest(case=case):
+                with self.assertRaises(ToolRefusal) as caught:
+                    services.create_template(key(self.owner), **{'name': 'Refused', 'doc_type': 'custom', **arguments})
+                self.assertEqual(str(caught.exception), text)
+        self.assertEqual(self.names(), names)
+
+    def test_update_template_changes_only_the_fields_given(self):
+        template = TemplateFactory(created_by=self.owner, name='Change Request', doc_type='custom')
+        TemplateSectionFactory(template=template, number='1', title='Summary', order=0)
+        TemplateAttributeFactory(template=template, name='Impact', order=0)
+        rows = (list(template.sections.values_list('pk', flat=True)), list(template.attributes.values_list('pk', flat=True)))
+        services.update_template(key(self.owner), str(template.public_key), description='Changes to a release', visible_to_all=True)
+        template.refresh_from_db()
+        self.assertEqual(
+            (template.name, template.description, template.doc_type, template.is_global),
+            ('Change Request', 'Changes to a release', 'custom', True),
+        )
+        self.assertEqual(
+            (list(template.sections.values_list('pk', flat=True)), list(template.attributes.values_list('pk', flat=True))), rows,
+        )
+
+    def test_update_template_with_sections_replaces_the_whole_section_tree(self):
+        template = TemplateFactory(created_by=self.owner)
+        TemplateSectionFactory(template=template, number='1', title='Old', order=0)
+        TemplateSectionFactory(template=template, number='2', title='Older', order=1)
+        services.update_template(
+            key(self.owner), str(template.public_key), sections=[{'title': 'Summary', 'children': [{'title': 'Reason'}]}],
+        )
+        self.assertEqual(self.sections(template), [('1', 'Summary', '', None), ('1.1', 'Reason', '', '1')])
+
+    def test_update_template_with_attributes_replaces_the_custom_attributes_and_keeps_the_built_in_ones(self):
+        template = TemplateFactory(created_by=self.owner)
+        TemplateAttributeFactory(template=template, name='Status', is_builtin=True, order=0)
+        TemplateAttributeFactory(template=template, name='Old', order=1)
+        services.update_template(
+            key(self.owner), str(template.public_key),
+            attributes=[{'name': 'Impact', 'type': 'multiselect', 'options': ['Cost', 'Time']}],
+        )
+        self.assertEqual(self.attributes(template), [('Status', 'text', [], True, 0), ('Impact', 'multiselect', ['Cost', 'Time'], False, 1)])
+
+    def test_an_administrator_changes_another_users_private_template(self):
+        template = TemplateFactory(created_by=self.owner, is_global=False, name='Private')
+        services.update_template(key(AdminUserFactory()), str(template.public_key), name='Renamed')
+        template.refresh_from_db()
+        self.assertEqual(template.name, 'Renamed')
+
+    def test_update_template_is_refused_for_a_template_the_account_cannot_change_and_nothing_changes(self):
+        builtin = TemplateFactory(is_builtin=True, created_by=None, name='Built In')
+        shared = TemplateFactory(created_by=self.owner, is_global=True, name='Shared')
+        private = TemplateFactory(created_by=self.owner, is_global=False, name='Private')
+        other = UserFactory()
+        names = self.names()
+        for case, user, value, text in (
+            ('built-in, as an administrator', AdminUserFactory(), str(builtin.public_key), 'A built-in template cannot be changed.'),
+            ("another user's shared template", other, str(shared.public_key),
+             'Only the owner of the template or an administrator can change it.'),
+            ("another user's private template", other, str(private.public_key), f'Not found: template {private.public_key}.'),
+            ('unknown key', other, 'no-such-template', 'Not found: template no-such-template.'),
+        ):
+            with self.subTest(case=case):
+                with self.assertRaises(ToolRefusal) as caught:
+                    services.update_template(key(user), value, name='Changed')
+                self.assertEqual(str(caught.exception), text)
+        self.assertEqual(self.names(), names)
 
 
 class ConflictTests(TransactionTestCase):

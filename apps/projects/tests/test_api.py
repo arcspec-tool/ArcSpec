@@ -651,7 +651,7 @@ class AttachmentAPITests(TestCase):
         url = reverse('api_attachment_list', kwargs={
             'slug': self.project.slug, 'item_key': self.item.public_key
         })
-        test_file = SimpleUploadedFile('report.pdf', b'pdf-content', content_type='application/pdf')
+        test_file = SimpleUploadedFile('report.pdf', b'%PDF-1.4\n%%EOF\n', content_type='application/pdf')
         response = self.client.post(url, {'file': test_file})
         self.assertEqual(response.status_code, 201)
         self.assertTrue(Attachment.objects.filter(item=self.item, filename='report.pdf').exists())
@@ -1331,7 +1331,11 @@ class ItemImageAPITests(TestCase):
         })
 
     def test_upload_image(self):
-        image = SimpleUploadedFile('chart.png', b'\x89PNG\r\n\x1a\n' + b'\x00' * 100, content_type='image/png')
+        import io
+        from PIL import Image
+        buf = io.BytesIO()
+        Image.new('RGB', (2, 2), color='red').save(buf, format='PNG')
+        image = SimpleUploadedFile('chart.png', buf.getvalue(), content_type='image/png')
         response = self.client.post(self.url, {'image': image, 'image_caption': 'Test chart'})
         self.assertEqual(response.status_code, 200)
         self.item.refresh_from_db()

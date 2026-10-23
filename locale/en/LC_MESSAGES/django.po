@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-21 01:34+0300\n"
+"POT-Creation-Date: 2026-10-23 20:55+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -806,7 +806,7 @@ msgstr ""
 msgid "Profile updated successfully."
 msgstr ""
 
-#: apps/accounts/views.py:262 apps/doctemplates/views.py:64
+#: apps/accounts/views.py:262 apps/doctemplates/views.py:65
 #: apps/projects/views.py:264 apps/projects/views.py:282
 msgid "Please correct the errors below."
 msgstr ""
@@ -884,138 +884,138 @@ msgstr ""
 msgid "System Settings"
 msgstr ""
 
-#: apps/administration/templates/administration/includes/_system.html:5
+#: apps/administration/templates/administration/includes/_system.html:6
 msgid "General"
 msgstr ""
 
-#: apps/administration/templates/administration/includes/_system.html:6
+#: apps/administration/templates/administration/includes/_system.html:7
 msgid "The organisation name printed in export footers, and the upload limit."
 msgstr ""
 
-#: apps/administration/templates/administration/includes/_system.html:20
-#: apps/administration/templates/administration/includes/_system.html:67
-#: apps/administration/templates/administration/includes/_system.html:114
-#: apps/administration/templates/administration/includes/_system.html:126
-#: apps/administration/templates/administration/includes/_system.html:137
+#: apps/administration/templates/administration/includes/_system.html:21
+#: apps/administration/templates/administration/includes/_system.html:33
+#: apps/administration/templates/administration/includes/_system.html:44
+#: apps/administration/templates/administration/includes/_system.html:92
+#: apps/administration/templates/administration/includes/_system.html:139
 #: apps/administration/templates/administration/modals/_edit_role.html:12
 #: apps/projects/templates/projects/modals/_save_view.html:11
 msgid "Save"
 msgstr ""
 
-#: apps/administration/templates/administration/includes/_system.html:28
-msgid "Project archiving"
-msgstr ""
-
 #: apps/administration/templates/administration/includes/_system.html:29
-msgid "Archive inactive projects and delete archived ones after a period."
-msgstr ""
-
-#: apps/administration/templates/administration/includes/_system.html:37
-msgid "Auto-archive inactive projects"
-msgstr ""
-
-#: apps/administration/templates/administration/includes/_system.html:38
-msgid ""
-"Active projects with no change for the number of days below are archived."
-msgstr ""
-
-#: apps/administration/templates/administration/includes/_system.html:43
-msgid "Days without a change"
-msgstr ""
-
-#: apps/administration/templates/administration/includes/_system.html:49
-msgid "Users can restore archived projects"
-msgstr ""
-
-#: apps/administration/templates/administration/includes/_system.html:50
-msgid "When off, only administrators can restore an archived project."
-msgstr ""
-
-#: apps/administration/templates/administration/includes/_system.html:56
-msgid "Auto-delete archived projects"
-msgstr ""
-
-#: apps/administration/templates/administration/includes/_system.html:57
-msgid ""
-"Projects archived for longer than the number of days below are deleted "
-"permanently."
-msgstr ""
-
-#: apps/administration/templates/administration/includes/_system.html:62
-msgid "Days after archiving"
-msgstr ""
-
-#: apps/administration/templates/administration/includes/_system.html:75
-msgid "Authentication"
-msgstr ""
-
-#: apps/administration/templates/administration/includes/_system.html:76
-msgid "At least one method stays on. Accounts are created by invitation only."
-msgstr ""
-
-#: apps/administration/templates/administration/includes/_system.html:84
-msgid "Microsoft sign-in"
-msgstr ""
-
-#: apps/administration/templates/administration/includes/_system.html:87
-msgid ""
-"The \"Sign in with Microsoft\" button and the Microsoft callback accept sign-"
-"ins."
-msgstr ""
-
-#: apps/administration/templates/administration/includes/_system.html:89
-msgid "Microsoft sign-in is not configured in this environment."
-msgstr ""
-
-#: apps/administration/templates/administration/includes/_system.html:97
-msgid "Password sign-in"
-msgstr ""
-
-#: apps/administration/templates/administration/includes/_system.html:98
-msgid ""
-"An email and password form on the sign-in page, with password reset through "
-"an emailed link."
-msgstr ""
-
-#: apps/administration/templates/administration/includes/_system.html:103
-msgid "Captcha"
-msgstr ""
-
-#: apps/administration/templates/administration/includes/_system.html:104
-msgid "On the password sign-in and forgot password forms."
-msgstr ""
-
-#: apps/administration/templates/administration/includes/_system.html:105
-#, python-format
-msgid "Not configured in this environment: %(providers)s."
-msgstr ""
-
-#: apps/administration/templates/administration/includes/_system.html:122
 msgid "MCP server"
 msgstr ""
 
-#: apps/administration/templates/administration/includes/_system.html:123
+#: apps/administration/templates/administration/includes/_system.html:30
 msgid "Access for AI assistants through the Model Context Protocol."
 msgstr ""
 
-#: apps/administration/templates/administration/includes/_system.html:126
+#: apps/administration/templates/administration/includes/_system.html:33
 msgid ""
 "While the server is on, every active user may connect an AI assistant and "
 "use it with their own roles. While it is off, every connection is refused."
 msgstr ""
 
-#: apps/administration/templates/administration/includes/_system.html:126
+#: apps/administration/templates/administration/includes/_system.html:33
 msgid "Save MCP Server Setting"
 msgstr ""
 
-#: apps/administration/templates/administration/includes/_system.html:131
+#: apps/administration/templates/administration/includes/_system.html:38
 msgid "Connections from AI assistants"
 msgstr ""
 
-#: apps/administration/templates/administration/includes/_system.html:132
+#: apps/administration/templates/administration/includes/_system.html:39
 msgid ""
 "On: every active user may connect an AI assistant, which works with the "
 "user's own project roles. Off: every request to the server is refused."
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_system.html:53
+msgid "Project archiving"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_system.html:54
+msgid "Archive inactive projects and delete archived ones after a period."
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_system.html:62
+msgid "Auto-archive inactive projects"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_system.html:63
+msgid ""
+"Active projects with no change for the number of days below are archived."
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_system.html:68
+msgid "Days without a change"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_system.html:74
+msgid "Users can restore archived projects"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_system.html:75
+msgid "When off, only administrators can restore an archived project."
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_system.html:81
+msgid "Auto-delete archived projects"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_system.html:82
+msgid ""
+"Projects archived for longer than the number of days below are deleted "
+"permanently."
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_system.html:87
+msgid "Days after archiving"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_system.html:100
+msgid "Authentication"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_system.html:101
+msgid "At least one method stays on. Accounts are created by invitation only."
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_system.html:109
+msgid "Microsoft sign-in"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_system.html:112
+msgid ""
+"The \"Sign in with Microsoft\" button and the Microsoft callback accept sign-"
+"ins."
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_system.html:114
+msgid "Microsoft sign-in is not configured in this environment."
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_system.html:122
+msgid "Password sign-in"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_system.html:123
+msgid ""
+"An email and password form on the sign-in page, with password reset through "
+"an emailed link."
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_system.html:128
+msgid "Captcha"
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_system.html:129
+msgid "On the password sign-in and forgot password forms."
+msgstr ""
+
+#: apps/administration/templates/administration/includes/_system.html:130
+#, python-format
+msgid "Not configured in this environment: %(providers)s."
 msgstr ""
 
 #: apps/administration/templates/administration/includes/_tags.html:2
@@ -1071,7 +1071,7 @@ msgstr ""
 #: apps/doctemplates/templates/doctemplates/includes/_template_card.html:17
 #: apps/doctemplates/templates/doctemplates/includes/_template_card.html:19
 #: apps/doctemplates/templates/doctemplates/includes/_template_card.html:22
-#: apps/projects/serializers.py:264
+#: apps/projects/serializers.py:257
 #: apps/projects/templates/projects/includes/_bulk_toolbar.html:29
 #: apps/projects/templates/projects/includes/_project_actions.html:28
 #: apps/projects/templates/projects/modals/_delete_item.html:8
@@ -1392,7 +1392,7 @@ msgstr ""
 msgid "Tag Presets"
 msgstr ""
 
-#: apps/administration/views.py:94 apps/doctemplates/views.py:46
+#: apps/administration/views.py:94 apps/doctemplates/views.py:47
 #: apps/projects/views.py:222
 msgid "All"
 msgstr ""
@@ -1475,6 +1475,14 @@ msgstr ""
 
 #: apps/administration/views.py:267
 msgid "System settings saved."
+msgstr ""
+
+#: apps/core/mixins.py:44
+msgid "A built-in template cannot be changed."
+msgstr ""
+
+#: apps/core/mixins.py:46
+msgid "Only the owner of the template or an administrator can change it."
 msgstr ""
 
 #: apps/core/modals.py:105 apps/core/modals.py:107
@@ -1699,25 +1707,25 @@ msgstr ""
 msgid "%(time)s ago"
 msgstr ""
 
-#: apps/doctemplates/forms.py:16
+#: apps/doctemplates/forms.py:17
 msgid "e.g. Risk Analysis Template"
 msgstr ""
 
-#: apps/doctemplates/forms.py:21
+#: apps/doctemplates/forms.py:22
 msgid "Describe what this template is for..."
 msgstr ""
 
-#: apps/doctemplates/forms.py:31
+#: apps/doctemplates/forms.py:32
 #: apps/doctemplates/templates/doctemplates/modals/_template_editor.html:30
 msgid "Visible to all users"
 msgstr ""
 
-#: apps/doctemplates/forms.py:41
+#: apps/doctemplates/forms.py:40 apps/mcp/services.py:307
 #, python-format
 msgid "Attribute names must be unique: %(names)s."
 msgstr ""
 
-#: apps/doctemplates/forms.py:54
+#: apps/doctemplates/forms.py:53
 #: apps/doctemplates/templates/doctemplates/modals/_editor_section.html:20
 #: apps/projects/templates/projects/modals/_structure_section.html:19
 msgid "Describe this section..."
@@ -2048,34 +2056,34 @@ msgstr ""
 msgid "Duplicate as Custom"
 msgstr ""
 
-#: apps/doctemplates/views.py:80
+#: apps/doctemplates/views.py:81
 #, python-format
 msgid "Template \"%(name)s\" created."
 msgstr ""
 
-#: apps/doctemplates/views.py:100
+#: apps/doctemplates/views.py:101
 #, python-format
 msgid "Template \"%(name)s\" updated."
 msgstr ""
 
-#: apps/doctemplates/views.py:201
+#: apps/doctemplates/views.py:172
 #, python-format
 msgid "Cannot delete \"%(name)s\": it is used by %(count)d project."
 msgid_plural "Cannot delete \"%(name)s\": it is used by %(count)d projects."
 msgstr[0] ""
 msgstr[1] ""
 
-#: apps/doctemplates/views.py:209
+#: apps/doctemplates/views.py:180
 #, python-format
 msgid "Template \"%(name)s\" deleted."
 msgstr ""
 
-#: apps/doctemplates/views.py:220 apps/projects/views.py:321
+#: apps/doctemplates/views.py:191 apps/projects/views.py:321
 #, python-format
 msgid "%(name)s (Copy)"
 msgstr ""
 
-#: apps/doctemplates/views.py:252
+#: apps/doctemplates/views.py:223
 #, python-format
 msgid "Template duplicated as \"%(name)s\"."
 msgstr ""
@@ -2108,7 +2116,7 @@ msgstr ""
 msgid "The request body is not valid JSON."
 msgstr ""
 
-#: apps/mcp/asgi.py:148 apps/mcp/tools_write.py:114
+#: apps/mcp/asgi.py:148 apps/mcp/tools_write.py:208
 msgid "This connection is read only."
 msgstr ""
 
@@ -2159,64 +2167,119 @@ msgid "Not found: attribute %(attribute)s."
 msgstr ""
 
 #: apps/mcp/identifiers.py:58 apps/mcp/identifiers.py:67
-#: apps/mcp/identifiers.py:82
+#: apps/mcp/identifiers.py:90
 #, python-format
 msgid "Not found: user %(email)s."
 msgstr ""
 
 #: apps/mcp/identifiers.py:75
 #, python-format
+msgid "Not found: attachment %(attachment)s."
+msgstr ""
+
+#: apps/mcp/identifiers.py:83
+#, python-format
 msgid "Not found: comment %(comment)s."
 msgstr ""
 
-#: apps/mcp/server.py:62
+#: apps/mcp/server.py:63
 #, python-format
 msgid "Not found: tool %(name)s."
 msgstr ""
 
-#: apps/mcp/services.py:38
+#: apps/mcp/services.py:51
 msgid "Not found: your account."
 msgstr ""
 
-#: apps/mcp/services.py:42 apps/mcp/services.py:47
+#: apps/mcp/services.py:55 apps/mcp/services.py:60
 #, python-format
 msgid "project %(slug)s"
 msgstr ""
 
-#: apps/mcp/services.py:114
+#: apps/mcp/services.py:127
 #, python-format
 msgid "Give only one of: %(names)s."
 msgstr ""
 
-#: apps/mcp/services.py:125 apps/projects/writes.py:58
+#: apps/mcp/services.py:138 apps/projects/writes.py:59
 msgid "The item is not in the chosen section."
 msgstr ""
 
-#: apps/mcp/services.py:206
+#: apps/mcp/services.py:219
 #, python-format
 msgid "Created %(count)d item"
 msgid_plural "Created %(count)d items"
 msgstr[0] ""
 msgstr[1] ""
 
-#: apps/mcp/services.py:210
+#: apps/mcp/services.py:223
 #, python-format
 msgid "%(count)d new item created in %(project)s"
 msgid_plural "%(count)d new items created in %(project)s"
 msgstr[0] ""
 msgstr[1] ""
 
-#: apps/mcp/services.py:327
+#: apps/mcp/services.py:252
 #, python-format
 msgid "Not found: template %(template)s."
 msgstr ""
 
-#: apps/mcp/services.py:409
+#: apps/mcp/services.py:270
+#, python-format
+msgid ""
+"The section tree is too deep: section number %(number)s is longer than "
+"%(count)d characters."
+msgstr ""
+
+#: apps/mcp/services.py:274
+#, python-format
+msgid "Section %(number)s has no title."
+msgstr ""
+
+#: apps/mcp/services.py:283
+#, python-format
+msgid "A template holds at most %(count)d sections."
+msgstr ""
+
+#: apps/mcp/services.py:292
+msgid "An attribute has no name."
+msgstr ""
+
+#: apps/mcp/services.py:296
+#, python-format
+msgid ""
+"Attribute %(name)s is not a dropdown or multi-select and takes no options."
+msgstr ""
+
+#: apps/mcp/services.py:299
+#, python-format
+msgid "Attribute %(name)s needs at least one option."
+msgstr ""
+
+#: apps/mcp/services.py:302
+#, python-format
+msgid "An option of attribute %(name)s is empty or holds a comma."
+msgstr ""
+
+#: apps/mcp/services.py:486
 msgid "Enter the comment text."
 msgstr ""
 
-#: apps/mcp/services.py:424
+#: apps/mcp/services.py:501
 msgid "This link already exists."
+msgstr ""
+
+#: apps/mcp/services.py:526
+msgid "Your system role does not allow this."
+msgstr ""
+
+#: apps/mcp/services.py:560
+msgid "The data is not valid base64."
+msgstr ""
+
+#: apps/mcp/services.py:581
+#, python-format
+msgid "Item %(item)s has no image."
 msgstr ""
 
 #: apps/mcp/settings_sections.py:15 apps/mcp/views.py:96 apps/mcp/views.py:106
@@ -2513,109 +2576,90 @@ msgstr ""
 msgid "Not found"
 msgstr ""
 
-#: apps/projects/api.py:172
+#: apps/projects/api.py:175
 msgid "Send a list of attribute values."
 msgstr ""
 
-#: apps/projects/api.py:279 apps/projects/views.py:645
+#: apps/projects/api.py:282 apps/projects/views.py:645
 msgid "One or more sections do not belong to this project."
 msgstr ""
 
-#: apps/projects/api.py:316
+#: apps/projects/api.py:319
 msgid "Tag not found."
 msgstr ""
 
-#: apps/projects/api.py:343
+#: apps/projects/api.py:346
 #, python-format
 msgid "Deleted %(count)d items"
 msgid_plural "Deleted %(count)d items"
 msgstr[0] ""
 msgstr[1] ""
 
-#: apps/projects/api.py:359
+#: apps/projects/api.py:362
 msgid "No image file provided."
 msgstr ""
 
-#: apps/projects/api.py:365 apps/projects/serializers.py:20
-#, python-format
-msgid "Image type \"%(ext)s\" is not allowed. Use PNG, JPG, GIF, or WebP."
-msgstr ""
-
-#: apps/projects/api.py:370 apps/projects/serializers.py:23
-msgid "Image size exceeds 5 MB limit."
-msgstr ""
-
-#: apps/projects/api.py:525
+#: apps/projects/api.py:475
 msgid "No file was uploaded."
 msgstr ""
 
-#: apps/projects/api.py:531
-#, python-format
-msgid "File type \"%(ext)s\" is not allowed."
-msgstr ""
-
-#: apps/projects/api.py:539
-#, python-format
-msgid "File size exceeds the %(size)s MB limit."
-msgstr ""
-
-#: apps/projects/api.py:674
+#: apps/projects/api.py:595
 msgid "preferences must be a JSON object."
 msgstr ""
 
-#: apps/projects/api.py:703
+#: apps/projects/api.py:624
 msgid "Invalid role."
 msgstr ""
 
-#: apps/projects/api.py:709
+#: apps/projects/api.py:630
 msgid "User not found or inactive."
 msgstr ""
 
-#: apps/projects/api.py:715
+#: apps/projects/api.py:636
 msgid "User is already a collaborator."
 msgstr ""
 
-#: apps/projects/api.py:745
+#: apps/projects/api.py:666
 msgid "Cannot demote the last project admin."
 msgstr ""
 
-#: apps/projects/api.py:759
+#: apps/projects/api.py:680
 msgid "Cannot remove the last project admin."
 msgstr ""
 
-#: apps/projects/api.py:785
+#: apps/projects/api.py:706
 msgid "This version has no snapshot data to restore."
 msgstr ""
 
-#: apps/projects/api.py:801
+#: apps/projects/api.py:722
 #, python-format
 msgid "Restored version %(version)s"
 msgstr ""
 
-#: apps/projects/api.py:805
+#: apps/projects/api.py:726
 #, python-format
 msgid "Restored to version %(version)s"
 msgstr ""
 
-#: apps/projects/api.py:943 apps/projects/api.py:982
+#: apps/projects/api.py:864 apps/projects/api.py:903
 msgid "Name is required."
 msgstr ""
 
-#: apps/projects/api.py:947 apps/projects/api.py:991
+#: apps/projects/api.py:868 apps/projects/api.py:912
 #, python-format
 msgid "Invalid field type: %(type)s"
 msgstr ""
 
-#: apps/projects/api.py:950 apps/projects/api.py:984
+#: apps/projects/api.py:871 apps/projects/api.py:905
 #, python-format
 msgid "Attribute \"%(name)s\" already exists."
 msgstr ""
 
-#: apps/projects/api.py:976
+#: apps/projects/api.py:897
 msgid "Cannot modify built-in attributes."
 msgstr ""
 
-#: apps/projects/api.py:1008
+#: apps/projects/api.py:929
 msgid "Cannot delete built-in attributes."
 msgstr ""
 
@@ -2736,35 +2780,35 @@ msgstr ""
 msgid "%(name)s must be a whole number of 0 or more."
 msgstr ""
 
-#: apps/projects/serializers.py:238
+#: apps/projects/serializers.py:231
 msgid "Send insert_before or insert_after, not both."
 msgstr ""
 
-#: apps/projects/serializers.py:261
+#: apps/projects/serializers.py:254
 #: apps/projects/templates/projects/includes/_context_menu.html:6
 msgid "Set Status"
 msgstr ""
 
-#: apps/projects/serializers.py:262
+#: apps/projects/serializers.py:255
 #: apps/projects/templates/projects/includes/_context_menu.html:12
 msgid "Set Priority"
 msgstr ""
 
-#: apps/projects/serializers.py:263
+#: apps/projects/serializers.py:256
 msgid "Add Tag"
 msgstr ""
 
-#: apps/projects/serializers.py:279
+#: apps/projects/serializers.py:272
 #, python-format
 msgid "Invalid status \"%(value)s\". Must be one of: %(choices)s"
 msgstr ""
 
-#: apps/projects/serializers.py:285
+#: apps/projects/serializers.py:278
 #, python-format
 msgid "Invalid priority \"%(value)s\". Must be one of: %(choices)s"
 msgstr ""
 
-#: apps/projects/serializers.py:289
+#: apps/projects/serializers.py:282
 msgid "Give the id of the tag to add."
 msgstr ""
 
@@ -3552,6 +3596,30 @@ msgstr ""
 msgid "e.g. High Priority Draft Items"
 msgstr ""
 
+#: apps/projects/uploads.py:71
+#, python-format
+msgid "The content of the file is %(type)s, which does not match %(ext)s."
+msgstr ""
+
+#: apps/projects/uploads.py:79
+#, python-format
+msgid "Image type \"%(ext)s\" is not allowed. Use PNG, JPG, GIF, or WebP."
+msgstr ""
+
+#: apps/projects/uploads.py:81
+msgid "Image size exceeds 5 MB limit."
+msgstr ""
+
+#: apps/projects/uploads.py:91
+#, python-format
+msgid "File type \"%(ext)s\" is not allowed."
+msgstr ""
+
+#: apps/projects/uploads.py:94
+#, python-format
+msgid "File size exceeds the %(size)s MB limit."
+msgstr ""
+
 #: apps/projects/views.py:260
 #, python-format
 msgid "Project \"%(name)s\" created."
@@ -3594,76 +3662,76 @@ msgstr ""
 msgid "This reorder would create a circular hierarchy."
 msgstr ""
 
-#: apps/projects/writes.py:27
+#: apps/projects/writes.py:28
 msgid "Section does not belong to this project."
 msgstr ""
 
-#: apps/projects/writes.py:38 apps/projects/writes.py:40
-#: apps/projects/writes.py:86
+#: apps/projects/writes.py:39 apps/projects/writes.py:41
+#: apps/projects/writes.py:87
 msgid "Assignee user not found or inactive."
 msgstr ""
 
-#: apps/projects/writes.py:42
+#: apps/projects/writes.py:43
 msgid "Assignee must be a project member."
 msgstr ""
 
-#: apps/projects/writes.py:48
+#: apps/projects/writes.py:49
 #, python-format
 msgid "Invalid %(field)s. Must be one of: %(choices)s"
 msgstr ""
 
-#: apps/projects/writes.py:75
+#: apps/projects/writes.py:76
 msgid "Enter a number."
 msgstr ""
 
-#: apps/projects/writes.py:80
+#: apps/projects/writes.py:81
 msgid "Enter a date as YYYY-MM-DD."
 msgstr ""
 
-#: apps/projects/writes.py:83
+#: apps/projects/writes.py:84
 msgid "Enter true or false."
 msgstr ""
 
-#: apps/projects/writes.py:89
+#: apps/projects/writes.py:90
 #, python-format
 msgid "Choose one of: %(options)s"
 msgstr ""
 
-#: apps/projects/writes.py:94
+#: apps/projects/writes.py:95
 #, python-format
 msgid "Choose from: %(options)s"
 msgstr ""
 
-#: apps/projects/writes.py:105
+#: apps/projects/writes.py:106
 #, python-format
 msgid "Attribute %(id)s is not available for this project."
 msgstr ""
 
-#: apps/projects/writes.py:107
+#: apps/projects/writes.py:108
 msgid "Built-in attributes cannot be set."
 msgstr ""
 
-#: apps/projects/writes.py:131
+#: apps/projects/writes.py:132
 #, python-format
 msgid "Tag %(tag)s is not available for this project."
 msgstr ""
 
-#: apps/projects/writes.py:203
+#: apps/projects/writes.py:204
 msgid "The parent comment is on another item."
 msgstr ""
 
-#: apps/projects/writes.py:209
+#: apps/projects/writes.py:210
 msgid "Source item must belong to the current project."
 msgstr ""
 
-#: apps/projects/writes.py:211
+#: apps/projects/writes.py:212
 msgid "An item cannot link to itself."
 msgstr ""
 
-#: apps/projects/writes.py:213
+#: apps/projects/writes.py:214
 msgid "You do not have access to the target item's project."
 msgstr ""
 
-#: apps/projects/writes.py:215
+#: apps/projects/writes.py:216
 msgid "The target project is archived."
 msgstr ""

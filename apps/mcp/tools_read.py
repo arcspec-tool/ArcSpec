@@ -162,6 +162,7 @@ class TypedAttributeValue(TypedDict):
 
 
 class AttachmentRow(TypedDict):
+    public_key: str
     filename: str
     size: int
 
@@ -248,7 +249,10 @@ class VersionList(TypedDict):
 
 class ListAuditLogArguments(TypedDict):
     project: ProjectSlug
-    action: NotRequired[Annotated[AuditAction, Field(description='One action, or the collaboration group.')]]
+    action: NotRequired[Annotated[AuditAction, Field(
+        description='One action, or collaboration for collaborator_added, collaborator_removed and '
+                    'collaborator_role_changed together.',
+    )]]
     user: NotRequired[Annotated[str, Field(description='The email address of the user who acted.')]]
     item: NotRequired[Annotated[str, Field(description='An item id such as REQ-001.')]]
     offset: NotRequired[Offset]
@@ -280,6 +284,7 @@ class TemplateRow(TypedDict):
     doc_type: str
     description: str
     builtin: bool
+    can_edit: bool
     section_count: int
     attribute_count: int
 
@@ -303,6 +308,7 @@ class TemplateAttributeRow(TypedDict):
     name: str
     type: str
     options: list[str]
+    builtin: bool
 
 
 class TemplateDetail(TypedDict):
@@ -311,6 +317,8 @@ class TemplateDetail(TypedDict):
     doc_type: str
     description: str
     builtin: bool
+    visible_to_all: bool
+    can_edit: bool
     sections: list[TemplateSectionNode]
     attributes: list[TemplateAttributeRow]
 
@@ -369,7 +377,8 @@ TOOLS = (
     ),
     read_tool(
         'list_sections',
-        'The section tree of a project. item_count counts the section\'s own items; total_items includes its subsections.',
+        'The section tree of a project. Each section\'s description says what belongs in it; place items by it. '
+        'item_count counts the section\'s own items; total_items includes its subsections.',
         ProjectArguments, SectionList, services.list_sections,
     ),
     read_tool(
@@ -383,7 +392,7 @@ TOOLS = (
         'get_item',
         'One item of a project: its text as stored HTML, tags, attribute values, attachments, comments and the links '
         'to and from other items. A linked item in a project the account cannot open carries only the project name '
-        'and the item id.',
+        'and the item id. To change the text, send Markdown to update_item.',
         ItemArguments, ItemDetail, services.get_item,
     ),
     read_tool(
@@ -409,11 +418,14 @@ TOOLS = (
     ),
     read_tool(
         'list_templates',
-        'The document templates the connected account can use. Filter by a text in the name or by document type.',
+        'The document templates the connected account can use. Filter by a text in the name or by document type. '
+        'can_edit says whether the account can change the template with update_template.',
         ListTemplatesArguments, TemplateList, services.list_templates,
     ),
     read_tool(
-        'get_template', 'One template by its key: its section tree and its attributes.',
+        'get_template',
+        'One template by its key: its section tree, its attributes, whether every user sees it and whether the '
+        'connected account can change it.',
         TemplateArguments, TemplateDetail, services.get_template,
     ),
     read_tool(
