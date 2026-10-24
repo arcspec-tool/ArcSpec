@@ -8,9 +8,14 @@
         <p class="page-subtitle">{% translate "Create and manage project templates" %}</p>
     </div>
     {% if not request.user.is_viewer %}
-    <button type="button" class="btn btn-primary btn-sm" data-modal-open="template_editor">
-        <i class="bi bi-plus-lg me-1"></i> {% translate "New Template" %}
-    </button>
+    <div class="d-flex gap-2">
+        <button type="button" class="btn btn-light btn-sm" data-modal-open="template_import">
+            <i class="bi bi-upload me-1"></i> {% translate "Import" %}
+        </button>
+        <button type="button" class="btn btn-primary btn-sm" data-modal-open="template_editor">
+            <i class="bi bi-plus-lg me-1"></i> {% translate "New Template" %}
+        </button>
+    </div>
     {% endif %}
 </div>
 

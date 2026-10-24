@@ -72,7 +72,7 @@ Project roles:
 
 ## Document templates
 
-A project is created from a document template. Users create their own document templates from scratch or by duplicating another.
+A project is created from a document template. Users create their own document templates from scratch, by duplicating another and modifying it, or by importing a template file.
 
 The built-in templates are included:
 
@@ -86,6 +86,33 @@ The built-in templates are included:
 | GDPR Compliance Documentation | Custom | 52 |
 | NIS2 Compliance Documentation | Custom | 31 |
 | EU AI Act Compliance Documentation | Custom | 46 |
+
+### Template file
+
+On the Templates page, Export downloads a template as a JSON file and Import creates a private template from one. The file size limit is 1 MB.
+
+```
+{
+  "format": "arcspec-template",
+  "version": 1,
+  "name": "<name>",
+  "description": "<text>",
+  "doc_type": "requirements | architecture | testcases | risk | custom",
+  "sections": [
+    {"title": "<title>", "description": "<text>", "children": [<sections>]}
+  ],
+  "attributes": [
+    {"name": "<name>", "type": "text | number | date | boolean | user"},
+    {"name": "<name>", "type": "dropdown | multiselect", "options": ["<option>"]}
+  ]
+}
+```
+
+- The file is UTF-8 JSON per RFC 8259: no `NaN` or `Infinity`, each key once, no NUL character.
+- `description`, `sections`, `attributes` and `children` are optional.
+- Section numbers follow the position in the tree: 1, 1.1, 2.
+- An option holds no comma.
+- `name`, `description`, `doc_type`, `sections` and `attributes` are also the input of the MCP `create_template` tool.
 
 ## MCP server
 

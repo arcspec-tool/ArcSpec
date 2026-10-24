@@ -23,7 +23,10 @@
                 {% endif %}
 {% endblock %}
 {% block footer_class %} border-top{% endblock %}
-{% block modal_footer %}{% if can_duplicate %}<form method="post" id="viewTemplateDuplicateForm" action="{% url 'template_duplicate' template.public_key %}" class="d-inline" data-confirm="{% blocktranslate trimmed with name=template.name %}A private copy named &quot;{{ name }} (Copy)&quot; will be created.{% endblocktranslate %}" data-confirm-title="{% translate 'Duplicate Template' %}" data-confirm-button="{% translate 'Duplicate' %}" data-confirm-class="btn-primary">
+{% block modal_footer %}<a href="{% url 'template_export' template.public_key %}" class="btn btn-sm btn-outline-primary" id="viewTemplateExportLink" download="{{ export_name }}">
+                    <i class="bi bi-download me-1"></i>{% translate "Export" %}
+                </a>
+                {% if can_duplicate %}<form method="post" id="viewTemplateDuplicateForm" action="{% url 'template_duplicate' template.public_key %}" class="d-inline" data-confirm="{% blocktranslate trimmed with name=template.name %}A private copy named &quot;{{ name }} (Copy)&quot; will be created.{% endblocktranslate %}" data-confirm-title="{% translate 'Duplicate Template' %}" data-confirm-button="{% translate 'Duplicate' %}" data-confirm-class="btn-primary">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-sm btn-outline-primary" id="viewTemplateDuplicateBtn">
                         <i class="bi bi-files me-1"></i>{% translate "Duplicate as Custom" %}

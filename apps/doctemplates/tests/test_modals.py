@@ -68,6 +68,15 @@ class TemplateEditorModalTest(TestCase):
         self.assertEqual(self.client.get(self.url, {'template': '00000000-0000-7000-8000-000000000000'}, **AJAX).status_code, 404)
 
 
+class TemplateImportModalTest(TestCase):
+
+    def test_viewer_cannot_open_the_import_dialog(self):
+        self.client.force_login(ViewerUserFactory())
+        response = self.client.get(reverse('modal', args=['template_import']), **AJAX)
+        self.assertEqual(response.status_code, 403)
+        self.assertNotIn('data-modal-name="template_import"', response.content.decode())
+
+
 class TemplateViewModalTest(TestCase):
 
     def setUp(self):

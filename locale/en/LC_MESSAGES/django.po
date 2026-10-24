@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-23 20:55+0300\n"
+"POT-Creation-Date: 2026-10-24 14:48+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -380,6 +380,7 @@ msgstr ""
 #: apps/administration/templates/administration/modals/_tag_preset.html:16
 #: apps/core/templates/modals/_confirm.html:7
 #: apps/core/templates/modals/_sign_out.html:7
+#: apps/doctemplates/templates/doctemplates/modals/_import_template.html:12
 #: apps/doctemplates/templates/doctemplates/modals/_template_editor.html:73
 #: apps/mcp/templates/mcp/authorize.html:26
 #: apps/projects/templates/projects/modals/_add_item.html:57
@@ -806,7 +807,7 @@ msgstr ""
 msgid "Profile updated successfully."
 msgstr ""
 
-#: apps/accounts/views.py:262 apps/doctemplates/views.py:65
+#: apps/accounts/views.py:262 apps/doctemplates/views.py:74
 #: apps/projects/views.py:264 apps/projects/views.py:282
 msgid "Please correct the errors below."
 msgstr ""
@@ -1307,7 +1308,7 @@ msgid "No users match."
 msgstr ""
 
 #: apps/administration/templates/administration/includes/_users.html:112
-#: apps/doctemplates/templates/doctemplates/list.html:35
+#: apps/doctemplates/templates/doctemplates/list.html:40
 #: apps/projects/templates/projects/list.html:121
 msgid "Clear filters"
 msgstr ""
@@ -1392,7 +1393,7 @@ msgstr ""
 msgid "Tag Presets"
 msgstr ""
 
-#: apps/administration/views.py:94 apps/doctemplates/views.py:47
+#: apps/administration/views.py:94 apps/doctemplates/views.py:56
 #: apps/projects/views.py:222
 msgid "All"
 msgstr ""
@@ -1551,7 +1552,7 @@ msgid "Sign Out"
 msgstr ""
 
 #: apps/core/templates/components/_modal_shell.html:6
-#: apps/doctemplates/templates/doctemplates/modals/_view_template.html:32
+#: apps/doctemplates/templates/doctemplates/modals/_view_template.html:35
 #: apps/projects/templates/projects/includes/_audit_trail.html:9
 #: apps/projects/templates/projects/includes/_version_history.html:8
 msgid "Close"
@@ -1707,35 +1708,48 @@ msgstr ""
 msgid "%(time)s ago"
 msgstr ""
 
-#: apps/doctemplates/forms.py:17
+#: apps/doctemplates/forms.py:24
 msgid "e.g. Risk Analysis Template"
 msgstr ""
 
-#: apps/doctemplates/forms.py:22
+#: apps/doctemplates/forms.py:29
 msgid "Describe what this template is for..."
 msgstr ""
 
-#: apps/doctemplates/forms.py:32
+#: apps/doctemplates/forms.py:39
 #: apps/doctemplates/templates/doctemplates/modals/_template_editor.html:30
 msgid "Visible to all users"
 msgstr ""
 
-#: apps/doctemplates/forms.py:40 apps/mcp/services.py:307
+#: apps/doctemplates/forms.py:47 apps/doctemplates/writes.py:102
 #, python-format
 msgid "Attribute names must be unique: %(names)s."
 msgstr ""
 
 #: apps/doctemplates/forms.py:53
+msgid "Template file"
+msgstr ""
+
+#: apps/doctemplates/forms.py:64
+msgid "The file must be a .json file."
+msgstr ""
+
+#: apps/doctemplates/forms.py:66
+#, python-format
+msgid "The file is larger than %(count)d MB."
+msgstr ""
+
+#: apps/doctemplates/forms.py:84
 #: apps/doctemplates/templates/doctemplates/modals/_editor_section.html:20
 #: apps/projects/templates/projects/modals/_structure_section.html:19
 msgid "Describe this section..."
 msgstr ""
 
-#: apps/doctemplates/modals.py:81
+#: apps/doctemplates/modals.py:67
 msgid "Edit Template"
 msgstr ""
 
-#: apps/doctemplates/modals.py:87
+#: apps/doctemplates/modals.py:73
 msgid "Create Template"
 msgstr ""
 
@@ -1853,20 +1867,30 @@ msgstr ""
 msgid "View"
 msgstr ""
 
-#: apps/doctemplates/templates/doctemplates/includes/_template_card.html:41
-#: apps/doctemplates/templates/doctemplates/modals/_view_template.html:26
+#: apps/doctemplates/templates/doctemplates/includes/_template_card.html:40
+msgid "Export as a JSON file"
+msgstr ""
+
+#: apps/doctemplates/templates/doctemplates/includes/_template_card.html:40
+#: apps/doctemplates/templates/doctemplates/modals/_view_template.html:27
+#: apps/projects/templates/projects/modals/_export.html:49
+msgid "Export"
+msgstr ""
+
+#: apps/doctemplates/templates/doctemplates/includes/_template_card.html:42
+#: apps/doctemplates/templates/doctemplates/modals/_view_template.html:29
 #, python-format
 msgid "A private copy named &quot;%(name)s (Copy)&quot; will be created."
 msgstr ""
 
-#: apps/doctemplates/templates/doctemplates/includes/_template_card.html:41
-#: apps/doctemplates/templates/doctemplates/modals/_view_template.html:26
+#: apps/doctemplates/templates/doctemplates/includes/_template_card.html:42
+#: apps/doctemplates/templates/doctemplates/modals/_view_template.html:29
 msgid "Duplicate Template"
 msgstr ""
 
-#: apps/doctemplates/templates/doctemplates/includes/_template_card.html:41
-#: apps/doctemplates/templates/doctemplates/includes/_template_card.html:43
-#: apps/doctemplates/templates/doctemplates/modals/_view_template.html:26
+#: apps/doctemplates/templates/doctemplates/includes/_template_card.html:42
+#: apps/doctemplates/templates/doctemplates/includes/_template_card.html:44
+#: apps/doctemplates/templates/doctemplates/modals/_view_template.html:29
 #: apps/projects/templates/projects/includes/_context_menu.html:4
 #: apps/projects/templates/projects/includes/_project_actions.html:9
 #: apps/projects/templates/projects/includes/_project_actions.html:10
@@ -1877,41 +1901,46 @@ msgstr ""
 msgid "Create and manage project templates"
 msgstr ""
 
-#: apps/doctemplates/templates/doctemplates/list.html:12
-#: apps/doctemplates/templates/doctemplates/list.html:74
+#: apps/doctemplates/templates/doctemplates/list.html:13
+#: apps/doctemplates/templates/doctemplates/modals/_import_template.html:13
+msgid "Import"
+msgstr ""
+
+#: apps/doctemplates/templates/doctemplates/list.html:16
+#: apps/doctemplates/templates/doctemplates/list.html:79
 msgid "New Template"
 msgstr ""
 
-#: apps/doctemplates/templates/doctemplates/list.html:20
+#: apps/doctemplates/templates/doctemplates/list.html:25
 msgid "Search templates"
 msgstr ""
 
-#: apps/doctemplates/templates/doctemplates/list.html:23
+#: apps/doctemplates/templates/doctemplates/list.html:28
 msgid "Filter by document type"
 msgstr ""
 
-#: apps/doctemplates/templates/doctemplates/list.html:34
+#: apps/doctemplates/templates/doctemplates/list.html:39
 #, python-format
 msgid "No templates match “%(search_query)s”"
 msgstr ""
 
-#: apps/doctemplates/templates/doctemplates/list.html:34
+#: apps/doctemplates/templates/doctemplates/list.html:39
 msgid "No templates match this type"
 msgstr ""
 
-#: apps/doctemplates/templates/doctemplates/list.html:44
+#: apps/doctemplates/templates/doctemplates/list.html:49
 msgid "Built-in templates"
 msgstr ""
 
-#: apps/doctemplates/templates/doctemplates/list.html:51
+#: apps/doctemplates/templates/doctemplates/list.html:56
 msgid "No built-in templates available."
 msgstr ""
 
-#: apps/doctemplates/templates/doctemplates/list.html:61
+#: apps/doctemplates/templates/doctemplates/list.html:66
 msgid "Custom templates"
 msgstr ""
 
-#: apps/doctemplates/templates/doctemplates/list.html:72
+#: apps/doctemplates/templates/doctemplates/list.html:77
 msgid "No custom templates yet"
 msgstr ""
 
@@ -1970,6 +1999,16 @@ msgstr ""
 #: apps/doctemplates/templates/doctemplates/modals/_editor_section.html:16
 #: apps/projects/templates/projects/modals/_structure_section.html:15
 msgid "Remove section"
+msgstr ""
+
+#: apps/doctemplates/templates/doctemplates/modals/_import_template.html:3
+msgid "Import Template"
+msgstr ""
+
+#: apps/doctemplates/templates/doctemplates/modals/_import_template.html:10
+msgid ""
+"Select a JSON file exported from ArcSpec. The template is added as a private "
+"template that you own."
 msgstr ""
 
 #: apps/doctemplates/templates/doctemplates/modals/_template_editor.html:13
@@ -2052,40 +2091,153 @@ msgstr ""
 msgid "Item Attributes:"
 msgstr ""
 
-#: apps/doctemplates/templates/doctemplates/modals/_view_template.html:29
+#: apps/doctemplates/templates/doctemplates/modals/_view_template.html:32
 msgid "Duplicate as Custom"
 msgstr ""
 
-#: apps/doctemplates/views.py:81
+#: apps/doctemplates/transfer.py:59
+#, python-format
+msgid "The file has the key \"%(key)s\" twice."
+msgstr ""
+
+#: apps/doctemplates/transfer.py:82
+msgid "The file is not valid JSON."
+msgstr ""
+
+#: apps/doctemplates/transfer.py:84
+msgid "The file holds a NUL character."
+msgstr ""
+
+#: apps/doctemplates/transfer.py:86
+msgid "The file is not an ArcSpec template file."
+msgstr ""
+
+#: apps/doctemplates/transfer.py:88
+#, python-format
+msgid "Version %(version)d of the template file format is not supported."
+msgstr ""
+
+#: apps/doctemplates/transfer.py:97
+msgid ""
+"A template file must have a name and a doc_type, and can have a description, "
+"sections and attributes."
+msgstr ""
+
+#: apps/doctemplates/transfer.py:107
+msgid "The template in the file has no name."
+msgstr ""
+
+#: apps/doctemplates/transfer.py:109
+#, python-format
+msgid "The template name is longer than %(count)d characters."
+msgstr ""
+
+#: apps/doctemplates/transfer.py:112
+#, python-format
+msgid "The doc_type %(type)s is not one of: %(types)s."
+msgstr ""
+
+#: apps/doctemplates/views.py:90
 #, python-format
 msgid "Template \"%(name)s\" created."
 msgstr ""
 
-#: apps/doctemplates/views.py:101
+#: apps/doctemplates/views.py:110
 #, python-format
 msgid "Template \"%(name)s\" updated."
 msgstr ""
 
-#: apps/doctemplates/views.py:172
+#: apps/doctemplates/views.py:181
 #, python-format
 msgid "Cannot delete \"%(name)s\": it is used by %(count)d project."
 msgid_plural "Cannot delete \"%(name)s\": it is used by %(count)d projects."
 msgstr[0] ""
 msgstr[1] ""
 
-#: apps/doctemplates/views.py:180
+#: apps/doctemplates/views.py:189
 #, python-format
 msgid "Template \"%(name)s\" deleted."
 msgstr ""
 
-#: apps/doctemplates/views.py:191 apps/projects/views.py:321
+#: apps/doctemplates/views.py:200 apps/projects/views.py:321
 #, python-format
 msgid "%(name)s (Copy)"
 msgstr ""
 
-#: apps/doctemplates/views.py:223
+#: apps/doctemplates/views.py:232
 #, python-format
 msgid "Template duplicated as \"%(name)s\"."
+msgstr ""
+
+#: apps/doctemplates/views.py:259
+#, python-format
+msgid "Template \"%(name)s\" imported."
+msgstr ""
+
+#: apps/doctemplates/writes.py:22
+#, python-format
+msgid ""
+"Section %(number)s must be an object with a title, and can have a "
+"description and children."
+msgstr ""
+
+#: apps/doctemplates/writes.py:36
+#, python-format
+msgid ""
+"The section tree is too deep: section number %(number)s is longer than "
+"%(count)d characters."
+msgstr ""
+
+#: apps/doctemplates/writes.py:46
+#, python-format
+msgid "Section %(number)s has no title."
+msgstr ""
+
+#: apps/doctemplates/writes.py:49
+#, python-format
+msgid "The title of section %(number)s is longer than %(count)d characters."
+msgstr ""
+
+#: apps/doctemplates/writes.py:59
+#, python-format
+msgid "A template holds at most %(count)d sections."
+msgstr ""
+
+#: apps/doctemplates/writes.py:75
+#, python-format
+msgid ""
+"Attribute %(position)d must be an object with a name and a type, and can "
+"have options."
+msgstr ""
+
+#: apps/doctemplates/writes.py:79
+msgid "An attribute has no name."
+msgstr ""
+
+#: apps/doctemplates/writes.py:82
+#, python-format
+msgid "The name of attribute %(position)d is longer than %(count)d characters."
+msgstr ""
+
+#: apps/doctemplates/writes.py:85
+#, python-format
+msgid "Attribute %(name)s has an unknown type: %(type)s."
+msgstr ""
+
+#: apps/doctemplates/writes.py:91
+#, python-format
+msgid ""
+"Attribute %(name)s is not a dropdown or multi-select and takes no options."
+msgstr ""
+
+#: apps/doctemplates/writes.py:94
+#, python-format
+msgid "Attribute %(name)s needs at least one option."
+msgstr ""
+
+#: apps/doctemplates/writes.py:97
+#, python-format
+msgid "An option of attribute %(name)s is empty or holds a comma."
 msgstr ""
 
 #: apps/mcp/asgi.py:119
@@ -2116,7 +2268,7 @@ msgstr ""
 msgid "The request body is not valid JSON."
 msgstr ""
 
-#: apps/mcp/asgi.py:148 apps/mcp/tools_write.py:208
+#: apps/mcp/asgi.py:148 apps/mcp/tools_write.py:222
 msgid "This connection is read only."
 msgstr ""
 
@@ -2187,97 +2339,60 @@ msgstr ""
 msgid "Not found: tool %(name)s."
 msgstr ""
 
-#: apps/mcp/services.py:51
+#: apps/mcp/services.py:50
 msgid "Not found: your account."
 msgstr ""
 
-#: apps/mcp/services.py:55 apps/mcp/services.py:60
+#: apps/mcp/services.py:54 apps/mcp/services.py:59
 #, python-format
 msgid "project %(slug)s"
 msgstr ""
 
-#: apps/mcp/services.py:127
+#: apps/mcp/services.py:126
 #, python-format
 msgid "Give only one of: %(names)s."
 msgstr ""
 
-#: apps/mcp/services.py:138 apps/projects/writes.py:59
+#: apps/mcp/services.py:137 apps/projects/writes.py:59
 msgid "The item is not in the chosen section."
 msgstr ""
 
-#: apps/mcp/services.py:219
+#: apps/mcp/services.py:218
 #, python-format
 msgid "Created %(count)d item"
 msgid_plural "Created %(count)d items"
 msgstr[0] ""
 msgstr[1] ""
 
-#: apps/mcp/services.py:223
+#: apps/mcp/services.py:222
 #, python-format
 msgid "%(count)d new item created in %(project)s"
 msgid_plural "%(count)d new items created in %(project)s"
 msgstr[0] ""
 msgstr[1] ""
 
-#: apps/mcp/services.py:252
+#: apps/mcp/services.py:251
 #, python-format
 msgid "Not found: template %(template)s."
 msgstr ""
 
-#: apps/mcp/services.py:270
-#, python-format
-msgid ""
-"The section tree is too deep: section number %(number)s is longer than "
-"%(count)d characters."
-msgstr ""
-
-#: apps/mcp/services.py:274
-#, python-format
-msgid "Section %(number)s has no title."
-msgstr ""
-
-#: apps/mcp/services.py:283
-#, python-format
-msgid "A template holds at most %(count)d sections."
-msgstr ""
-
-#: apps/mcp/services.py:292
-msgid "An attribute has no name."
-msgstr ""
-
-#: apps/mcp/services.py:296
-#, python-format
-msgid ""
-"Attribute %(name)s is not a dropdown or multi-select and takes no options."
-msgstr ""
-
-#: apps/mcp/services.py:299
-#, python-format
-msgid "Attribute %(name)s needs at least one option."
-msgstr ""
-
-#: apps/mcp/services.py:302
-#, python-format
-msgid "An option of attribute %(name)s is empty or holds a comma."
-msgstr ""
-
-#: apps/mcp/services.py:486
+#: apps/mcp/services.py:433
 msgid "Enter the comment text."
 msgstr ""
 
-#: apps/mcp/services.py:501
+#: apps/mcp/services.py:448
 msgid "This link already exists."
 msgstr ""
 
-#: apps/mcp/services.py:526
+#: apps/mcp/services.py:468
 msgid "Your system role does not allow this."
 msgstr ""
 
-#: apps/mcp/services.py:560
+#: apps/mcp/services.py:502
 msgid "The data is not valid base64."
 msgstr ""
 
-#: apps/mcp/services.py:581
+#: apps/mcp/services.py:523
 #, python-format
 msgid "Item %(item)s has no image."
 msgstr ""
@@ -3531,10 +3646,6 @@ msgstr ""
 
 #: apps/projects/templates/projects/modals/_export.html:44
 msgid "Traceability Links"
-msgstr ""
-
-#: apps/projects/templates/projects/modals/_export.html:49
-msgid "Export"
 msgstr ""
 
 #: apps/projects/templates/projects/modals/_item_attribute_fields.html:10

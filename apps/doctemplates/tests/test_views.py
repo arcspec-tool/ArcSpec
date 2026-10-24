@@ -136,11 +136,13 @@ class TemplateListPageTest(TestCase):
         self.assertTrue(all(t.doc_type == 'risk' for t in response.context['builtin_templates']))
         self.assertContains(response, 'aria-current="page">Risk Analysis')
 
-    def test_viewer_gets_no_create_or_duplicate(self):
-        self.client.force_login(ViewerUserFactory())
+    def test_viewer_gets_no_create_import_or_duplicate(self):
         TemplateFactory(is_builtin=True)
+        self.assertIn('data-modal-open="template_import"', self.client.get(self.url).content.decode())
+        self.client.force_login(ViewerUserFactory())
         html = self.client.get(self.url).content.decode()
         self.assertNotIn('data-modal-open="template_editor"', html)
+        self.assertNotIn('data-modal-open="template_import"', html)
         self.assertNotIn('data-confirm-title="Duplicate Template"', html)
 
     def test_queries_do_not_grow_with_the_number_of_templates(self):

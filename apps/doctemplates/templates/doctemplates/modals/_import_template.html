@@ -1,0 +1,14 @@
+{% extends "components/_modal_shell.html" %}
+{% load i18n %}
+{% block modal_title %}<i class="bi bi-upload me-2"></i>{% translate "Import Template" %}{% endblock %}
+{% block after_header %}<form method="post" action="{{ form_action }}" enctype="multipart/form-data" data-modal-form>
+                {% csrf_token %}{% endblock %}
+{% block modal_body %}
+                    <label class="form-label" for="{{ form.file.id_for_label }}">{{ form.file.label }}</label>
+                    {{ form.file }}
+                    {% for error in form.file.errors %}<div class="text-danger small mt-1" data-import-error>{{ error }}</div>{% endfor %}
+                    <p class="text-muted small mt-2 mb-0">{% translate "Select a JSON file exported from ArcSpec. The template is added as a private template that you own." %}</p>
+{% endblock %}
+{% block modal_footer %}<button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{% translate "Cancel" %}</button>
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-upload me-1"></i>{% translate "Import" %}</button>{% endblock %}
+{% block after_footer %}</form>{% endblock %}

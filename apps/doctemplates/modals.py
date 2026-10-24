@@ -3,25 +3,11 @@ from django.utils.translation import gettext as _
 
 from apps.core.mixins import editable_template, require_not_viewer, visible_template
 from apps.core.modals import key_param, register
-from apps.doctemplates.forms import TemplateForm, TemplateSectionFormSet
+from apps.doctemplates.forms import TemplateForm, TemplateImportForm, TemplateSectionFormSet
 from apps.doctemplates.models import TemplateAttribute
-
-MAX_POSTED_SECTIONS = 1000
-OPTION_TYPES = ('dropdown', 'multiselect')
-
-
-def section_node(section_id, number, title, description):
-    return {'id': section_id, 'number': number, 'title': title, 'description': description, 'children': []}
-
-
-def sections_from_template(template):
-    sections = list(template.sections.order_by('order'))
-    nodes = {s.pk: section_node(s.pk, s.number, s.title, s.description) for s in sections}
-    roots = []
-    for s in sections:
-        parent = nodes.get(s.parent_id) if s.parent_id else None
-        (parent['children'] if parent else roots).append(nodes[s.pk])
-    return roots
+from apps.doctemplates.queries import section_node, sections_from_template
+from apps.doctemplates.transfer import file_name
+from apps.doctemplates.writes import MAX_POSTED_SECTIONS
 
 
 def sections_from_post(post):
@@ -110,7 +96,17 @@ def template_editor(request, params):
     return editor_context()
 
 
-@register('template_view', 'doctemplates/modals/_view_template.html', params=('template',), modal_id='viewTemplateModal', size='lg', scrollable=True)
+def import_context(form=None):
+    return {'form': form or TemplateImportForm(), 'form_action': reverse('template_import')}
+
+
+@register('template_import', 'doctemplates/modals/_import_template.html', modal_id='importTemplateModal')
+def template_import(request, params):
+    require_not_viewer(request.user)
+    return import_context()
+
+
+@register('template_view','doctemplates/modals/_view_template.html', params=('template',), modal_id='viewTemplateModal', size='lg', scrollable=True)
 def template_view(request, params):
     template = visible_template(request.user, key_param(params, 'template'))
     return {
@@ -118,4 +114,5 @@ def template_view(request, params):
         'sections': sections_from_template(template),
         'attributes': template.attributes.order_by('order'),
         'can_duplicate': not request.user.is_viewer,
+        'export_name': file_name(template),
     }

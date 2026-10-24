@@ -72,6 +72,35 @@ You can also duplicate a template from the **Template Structure** dialog with **
 
 ![Duplicate as Custom button](images/08-duplicate-as-custom.png)
 
+## Export a template
+
+You can export each template that you can see.
+This includes the built-in templates.
+
+1. Click **Export** on the template card.
+
+![Export button](images/08-export-template.png)
+
+You can also click **Export** in the **Template Structure** dialog.
+
+The browser downloads the template as a JSON file.
+You can import the file into a different ArcSpec installation.
+
+## Import a template
+
+Your system role must be User or Administrator.
+
+1. Click **Import** on the Templates page.
+2. In the **Import Template** dialog, select a JSON file that you exported from ArcSpec.
+3. Click **Import**.
+
+![Import Template dialog](images/08-import-template.png)
+
+ArcSpec adds the template as your private template.
+To let all users use the template, edit it and select **Visible to all users**.
+
+The file must not be larger than 1 MB.
+
 ## Delete a template
 
 The creator of a custom template and the administrators can delete it.

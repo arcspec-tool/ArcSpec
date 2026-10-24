@@ -2,20 +2,28 @@ from django.contrib import messages
 from django.db import transaction
 from django.db.models import Count
 from django.core.exceptions import PermissionDenied
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.utils.translation import gettext as _
 from django.utils.translation import ngettext
 from django.views import View
-from django.views.generic import CreateView, DeleteView, ListView, UpdateView
+from django.views.generic import CreateView, DeleteView, FormView, ListView, UpdateView
 
-from apps.core.mixins import LoginRequiredMixin, NotViewerMixin, TemplateOwnerOrAdminMixin, can_edit_template
+from apps.core.mixins import (
+    LoginRequiredMixin,
+    NotViewerMixin,
+    TemplateOwnerOrAdminMixin,
+    can_edit_template,
+    visible_template,
+)
 from apps.core.modals import is_ajax, render_modal
-from apps.doctemplates.forms import TemplateForm
-from apps.doctemplates.modals import attributes_from_post, editor_context, sections_from_post
+from apps.doctemplates.forms import TemplateForm, TemplateImportForm
+from apps.doctemplates.modals import attributes_from_post, editor_context, import_context, sections_from_post
 from apps.doctemplates.models import Template, TemplateAttribute, TemplateSection
 from apps.doctemplates.queries import template_list_queryset
-from apps.doctemplates.writes import replace_attributes, replace_sections
+from apps.doctemplates.transfer import file_content, file_name
+from apps.doctemplates.writes import replace_attributes, replace_sections, save_template
 
 
 class TemplateListView(LoginRequiredMixin, ListView):
@@ -38,6 +46,7 @@ class TemplateListView(LoginRequiredMixin, ListView):
             tmpl.can_edit = can_edit_template(user, tmpl)
             tmpl.can_delete = tmpl.can_edit and tmpl.usage_count == 0
             tmpl.can_duplicate = not user.is_viewer
+            tmpl.export_name = file_name(tmpl)
         context['builtin_templates'] = [t for t in templates if t.is_builtin]
         context['custom_templates'] = [t for t in templates if not t.is_builtin]
 
@@ -221,5 +230,39 @@ class TemplateDuplicateView(NotViewerMixin, View):
             )
 
         messages.success(request, _('Template duplicated as "%(name)s".') % {'name': copy_name})
+        return redirect('template_list')
+
+
+class TemplateExportView(LoginRequiredMixin, View):
+    http_method_names = ['get']
+
+    def get(self, request, public_key):
+        template = visible_template(request.user, public_key)
+        return HttpResponse(
+            file_content(template),
+            headers={
+                'Content-Type': 'application/json',
+                'Content-Disposition': f'attachment; filename="{file_name(template)}"',
+            },
+        )
+
+
+class TemplateImportView(NotViewerMixin, FormView):
+    form_class = TemplateImportForm
+    http_method_names = ['post']
+
+    def get_form_kwargs(self):
+        return {**super().get_form_kwargs(), 'user': self.request.user}
+
+    def form_valid(self, form):
+        save_template(form.template, form.sections, form.attributes)
+        messages.success(self.request, _('Template "%(name)s" imported.') % {'name': form.template.name})
+        return redirect('template_list')
+
+    def form_invalid(self, form):
+        if is_ajax(self.request):
+            return render_modal(self.request, 'template_import', import_context(form), status=422)
+        for error in form.errors.get('file', []):
+            messages.error(self.request, error)
         return redirect('template_list')
 

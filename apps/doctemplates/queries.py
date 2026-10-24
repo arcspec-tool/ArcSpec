@@ -9,6 +9,20 @@ def count_per_template(queryset):
     return Coalesce(Subquery(counted), 0)
 
 
+def section_node(section_id, number, title, description):
+    return {'id': section_id, 'number': number, 'title': title, 'description': description, 'children': []}
+
+
+def sections_from_template(template):
+    sections = list(template.sections.order_by('order'))
+    nodes = {s.pk: section_node(s.pk, s.number, s.title, s.description) for s in sections}
+    roots = []
+    for s in sections:
+        parent = nodes.get(s.parent_id) if s.parent_id else None
+        (parent['children'] if parent else roots).append(nodes[s.pk])
+    return roots
+
+
 def template_list_queryset(user, q='', doc_type=''):
     from apps.projects.models import Project
     qs = Template.objects.visible_to(user).select_related('created_by').annotate(

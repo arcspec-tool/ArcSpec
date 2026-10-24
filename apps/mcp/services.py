@@ -20,9 +20,8 @@ from apps.core.mixins import (
     visible_template,
 )
 from apps.doctemplates import writes as template_writes
-from apps.doctemplates.modals import MAX_POSTED_SECTIONS, OPTION_TYPES, sections_from_template
-from apps.doctemplates.models import Template, TemplateSection
-from apps.doctemplates.queries import template_list_queryset
+from apps.doctemplates.models import Template
+from apps.doctemplates.queries import sections_from_template, template_list_queryset
 from apps.mcp import identifiers, limits, output
 from apps.mcp import text as markdown
 from apps.mcp.errors import ToolRefusal, message_text, refusing
@@ -258,58 +257,6 @@ def template_detail(user, row):
     )
 
 
-def template_sections(entries):
-    longest = TemplateSection._meta.get_field('number').max_length
-    rows = []
-
-    def add(level, parent):
-        for position, entry in enumerate(level, start=1):
-            number = f'{parent}.{position}' if parent else str(position)
-            if len(number) > longest:
-                raise ValidationError({'sections': _(
-                    'The section tree is too deep: section number %(number)s is longer than %(count)d characters.'
-                ) % {'number': number, 'count': longest}})
-            title = entry['title'].strip()
-            if not title:
-                raise ValidationError({'sections': _('Section %(number)s has no title.') % {'number': number}})
-            rows.append({
-                'title': title, 'description': entry.get('description', '').strip(), 'number': number,
-                'order': len(rows), 'ref': number, 'parent_ref': parent or None,
-            })
-            add(entry.get('children', ()), number)
-
-    add(entries, '')
-    if len(rows) > MAX_POSTED_SECTIONS:
-        raise ValidationError({'sections': _('A template holds at most %(count)d sections.') % {'count': MAX_POSTED_SECTIONS}})
-    return rows
-
-
-def template_attributes(row, entries):
-    rows = []
-    for entry in entries:
-        name = entry['name'].strip()
-        if not name:
-            raise ValidationError({'attributes': _('An attribute has no name.')})
-        options = [option.strip() for option in entry.get('options', ())]
-        if entry['type'] not in OPTION_TYPES and options:
-            raise ValidationError({'attributes': _(
-                'Attribute %(name)s is not a dropdown or multi-select and takes no options.'
-            ) % {'name': name}})
-        if entry['type'] in OPTION_TYPES and not options:
-            raise ValidationError({'attributes': _('Attribute %(name)s needs at least one option.') % {'name': name}})
-        if any(not option or ',' in option for option in options):
-            raise ValidationError({'attributes': _(
-                'An option of attribute %(name)s is empty or holds a comma.'
-            ) % {'name': name}})
-        rows.append((name, entry['type'], options))
-    duplicates = template_writes.duplicate_attribute_names(row, [name for name, field_type, options in rows])
-    if duplicates:
-        raise ValidationError({'attributes': _('Attribute names must be unique: %(names)s.') % {
-            'names': ', '.join(duplicates),
-        }})
-    return rows
-
-
 def whoami(user_key):
     user = load_user(user_key)
     return {'name': str(user), 'email': user.email, 'system_role': user.system_role}
@@ -510,12 +457,7 @@ TEMPLATE_FIELDS = (('name', 'name'), ('description', 'description'), ('doc_type'
 
 def save_template(row, sections, attributes):
     with refusing():
-        with transaction.atomic():
-            row.save()
-            if sections is not None:
-                template_writes.replace_sections(row, sections)
-            if attributes is not None:
-                template_writes.replace_attributes(row, attributes)
+        template_writes.save_template(row, sections, attributes)
 
 
 def create_template(user_key, name, doc_type, description='', visible_to_all=False, sections=(), attributes=()):
@@ -530,8 +472,8 @@ def create_template(user_key, name, doc_type, description='', visible_to_all=Fal
     )
     with refusing():
         row.full_clean()
-        section_rows = template_sections(sections)
-        attribute_rows = template_attributes(row, attributes)
+        section_rows = template_writes.section_rows(sections)
+        attribute_rows = template_writes.attribute_rows(row, attributes)
     save_template(row, section_rows, attribute_rows)
     return template_detail(user, row)
 
@@ -546,8 +488,8 @@ def update_template(user_key, template, **changes):
                 value = changes[name]
                 setattr(row, model_field, value.strip() if isinstance(value, str) else value)
         row.full_clean()
-        section_rows = template_sections(changes['sections']) if 'sections' in changes else None
-        attribute_rows = template_attributes(row, changes['attributes']) if 'attributes' in changes else None
+        section_rows = template_writes.section_rows(changes['sections']) if 'sections' in changes else None
+        attribute_rows = template_writes.attribute_rows(row, changes['attributes']) if 'attributes' in changes else None
     if changes:
         save_template(row, section_rows, attribute_rows)
     return template_detail(user, row)

@@ -42,6 +42,7 @@ KEYED_ROUTES = {
     'template_delete',
     'template_duplicate',
     'template_edit',
+    'template_export',
 }
 
 METHODS = ('get', 'post', 'put', 'patch', 'delete')

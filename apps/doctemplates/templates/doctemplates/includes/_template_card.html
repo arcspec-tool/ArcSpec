@@ -37,6 +37,7 @@
             <span>{% blocktranslate trimmed count counter=tmpl.usage_count %}Used in {{ counter }} project{% plural %}Used in {{ counter }} projects{% endblocktranslate %}</span>
             <div class="template-card-actions">
                 <button type="button" class="btn btn-sm btn-light" data-modal-open="template_view" data-template="{{ tmpl.public_key }}" title="{% translate 'View structure' %}">{% translate "View" %}</button>
+                <a href="{% url 'template_export' tmpl.public_key %}" class="btn btn-sm btn-light" download="{{ tmpl.export_name }}" title="{% translate 'Export as a JSON file' %}">{% translate "Export" %}</a>
                 {% if tmpl.can_duplicate %}
                 <form method="post" action="{% url 'template_duplicate' tmpl.public_key %}" data-confirm="{% blocktranslate trimmed with name=tmpl.name %}A private copy named &quot;{{ name }} (Copy)&quot; will be created.{% endblocktranslate %}" data-confirm-title="{% translate 'Duplicate Template' %}" data-confirm-button="{% translate 'Duplicate' %}" data-confirm-class="btn-primary">
                     {% csrf_token %}
